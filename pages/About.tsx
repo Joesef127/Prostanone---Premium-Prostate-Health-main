@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { IMAGES } from '../constants';
 import { CheckCircle } from 'lucide-react';
+import { images } from '@/lib';
 
 const About: React.FC = () => {
    return (
@@ -37,7 +38,7 @@ const About: React.FC = () => {
                      viewport={{ once: true }}
                      className="relative h-full min-h-[500px] rounded-3xl overflow-hidden shadow-2xl"
                   >
-                     <img src="/prostanone-about.jpg" alt="Manufacturing Facility" className="w-full h-full object-cover" />
+                     <img src={images.prostanone_about} alt="Manufacturing Facility" className="w-full h-full object-cover" />
                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
                         <div className="text-white">
                            <p className="font-bold text-xl">GMP Certified Facility</p>

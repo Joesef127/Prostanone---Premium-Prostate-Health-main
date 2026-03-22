@@ -4,6 +4,7 @@ import { PACKAGES } from '../constants';
 import Button from '../components/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, ArrowRight, Truck, Minus, Plus, Clock } from 'lucide-react';
+import { images } from '@/lib';
 
 const Summary: React.FC = () => {
    const { cart, removeFromCart, updateQuantity } = useApp();
@@ -49,7 +50,7 @@ const Summary: React.FC = () => {
                         <div key={item.packageId} className="flex flex-col md:flex-row gap-6 items-center border-b border-gray-100 pb-8 last:border-0 last:pb-0">
                            <div className="w-32 h-32 bg-gray-100 rounded-xl flex items-center justify-center shrink-0">
                               <img
-                                 src="/Prostanone.png"
+                                 src={images.prostanone}
                                  alt="Prostanone"
                                  className="h-28 w-auto object-contain"
                               />

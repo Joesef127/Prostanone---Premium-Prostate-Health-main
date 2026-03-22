@@ -7,6 +7,7 @@ import { PACKAGES, TESTIMONIALS, SMALL_PRINT } from '../constants';
 import { ProstateDiagram } from '../components/ProstateDiagram';
 import { useApp } from '../context/AppContext';
 import FAQ from '../components/FAQ';
+import { images } from '@/lib';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const Home: React.FC = () => {
 
                 {/* ✅ Added Product Image */}
                 <img
-                  src="/Prostanone.png"
+                  src={images.prostanone}
                   alt="Prostanone Bottle"
                   className="w-28 h-28 object-contain mx-auto my-2 drop-shadow-xl"
                 />
@@ -207,7 +208,7 @@ const Home: React.FC = () => {
 
           {/* Static Hero Image Card */}
           <div className="relative flex-shrink-0 w-full lg:w-[450px] rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 lg:sticky lg:top-8 h-[400px] lg:h-auto lg:min-h-[500px]">
-            <img src="/prostanone-home.jpg" alt="Prostanone Premium Product" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <img src={images.prostanone_home} alt="Prostanone Premium Product" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent flex flex-col justify-end p-8">
               <div className="bg-accent text-primary text-xs font-bold uppercase py-1 px-3 rounded-full inline-block mb-3 self-start">Premium Quality</div>
               <h3 className="text-3xl font-bold text-white mb-2">100% Herbal</h3>

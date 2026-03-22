@@ -4,6 +4,7 @@ import { Menu, X, ShoppingCart } from 'lucide-react';
 import { NAV_LINKS } from '../constants';
 import Button from './Button';
 import { useApp } from '../context/AppContext';
+import { images } from '@/lib';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +35,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center z-50">
-            <img src="/logo.png" alt="Prostanone Logo" className="h-10 w-auto" />
+            <img src={images.logo} alt="Prostanone Logo" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Nav */}

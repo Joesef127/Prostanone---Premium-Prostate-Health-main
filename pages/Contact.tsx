@@ -51,9 +51,9 @@ const Contact: React.FC = () => {
                            <p className="font-bold text-text mb-2">Holis Botanical Gardens</p>
                            <p className="text-text-muted text-sm leading-relaxed">
                               Distributed by Holis Botanical Gardens <br />
-                              Address:<br />
-                              Km 35 Ikorodu-Itoikin Ijebu-Ode Road,<br />
-                              Ikosi, Ejirin LCDA, Epe Local Government,<br />
+                              {/* Address:<br /> */}
+                              {/* Km 35 Ikorodu-Itoikin Ijebu-Ode Road,<br />
+                              Ikosi, Ejirin LCDA, Epe Local Government,<br /> */}
                               Lagos State, Nigeria
                            </p>
                         </div>

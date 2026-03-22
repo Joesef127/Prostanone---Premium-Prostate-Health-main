@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_LINKS } from '../constants';
 import { Twitter, Facebook, Instagram, Phone, Mail } from 'lucide-react';
+import { images } from '@/lib';
 
 const Footer: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center mb-6">
-              <img src="/logo.png" alt="Prostanone Logo" className="h-10 w-auto brightness-0 invert" />
+              <img src={images.logo} alt="Prostanone Logo" className="h-10 w-auto brightness-0 invert" />
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
               NAFDAC-certified herbal prostate health supplement. Restoring vitality and confidence for Nigerian men naturally.
@@ -55,8 +56,8 @@ const Footer: React.FC = () => {
               </li>
               <li className="text-gray-300 text-sm pt-4 border-t border-white/10 mt-2">
                 <strong>Holis Botanical Gardens</strong><br />
-                Km 35 Ikorodu-Itoikin Ijebu-Ode Road,<br />
-                Ikosi, Ejirin LCDA, Epe Local Government,<br />
+                {/* Km 35 Ikorodu-Itoikin Ijebu-Ode Road,<br />
+                Ikosi, Ejirin LCDA, Epe Local Government,<br /> */}
                 Lagos State, Nigeria
               </li>
             </ul>
