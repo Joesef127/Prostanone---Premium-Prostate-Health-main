@@ -195,7 +195,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
 ];
 
 export const NAV_LINKS = [
-  { label: 'Home', path: '/' },
+  { label: 'Product', path: '/product' },
   { label: 'About', path: '/about' },
   { label: 'Science', path: '/science' },
   { label: 'Reviews', path: '/reviews' },
