@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { PACKAGES } from '../constants';
+import { calcDeliveryFee, NIGERIAN_STATES } from '../utils/delivery';
 import Button from '../components/Button';
 import { Lock, CheckCircle, MapPin, User, CreditCard, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -32,14 +33,17 @@ const Checkout: React.FC = () => {
     const pkg = PACKAGES.find(p => p.id === item.packageId);
     return acc + (pkg ? pkg.price * item.quantity : 0);
   }, 0);
-  // Delivery fee logic: Free for Lagos (excluding Badagry and Epe), otherwise 3000
-  const isLagos = formData.state?.toLowerCase() === 'lagos';
-  const isExcludedLagosArea = formData.address.toLowerCase().includes('badagry')
-    || formData.city.toLowerCase().includes('badagry')
-    || formData.address.toLowerCase().includes('epe')
-    || formData.city.toLowerCase().includes('epe');
+  // Total packs in cart (used for weight-based delivery pricing)
+  const totalPacks = cart.reduce((acc, item) => {
+    const pkg = PACKAGES.find(p => p.id === item.packageId);
+    return acc + (pkg ? pkg.containers * item.quantity : 0);
+  }, 0);
 
-  const finalDeliveryFee = (isLagos && !isExcludedLagosArea) ? 0 : 3000;
+  const finalDeliveryFee = calcDeliveryFee(
+    formData.state,
+    `${formData.address} ${formData.city}`,
+    totalPacks,
+  );
   const total = subtotal + finalDeliveryFee;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -312,10 +316,7 @@ const Checkout: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
                       <select name="state" value={formData.state} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none bg-gray-50 focus:bg-white transition-colors">
-                        <option>Lagos</option>
-                        <option>Abuja</option>
-                        <option>Rivers</option>
-                        <option>Other</option>
+                        {NIGERIAN_STATES.map(s => <option key={s}>{s}</option>)}
                       </select>
                     </div>
                     <div>

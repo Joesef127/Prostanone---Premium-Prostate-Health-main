@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_LINKS } from '../constants';
-import { Twitter, Facebook, Instagram, Phone, Mail } from 'lucide-react';
+import { Twitter, Facebook, Instagram, Phone, Mail, Youtube } from 'lucide-react';
 import { images } from '@/lib';
 
 const Footer: React.FC = () => {
@@ -18,9 +18,9 @@ const Footer: React.FC = () => {
               NAFDAC-certified herbal prostate health supplement. Restoring vitality and confidence for Nigerian men naturally.
             </p>
             <div className="flex space-x-4">
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Twitter size={20} /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Facebook size={20} /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Instagram size={20} /></a>
+              {/* <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Twitter size={20} /></a> */}
+              <a href="https://youtube.com/@prostanone?si=g5r9czALpAdS3WIJ" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Youtube size={24} /></a>
+              <a href="https://instagram.com/prostanone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Instagram size={20} /></a>
             </div>
           </div>
 
