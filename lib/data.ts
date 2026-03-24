@@ -68,10 +68,10 @@ export const INGREDIENTS = [
 ];
 
 export const STATS = [
-  { value: '1,000+', label: 'Men Helped' },
-  // { value: '4–6 wks', label: 'To First Results' },
   // { value: '96%', label: 'Satisfaction Rate' },
   { value: 'NAFDAC', label: 'Reg. A7-4976L' },
+  { value: '4–6 wks', label: 'To First Results' },
+  { value: '1,000+', label: 'Men Helped' },
 ];
 
 export const TRUST_BADGES: Array<{ icon: LucideIcon; label: string }> = [

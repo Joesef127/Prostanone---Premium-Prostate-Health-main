@@ -14,7 +14,7 @@ declare global {
 }
 
 const Checkout: React.FC = () => {
-  const { cart } = useApp();
+  const { cart, paymentMethod, setPaymentMethod } = useApp();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -28,7 +28,6 @@ const Checkout: React.FC = () => {
     state: 'Lagos',
     notes: ''
   });
-  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod' | null>(null);
 
   // Calculate totals
   const subtotal = cart.reduce((acc, item) => {
@@ -207,11 +206,11 @@ const Checkout: React.FC = () => {
           // Report final checkout step to n8n Webhook
           sendCheckoutProgress(4, 'payment_completed', data);
 
-          navigate('/thank-you');
+          navigate('/thank-you', { state: { paymentMethod: 'online' } });
         } catch (error) {
-          console.error("Post-payment error:", error);
+          console.error("Post-payment error:");
           // Redirect anyway since payment succeeded
-          navigate('/thank-you');
+          navigate('/thank-you', { state: { paymentMethod: 'online' } });
         } finally {
           setLoading(false);
         }
@@ -253,7 +252,7 @@ const Checkout: React.FC = () => {
           date: new Date(new Date().getTime() + 60 * 60 * 1000).toISOString().replace('Z', '+01:00'),
         }),
       });
-      navigate('/thank-you');
+      navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
     } catch {
       alert('Order submission failed. Please try again or call us directly.');
     } finally {
