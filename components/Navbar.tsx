@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
             <img
               src={images.logo}
               alt="Prostanone Logo"
-              className={`h-10 w-auto ${isProductPage ? `${isOpen ? "inverted-colors:text-primary" : "brightness-0 invert"}` : ""}`}
+              className={`h-10 w-auto ${isProductPage ? (isOpen ? "" : "brightness-0 invert") : ""}`}
             />
           </Link>
 

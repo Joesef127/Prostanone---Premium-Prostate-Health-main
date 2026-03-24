@@ -47,6 +47,9 @@ export function calcDeliveryFee(
     return isExcluded ? 4000 : 0;
   }
 
+  if (totalPacks <= 0) {
+    return 0;
+  }
   const kg = Math.max(totalPacks * WEIGHT_PER_PACK, 0.1);
   return SOUTH_WEST.has(s)
     ? tierLookup(SW_TIERS, kg)

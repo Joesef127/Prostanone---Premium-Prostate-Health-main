@@ -208,7 +208,7 @@ const Checkout: React.FC = () => {
 
           navigate('/thank-you', { state: { paymentMethod: 'online' } });
         } catch (error) {
-          console.error("Post-payment error:");
+          console.error("Post-payment error:", error);
           // Redirect anyway since payment succeeded
           navigate('/thank-you', { state: { paymentMethod: 'online' } });
         } finally {

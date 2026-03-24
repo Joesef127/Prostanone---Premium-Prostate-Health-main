@@ -1,7 +1,7 @@
-import logo from "../public/logo.png"
+import logo from "../public/logo.png";
 
 import prostanone from "../public/Prostanone.png";
-import prostanone1 from "../public/images/Prostanone01.jpg"
+import prostanone1 from "../public/images/Prostanone01.jpg";
 import prostanone2 from "../public/images/Prostanone02.jpg";
 import prostanone3 from "../public/images/Prostanone03.jpg";
 import prostanone4 from "../public/images/Prostanone04.jpg";
