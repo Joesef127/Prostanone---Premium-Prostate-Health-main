@@ -128,7 +128,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-white z-40 pt-20 pb-8 px-6 md:hidden flex flex-col items-center space-y-6 h-fit">
+        <div className="fixed inset-0 bg-white z-40 pt-20 pb-8 px-6 md:hidden flex flex-col items-center space-y-3 h-fit">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.path}

@@ -61,7 +61,7 @@ const PricingSection: React.FC = () => {
                       )}
                     </div>
                     {pkg.savingsText && (
-                      <span className="inline-block bg-success/10 text-success text-xs font-bold px-2.5 py-1 rounded-full mb-4">
+                      <span className="inline-block bg-success/10 text-success text-xs px-2.5 py-1 rounded-full mb-4">
                         {pkg.savingsText}
                       </span>
                     )}
@@ -82,7 +82,7 @@ const PricingSection: React.FC = () => {
                     <Button
                       fullWidth
                       variant={isBest ? 'primary' : 'outline'}
-                      size="lg"
+                      size="md"
                       onClick={() => handleOrder(pkg.id)}
                     >
                       Order Now <ArrowRight size={16} className="ml-1.5" />

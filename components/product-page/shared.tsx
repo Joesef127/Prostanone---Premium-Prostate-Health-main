@@ -76,14 +76,14 @@ export const SectionHeader: React.FC<{
       </span>
     )}
     <h2
-      className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 ${
+      className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 ${
         light ? 'text-white' : 'text-secondary'
       }`}
     >
       {title}
     </h2>
     {subtitle && (
-      <p className={`text-lg leading-relaxed ${light ? 'text-white/70' : 'text-text-muted'}`}>
+      <p className={`text-base sm:text-lg leading-relaxed ${light ? 'text-white/70' : 'text-text-muted'}`}>
         {subtitle}
       </p>
     )}

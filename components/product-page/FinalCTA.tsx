@@ -112,7 +112,7 @@ const FinalCTA: React.FC = () => {
               >
                 {PACKAGES.map(p => (
                   <option key={p.id} value={p.id}>
-                    {p.name} â€” â‚¦{p.price.toLocaleString()} ({p.description})
+                    {p.name} - ₦{p.price.toLocaleString()} ({p.description})
                   </option>
                 ))}
               </select>
