@@ -252,7 +252,7 @@ export const FAQS = [
   },
   {
     question: "Are there side effects?",
-    answer: "Prostanone is made from natural herbal ingredients with no reported sexual side effects. Consult your doctor if you have existing medical conditions."
+    answer: "Prostanone is made from natural herbal ingredients with no reported side effects. Consult your doctor if you have existing medical conditions."
   },
   {
     question: "Can I take it with other medications?",

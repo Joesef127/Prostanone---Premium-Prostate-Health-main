@@ -19,9 +19,9 @@ const Results: React.FC = () => {
   if (!quizResult) return null;
 
   // Logic for recommendation
-  let recommendedPackageId = 'option-a'; // MILD
-  if (quizResult.severity === QuizSeverity.MODERATE) recommendedPackageId = 'option-b';
-  if (quizResult.severity === QuizSeverity.SEVERE) recommendedPackageId = 'option-c';
+  let recommendedPackageId = 'starter'; // MILD
+  if (quizResult.severity === QuizSeverity.MODERATE) recommendedPackageId = 'most-valuable';
+  if (quizResult.severity === QuizSeverity.SEVERE) recommendedPackageId = 'loyalty';
 
   const recommendedPackage = PACKAGES.find(p => p.id === recommendedPackageId)!;
 

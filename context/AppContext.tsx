@@ -17,9 +17,9 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: ReactNode; initialQuizResult?: QuizResult | null }> = ({ children, initialQuizResult = null }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(initialQuizResult);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online' | null>(null);
   const [gatewayChoice, setGatewayChoice] = useState<'korapay' | 'payaza' | null>(null);
 

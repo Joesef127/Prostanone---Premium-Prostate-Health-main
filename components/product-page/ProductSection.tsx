@@ -29,7 +29,7 @@ const ProductSection: React.FC = () => (
           <p className="text-text-muted text-base sm:text-lg leading-relaxed mb-6">
             A scientifically formulated herbal supplement combining four powerful plant extracts to support
             prostate health, reduce inflammation, and restore healthy urinary function, without synthetic
-            chemicals or sexual side effects.
+            chemicals.
           </p>
           <ul className="space-y-2.5 mb-8">
             {[

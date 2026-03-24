@@ -50,7 +50,7 @@ const HeroSection: React.FC = () => (
           transition={{ duration: 0.7, delay: 0.35 }}
           className="text-sm sm:text-base md:text-lg text-white/75 leading-relaxed mb-8 max-w-xl text-start sm:text-center lg:text-start"
         >
-          Struggling with weak flow or incomplete emptying? <br/>
+          {/* Struggling with weak flow or incomplete emptying? <br/> */}
           Prostanone's NAFDAC-certified herbal formula targets the root cause, not just the symptoms.
           Supporting vitality and confidence for Nigerian men naturally.
         </motion.p>
