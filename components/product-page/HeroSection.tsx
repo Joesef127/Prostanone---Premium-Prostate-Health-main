@@ -20,7 +20,7 @@ const HeroSection: React.FC = () => (
     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
 
       {/* ── Left: copy ── */}
-      <div className="text-white">
+      <div className="text-white flex flex-col items-center lg:items-start max-w-[460px] mx-auto">
         {/* NAFDAC pill */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -29,7 +29,7 @@ const HeroSection: React.FC = () => (
           className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6"
         >
           <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover" />
-          <span className="text-xs font-bold tracking-wider uppercase text-accent">
+          <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-accent">
             NAFDAC Approved — Reg. No. A7-4976L
           </span>
         </motion.div>
@@ -38,7 +38,7 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6"
+          className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] mb-6 text-start sm:text-center lg:text-start"
         >
           Reclaim Control of Your{' '}
           <span className="text-accent">Prostate Health</span>
@@ -48,7 +48,7 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="text-base md:text-lg text-white/75 leading-relaxed mb-8 max-w-xl"
+          className="text-sm sm:text-base md:text-lg text-white/75 leading-relaxed mb-8 max-w-xl text-start sm:text-center lg:text-start"
         >
           Struggling with weak flow or incomplete emptying? <br/>
           Prostanone's NAFDAC-certified herbal formula targets the root cause, not just the symptoms.
@@ -59,10 +59,10 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4 mb-12"
+          className="flex flex-col sm:flex-row gap-4 mb-12 w-full"
         >
           <a href="#pricing">
-            <Button size="md" variant="secondary" className="gap-2 font-bold">
+            <Button size="md" variant="secondary" className="gap-2 font-bold w-full sm:w-fit">
               Order Now <ArrowRight size={18} />
             </Button>
           </a>
@@ -70,7 +70,7 @@ const HeroSection: React.FC = () => (
             <Button
               size="md"
               variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 focus:ring-white/20"
+              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 focus:ring-white/20 w-full sm:w-fit"
             >
               Take Free Prostate Check
             </Button>
@@ -82,11 +82,11 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.65 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-2"
+          className="flex flex-wrap sm:grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-2"
         >
           {STATS.map(({ value, label }) => (
             <div key={label}>
-              <div className="text-xl font-bold text-accent">{value}</div>
+              <div className="text-lg sm:text-xl font-bold text-accent">{value}</div>
               <div className="text-xs text-white/55 uppercase tracking-wide mt-0.5">{label}</div>
             </div>
           ))}
@@ -114,9 +114,9 @@ const HeroSection: React.FC = () => (
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            className="absolute -top-6 -right-4 z-20 p-2.5 rounded-full bg-white"
+            className="absolute -top-6 right-1 sm:-right-4 z-20 p-2.5 rounded-full bg-white"
           >
-            <img src={images.nafdac_approved_badge} alt="NAFDAC Approved" className="w-20 h-20 drop-shadow-xl" />
+            <img src={images.nafdac_approved_badge} alt="NAFDAC Approved" className="w-16 sm:w-20 h-16 sm:h-20 drop-shadow-xl" />
           </motion.div>
         </div>
       </motion.div>

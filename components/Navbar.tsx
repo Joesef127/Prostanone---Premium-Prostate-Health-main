@@ -46,12 +46,12 @@ const Navbar: React.FC = () => {
             <img
               src={images.logo}
               alt="Prostanone Logo"
-              className={`h-10 w-auto ${isProductPage ? "brightness-0 invert" : ""}`}
+              className={`h-10 w-auto ${isProductPage ? `${isOpen ? "inverted-colors:text-primary" : "brightness-0 invert"}` : ""}`}
             />
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-0 lg:space-x-8">
+          <div className="hidden md:flex items-center space-x-2 lg:space-x-8">
             {/* {isProductPage ? (
                 <Link
                     to={"#"}
@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
+                    className={`text-xs lg:text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
                       location.pathname === link.path
                         ? `${isProductPage ? "bg-white text-primary!" : "text-primary font-bold"}`
                         : "text-gray-600"
@@ -99,17 +99,22 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4 z-50">
-            <Link to="/checkout" className="relative text-gray-800">
-              <ShoppingCart className="w-6 h-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-accent text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                  {cartCount}
-                </span>
-              )}
+            <Link to="/summary" className="relative text-gray-800">
+              <div
+                  className={`py-1.5 px-2 ${isProductPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`}`}
+              >
+                <ShoppingCart className="w-6 h-6" />
+                {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 bg-accent text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
             </Link>
+
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-800 focus:outline-none"
+              className={`py-1 px-1.5 ${isProductPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`} focus:outline-none`}
             >
               {isOpen ? (
                 <X className="w-8 h-8" />
@@ -123,18 +128,22 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-white z-40 pt-24 px-6 md:hidden flex flex-col items-center space-y-8 h-screen">
+        <div className="fixed inset-0 bg-white z-40 pt-20 pb-8 px-6 md:hidden flex flex-col items-center space-y-6 h-fit">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className="text-2xl font-medium text-gray-800"
+              className={`text-xl font-medium text-gray-800 hover:text-white p-2 hover:bg-primary w-full rounded-lg text-center ${
+                  location.pathname === link.path
+                      ? "bg-primary text-white!"
+                      : "text-gray-600"
+              }`}
             >
               {link.label}
             </Link>
           ))}
           <Link to="/quiz" className="w-full">
-            <Button fullWidth size="lg">
+            <Button fullWidth size="md">
               Check Prostate Health
             </Button>
           </Link>
