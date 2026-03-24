@@ -9,6 +9,10 @@ interface AppContextType {
   clearCart: () => void;
   quizResult: QuizResult | null;
   setQuizResult: (result: QuizResult) => void;
+  paymentMethod: 'cod' | 'online' | null;
+  setPaymentMethod: (method: 'cod' | 'online' | null) => void;
+  gatewayChoice: 'korapay' | 'payaza' | null;
+  setGatewayChoice: (choice: 'korapay' | 'payaza' | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -16,6 +20,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online' | null>(null);
+  const [gatewayChoice, setGatewayChoice] = useState<'korapay' | 'payaza' | null>(null);
 
   const addToCart = useCallback((packageId: string, quantity = 1) => {
     setCart(prev => {
@@ -42,10 +48,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     ));
   }, []);
 
-  const clearCart = useCallback(() => setCart([]), []);
+  const clearCart = useCallback(() => {
+    setCart([]);
+    setPaymentMethod(null);
+    setGatewayChoice(null);
+  }, []);
 
   return (
-    <AppContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, quizResult, setQuizResult }}>
+    <AppContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, quizResult, setQuizResult, paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice }}>
       {children}
     </AppContext.Provider>
   );

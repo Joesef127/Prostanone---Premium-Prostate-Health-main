@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { PACKAGES } from '../constants';
+import { PACKAGES } from '../lib/constants.ts';
 import Button from '../components/Button';
 import { CheckCircle, AlertTriangle, Shield, Clock, ArrowRight, Activity } from 'lucide-react';
 import { QuizSeverity } from '../types';

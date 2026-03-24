@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NAV_LINKS } from '../constants';
-import { Twitter, Facebook, Instagram, Phone, Mail } from 'lucide-react';
+import { NAV_LINKS } from '../lib/constants.ts';
+import { Twitter, Facebook, Instagram, Phone, Mail, Youtube } from 'lucide-react';
+import { images } from '@/lib';
 
 const Footer: React.FC = () => {
   return (
@@ -11,15 +12,15 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center mb-6">
-              <img src="/logo.png" alt="Prostanone Logo" className="h-10 w-auto brightness-0 invert" />
+              <img src={images.logo} alt="Prostanone Logo" className="h-10 w-auto brightness-0 invert" />
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
               NAFDAC-certified herbal prostate health supplement. Restoring vitality and confidence for Nigerian men naturally.
             </p>
             <div className="flex space-x-4">
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Twitter size={20} /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Facebook size={20} /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Instagram size={20} /></a>
+              {/* <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Twitter size={20} /></a> */}
+              <a href="https://youtube.com/@prostanone?si=g5r9czALpAdS3WIJ" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Youtube size={24} /></a>
+              <a href="https://instagram.com/prostanone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Instagram size={20} /></a>
             </div>
           </div>
 
@@ -55,8 +56,8 @@ const Footer: React.FC = () => {
               </li>
               <li className="text-gray-300 text-sm pt-4 border-t border-white/10 mt-2">
                 <strong>Holis Botanical Gardens</strong><br />
-                Km 35 Ikorodu-Itoikin Ijebu-Ode Road,<br />
-                Ikosi, Ejirin LCDA, Epe Local Government,<br />
+                {/* Km 35 Ikorodu-Itoikin Ijebu-Ode Road,<br />
+                Ikosi, Ejirin LCDA, Epe Local Government,<br /> */}
                 Lagos State, Nigeria
               </li>
             </ul>
