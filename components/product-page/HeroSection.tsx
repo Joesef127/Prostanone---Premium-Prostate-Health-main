@@ -28,7 +28,7 @@ const HeroSection: React.FC = () => (
           transition={{ duration: 0.7, delay: 0.1 }}
           className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6"
         >
-          <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover" />
+          <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover p-1 bg-white rounded-full" />
           <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-accent">
             NAFDAC Approved — Reg. No. A7-4976L
           </span>
