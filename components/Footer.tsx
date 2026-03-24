@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NAV_LINKS } from '../constants';
+import { NAV_LINKS } from '../lib/constants.ts';
 import { Twitter, Facebook, Instagram, Phone, Mail, Youtube } from 'lucide-react';
 import { images } from '@/lib';
 

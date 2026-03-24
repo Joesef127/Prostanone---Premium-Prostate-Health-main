@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { QUIZ_QUESTIONS } from '../constants';
+import { QUIZ_QUESTIONS } from '../lib/constants.ts';
 import { useApp } from '../context/AppContext';
 import { QuizSeverity } from '../types';
 import Button from '../components/Button';

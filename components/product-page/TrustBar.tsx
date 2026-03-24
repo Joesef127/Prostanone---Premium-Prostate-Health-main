@@ -1,5 +1,5 @@
 import React from 'react';
-import { TRUST_BADGES } from './data';
+import { TRUST_BADGES } from '../../lib/data.ts';
 
 const TrustBar: React.FC = () => (
   <section className="bg-white border-y border-gray-100">

@@ -1,4 +1,4 @@
-import { ProductPackage, QuizQuestion, Testimonial } from './types';
+import { ProductPackage, QuizQuestion, Testimonial } from '../types.ts';
 
 // Pricing
 export const PACKAGES: ProductPackage[] = [

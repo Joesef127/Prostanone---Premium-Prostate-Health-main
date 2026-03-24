@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
-import { NAV_LINKS } from "../constants";
+import { NAV_LINKS } from "../lib/constants.ts";
 import Button from "./Button";
 import { useApp } from "../context/AppContext";
 import { images } from "@/lib";
@@ -52,37 +52,37 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-0 lg:space-x-8">
-            {isProductPage ? (
+            {/* {isProductPage ? (
                 <Link
                     to={"#"}
                     className={`text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
                         location.pathname !== "/product"
                             ? "text-primary font-bold"
                             : "text-gray-600"
-                    } ${isProductPage && "text-white hover:bg-white hover:text-primary transition rounded-lg"}`}
+                    } ${isProductPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
                 >
                     Product
                 </Link>
             ) : (
-              <>
+              <> */}
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.path}
                     to={link.path}
                     className={`text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
                       location.pathname === link.path
-                        ? "text-primary font-bold"
+                        ? `${isProductPage ? "bg-white text-primary!" : "text-primary font-bold"}`
                         : "text-gray-600"
-                    } ${isProductPage && "text-white hover:bg-white hover:text-primary transition rounded-lg"}`}
+                    } ${isProductPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
                   >
                     {link.label}
                   </Link>
                 ))}
-              </>
-            )}
-            <Link to="/checkout">
+              {/* </>
+            )} */}
+            <Link to="/summary">
               <div
-                className={`relative py-1.5 px-2 ${isProductPage && "text-white hover:bg-white hover:text-primary transition rounded-lg"}`}
+                className={`relative py-1.5 px-2 ${isProductPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
               >
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -93,7 +93,7 @@ const Navbar: React.FC = () => {
               </div>
             </Link>
             <Link to="/quiz">
-              <Button size="sm">Check Prostate Health</Button>
+              <Button size="sm" className={`${isProductPage && "text-primary! bg-white border border-transparent hover:text-white! hover:bg-transparent hover:border-white rounded-lg"}`}>Check Prostate Health</Button>
             </Link>
           </div>
 

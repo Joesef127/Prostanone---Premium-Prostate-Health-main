@@ -12,7 +12,7 @@ import Summary from './pages/Summary';
 import Contact from './pages/Contact';
 import Checkout from './pages/Checkout';
 import ThankYou from './pages/ThankYou';
-import LandingPage from './pages/LandingPage';
+import Product from './pages/Product.tsx';
 import { AppProvider } from './context/AppContext';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
@@ -46,7 +46,7 @@ const App: React.FC = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/thank-you" element={<ThankYou />} />
-              <Route path="/product" element={<LandingPage />} />
+              <Route path="/product" element={<Product />} />
             </Routes>
           </main>
           <Footer />

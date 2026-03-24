@@ -1,5 +1,5 @@
 import React from 'react';
-import { TESTIMONIALS } from '../constants';
+import { TESTIMONIALS } from '../lib/constants.ts';
 import { ShieldCheck, Star } from 'lucide-react';
 
 const Reviews: React.FC = () => {

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { images } from '@/lib';
 import Button from '../Button';
-import { STATS } from './data';
+import { STATS } from '../../lib/data.ts';
 
 const HeroSection: React.FC = () => (
   <section className="relative min-h-screen bg-linear-to-br from-secondary via-primary to-[#3d0f2b] flex items-center overflow-hidden">
@@ -48,10 +48,11 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="text-lg md:text-xl text-white/75 leading-relaxed mb-8 max-w-lg"
+          className="text-base md:text-lg text-white/75 leading-relaxed mb-8 max-w-xl"
         >
-          Tired of waking up 4 times a night? Struggling with weak flow or incomplete emptying?
-          Prostanone's NAFDAC-certified herbal formula targets the root cause — not just the symptoms.
+          Struggling with weak flow or incomplete emptying? <br/>
+          Prostanone's NAFDAC-certified herbal formula targets the root cause, not just the symptoms.
+          Supporting vitality and confidence for Nigerian men naturally.
         </motion.p>
 
         <motion.div
@@ -61,17 +62,17 @@ const HeroSection: React.FC = () => (
           className="flex flex-col sm:flex-row gap-4 mb-12"
         >
           <a href="#pricing">
-            <Button size="lg" variant="secondary" className="gap-2 font-bold">
+            <Button size="md" variant="secondary" className="gap-2 font-bold">
               Order Now <ArrowRight size={18} />
             </Button>
           </a>
-          <a href="#product">
+          <a href="/quiz">
             <Button
-              size="lg"
+              size="md"
               variant="outline"
               className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 focus:ring-white/20"
             >
-              Learn More <ChevronDown size={18} />
+              Take Free Prostate Check
             </Button>
           </a>
         </motion.div>
@@ -81,11 +82,11 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.65 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-6"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-2"
         >
           {STATS.map(({ value, label }) => (
             <div key={label}>
-              <div className="text-2xl font-bold text-accent">{value}</div>
+              <div className="text-xl font-bold text-accent">{value}</div>
               <div className="text-xs text-white/55 uppercase tracking-wide mt-0.5">{label}</div>
             </div>
           ))}
@@ -106,7 +107,7 @@ const HeroSection: React.FC = () => (
           <img
             src={images.prostanone}
             alt="Prostanone — Premium Prostate Health"
-            className="relative z-10 w-full max-w-sm mx-auto drop-shadow-2xl"
+            className="relative z-10 w-full max-w-sm lg:max-w-md xl:max-w-lg mx-auto drop-shadow-2xl"
             loading="eager"
           />
           {/* floating NAFDAC badge */}

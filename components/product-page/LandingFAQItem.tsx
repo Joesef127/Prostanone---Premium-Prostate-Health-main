@@ -10,7 +10,7 @@ const LandingFAQItem: React.FC<{ question: string; answer: string }> = ({ questi
         onClick={() => setOpen(o => !o)}
         className="flex justify-between items-center w-full py-5 text-left gap-4 group"
       >
-        <span className="text-base font-semibold text-secondary group-hover:text-primary transition-colors">
+        <span className="text-base xl:text-lg font-semibold text-secondary group-hover:text-primary transition-colors">
           {question}
         </span>
         <ChevronDown
@@ -27,7 +27,7 @@ const LandingFAQItem: React.FC<{ question: string; answer: string }> = ({ questi
             transition={{ duration: 0.35, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            <p className="text-sm text-text-muted leading-relaxed pb-5">{answer}</p>
+            <p className="text-sm xl:text-base text-text-muted leading-relaxed pb-5">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>

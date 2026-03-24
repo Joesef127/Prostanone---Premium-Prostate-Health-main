@@ -1,11 +1,11 @@
 import React from 'react';
 import { FadeIn, SectionHeader } from './shared';
 import LandingFAQItem from './LandingFAQItem';
-import { FAQS } from '../../constants';
+import { FAQS } from '../../lib/constants.ts';
 
 const FAQSection: React.FC = () => (
   <section className="py-24 bg-white">
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <FadeIn>
         <SectionHeader
           eyebrow="Got Questions?"

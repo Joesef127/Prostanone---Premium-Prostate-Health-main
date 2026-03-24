@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Moon, Clock, AlertCircle, Droplets, ArrowRight, CheckCircle } from 'lucide-react';
 import Button from '../components/Button';
-import { PACKAGES, TESTIMONIALS, SMALL_PRINT } from '../constants';
+import { PACKAGES, TESTIMONIALS, SMALL_PRINT } from '../lib/constants.ts';
 import { ProstateDiagram } from '../components/ProstateDiagram';
 import { useApp } from '../context/AppContext';
 import FAQ from '../components/FAQ';

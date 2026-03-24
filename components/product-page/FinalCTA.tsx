@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Loader2, ShieldCheck, Truck } from 'lucide-react';
+import { Loader2, ShieldCheck, Truck, CreditCard, Lock, CheckCircle } from 'lucide-react';
 import { images } from '@/lib';
 import Button from '../Button';
 import { FadeIn } from './shared';
-import { PACKAGES } from '../../constants';
+import { PACKAGES } from '../../lib/constants.ts';
 import { NIGERIAN_STATES, calcDeliveryFee } from '../../utils/delivery';
+import { useApp } from '../../context/AppContext';
 
 interface FormState {
   firstName: string;
@@ -34,7 +35,9 @@ const INITIAL: FormState = {
 
 const FinalCTA: React.FC = () => {
   const navigate = useNavigate();
+  const { addToCart, clearCart } = useApp();
   const [form, setForm] = useState<FormState>(INITIAL);
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online' | null>(null);
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
@@ -64,6 +67,10 @@ const FinalCTA: React.FC = () => {
     if (!validatePhone(form.phone)) errs.phone = 'Enter a valid Nigerian number (e.g. 08012345678)';
     if (form.address.trim().length < 10) errs.address = 'Enter a more detailed delivery address';
     setFieldErrors(errs);
+    if (!paymentMethod) {
+      alert('Please select a payment method before placing your order.');
+      return false;
+    }
     return Object.keys(errs).length === 0;
   };
 
@@ -76,9 +83,12 @@ const FinalCTA: React.FC = () => {
       import.meta.env.VITE_ORDERS_WEBHOOK_URL ||
       'https://n8n.metrohyp.com/webhook/prostanone-orders';
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
+    const paymentLabel = paymentMethod === 'online' ? 'Online Payment' : 'Cash on Delivery (COD)';
+    const checkoutStep = paymentMethod === 'online' ? 'redirected_to_checkout' : 'cod_order_placed';
 
     try {
-      await fetch(WEBHOOK_URL, {
+      // Fire-and-forget for "Pay Online" — don't block navigation waiting on webhook
+      const webhookPromise = fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,16 +97,28 @@ const FinalCTA: React.FC = () => {
           phone: form.phone.trim(),
           alt_phone: form.altPhone.trim(),
           shipping_address: `${form.address.trim()}, ${form.state}`,
-          items_ordered: `1x ${selectedPkg.name} (${selectedPkg.price.toLocaleString()})`,
+          items_ordered: `1x ${selectedPkg.name} (₦${selectedPkg.price.toLocaleString()})`,
           delivery_fee: deliveryFee,
           total_amount: total,
-          payment_method: 'Cash on Delivery (COD)',
-          checkout_step: 'cod_order_placed',
+          payment_method: paymentLabel,
+          checkout_step: checkoutStep,
           date: new Date(new Date().getTime() + 60 * 60 * 1000)
             .toISOString()
             .replace('Z', '+01:00'),
         }),
       });
+
+      if (paymentMethod === 'online') {
+        // Track async, then hand off to checkout
+        webhookPromise.catch(() => {});
+        clearCart();
+        addToCart(selectedPkg.id, 1);
+        navigate('/checkout');
+        return;
+      }
+
+      // COD path — await webhook before redirect
+      await webhookPromise;
 
       if (form.email.trim()) {
         fetch('https://formsubmit.co/ajax/sales@holisbotanicals.com', {
@@ -110,8 +132,8 @@ const FinalCTA: React.FC = () => {
             alt_phone: form.altPhone.trim(),
             shipping_address: `${form.address.trim()}, ${form.state}`,
             order_summary: `1x ${selectedPkg.name}`,
-            delivery_fee: `${deliveryFee.toLocaleString()}`,
-            total_amount: `${total.toLocaleString()}`,
+            delivery_fee: `₦${deliveryFee.toLocaleString()}`,
+            total_amount: `₦${total.toLocaleString()}`,
             payment_method: 'Cash on Delivery',
             _cc: form.email.trim().toLowerCase(),
             _template: 'table',
@@ -153,7 +175,7 @@ const FinalCTA: React.FC = () => {
         }}
       />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
         <FadeIn className="text-center mb-12">
           <motion.div
             animate={{ y: [0, -6, 0] }}
@@ -206,7 +228,6 @@ const FinalCTA: React.FC = () => {
         </FadeIn>
 
         <div id="order-form" className="bg-white rounded-3xl overflow-hidden">
-
           <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -352,37 +373,84 @@ const FinalCTA: React.FC = () => {
             <div className="bg-gray-50 rounded-xl p-4 text-sm border border-gray-100">
               <div className="flex justify-between text-gray-600 mb-1">
                 <span>{selectedPkg.name}</span>
-                <span>{selectedPkg.price.toLocaleString()}</span>
+                <span>₦{selectedPkg.price.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-gray-600 mb-2 border-b border-gray-200 pb-2">
                 <span>Delivery</span>
                 <span className={deliveryFee === 0 ? 'text-green-600 font-bold' : ''}>
-                  {deliveryFee === 0 ? 'FREE' : deliveryFee.toLocaleString()}
+                  {deliveryFee === 0 ? 'FREE' : `₦${deliveryFee.toLocaleString()}`}
                 </span>
               </div>
               <div className="flex justify-between font-extrabold text-secondary pt-1">
                 <span>Total</span>
-                <span>{total.toLocaleString()}</span>
+                <span>₦{total.toLocaleString()}</span>
               </div>
             </div>
 
-            <p className="text-[11px] text-red-600 leading-relaxed">
-              <strong>PLEASE</strong> only proceed if you are READY and have the money to PAY ON
-              DELIVERY. Each order submitted incurs a logistics fee. By submitting this form, you
-              agree to receive a call from our team to confirm your order.
-            </p>
+            {/* Payment method selector */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-2">
+                Payment Method <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('cod')}
+                  className={`p-3.5 rounded-xl border-2 flex flex-col items-center gap-1.5 transition-all text-center ${
+                    paymentMethod === 'cod'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <Truck size={20} className={paymentMethod === 'cod' ? 'text-primary' : 'text-gray-400'} />
+                  <span className="text-xs font-bold text-gray-700">Pay on Delivery</span>
+                  <span className="text-[10px] text-gray-400">Pay cash at your door</span>
+                  {paymentMethod === 'cod' && <CheckCircle size={14} className="text-primary" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('online')}
+                  className={`p-3.5 rounded-xl border-2 flex flex-col items-center gap-1.5 transition-all text-center ${
+                    paymentMethod === 'online'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <CreditCard size={20} className={paymentMethod === 'online' ? 'text-primary' : 'text-gray-400'} />
+                  <span className="text-xs font-bold text-gray-700">Pay Online</span>
+                  <span className="text-[10px] text-gray-400">Card, Transfer, USSD</span>
+                  {paymentMethod === 'online' && <CheckCircle size={14} className="text-primary" />}
+                </button>
+              </div>
+            </div>
+
+            {paymentMethod === 'cod' && (
+              <p className="text-[11px] text-red-600 leading-relaxed">
+                <strong>PLEASE</strong> only proceed if you are READY and have the money to PAY ON
+                DELIVERY. Each order submitted incurs a logistics fee. By submitting this form, you
+                agree to receive a call from our team to confirm your order.
+              </p>
+            )}
+
+            {paymentMethod === 'online' && (
+              <p className="text-[11px] text-gray-500 leading-relaxed flex items-center gap-1.5">
+                <Lock size={11} className="shrink-0" />
+                You'll be taken to our secure checkout to complete payment via card, bank transfer,
+                or USSD.
+              </p>
+            )}
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 text-white font-extrabold text-lg py-4 rounded-2xl transition-colors shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
+              disabled={loading || !paymentMethod}
+              className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-extrabold text-lg py-4 rounded-2xl transition-colors shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <>
-                  <Loader2 size={20} className="animate-spin" /> Submitting...
-                </>
+                <><Loader2 size={20} className="animate-spin" /> {paymentMethod === 'online' ? 'Redirecting...' : 'Submitting...'}</>
+              ) : paymentMethod === 'online' ? (
+                <><CreditCard size={18} /> Continue to Secure Checkout</>
               ) : (
-                'Place Order Now!'
+                'Place Order, Pay on Delivery'
               )}
             </button>
 

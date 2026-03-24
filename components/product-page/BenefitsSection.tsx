@@ -1,6 +1,6 @@
 import React from 'react';
 import { FadeIn, SectionHeader } from './shared';
-import { BENEFITS } from './data';
+import { BENEFITS } from '../../lib/data.ts';
 
 const BenefitsSection: React.FC = () => (
   <section className="py-24 bg-linear-to-br from-secondary via-primary to-[#3d0f2b]">

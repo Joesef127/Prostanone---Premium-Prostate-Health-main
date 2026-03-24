@@ -1,6 +1,6 @@
 import React from 'react';
 import { FadeIn, SectionHeader, StarRating } from './shared';
-import { TESTIMONIALS } from '../../constants';
+import { TESTIMONIALS } from '../../lib/constants.ts';
 
 const TestimonialsSection: React.FC = () => (
   <section className="py-24 bg-white">

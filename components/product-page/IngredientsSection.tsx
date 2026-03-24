@@ -1,7 +1,7 @@
 import React from 'react';
 import { images } from '@/lib';
 import { FadeIn } from './shared';
-import { INGREDIENTS } from './data';
+import { INGREDIENTS } from '../../lib/data.ts';
 
 const IngredientsSection: React.FC = () => (
   <section className="py-24 bg-background">

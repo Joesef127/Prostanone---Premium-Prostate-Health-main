@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { IMAGES } from '../constants';
+import { IMAGES } from '../lib/constants.ts';
 import { CheckCircle } from 'lucide-react';
 import { images } from '@/lib';
 

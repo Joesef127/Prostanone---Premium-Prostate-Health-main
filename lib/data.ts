@@ -1,21 +1,21 @@
-import { ShieldCheck, Leaf, Award, Truck, CheckCircle2, Zap, FlaskConical, Users, Clock } from 'lucide-react';
+import { ShieldCheck, Leaf, Award, Truck, CheckCircle2, Zap, FlaskConical, Users, Clock, Moon, Droplets, Hourglass, AlertCircle, Flame, Frown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { images } from '@/lib';
+import { images } from '@/lib/index.ts';
 
-export const SYMPTOMS = [
-  { icon: '🌙', text: 'Waking up 3–5 times per night to urinate' },
-  { icon: '💧', text: 'Weak, slow or dribbling urine stream' },
-  { icon: '⏳', text: 'Feeling bladder never fully empties' },
-  { icon: '🚨', text: 'Sudden, uncontrollable urge to go' },
-  { icon: '🔥', text: 'Burning or pain when urinating' },
-  { icon: '😔', text: 'Embarrassment at work, travel, or social events' },
+export const SYMPTOMS: Array<{ icon: LucideIcon; text: string }> = [
+  { icon: Moon,         text: 'Waking up 3–5 times per night to urinate' },
+  { icon: Droplets,     text: 'Weak, slow or dribbling urine stream' },
+  { icon: Hourglass,    text: 'Feeling bladder never fully empties' },
+  { icon: AlertCircle,  text: 'Sudden, uncontrollable urge to go' },
+  { icon: Flame,        text: 'Burning or pain when urinating' },
+  { icon: Frown,        text: 'Embarrassment at work, travel, or social events' },
 ];
 
 export const BENEFITS: Array<{ icon: LucideIcon; title: string; desc: string }> = [
   {
     icon: Zap,
     title: 'Shrinks Enlarged Prostate',
-    desc: 'Targeted herbal compounds reduce prostate volume and relieve pressure on the bladder — addressing the root cause.',
+    desc: 'Targeted herbal compounds reduce prostate volume and relieve pressure on the bladder, addressing the root cause.',
   },
   {
     icon: Leaf,
@@ -25,7 +25,7 @@ export const BENEFITS: Array<{ icon: LucideIcon; title: string; desc: string }> 
   {
     icon: FlaskConical,
     title: 'Clinically Formulated',
-    desc: 'Developed in collaboration with Alpha Organics, Great Britain — produced in GMP-certified facilities.',
+    desc: 'Developed in collaboration with Alpha Organics, Great Britain, produced in GMP-certified facilities.',
   },
   {
     icon: Award,
@@ -35,7 +35,7 @@ export const BENEFITS: Array<{ icon: LucideIcon; title: string; desc: string }> 
   {
     icon: Users,
     title: 'Thousands of Men Helped',
-    desc: 'From Lagos to Kano — Nigerian men are reclaiming their nights and their confidence with Prostanone.',
+    desc: 'From Lagos to Kano, Nigerian men are reclaiming their nights and their confidence with Prostanone.',
   },
   {
     icon: Clock,
@@ -48,7 +48,7 @@ export const INGREDIENTS = [
   {
     name: 'Saw Palmetto',
     dose: '300mg',
-    desc: 'The gold standard of prostate support — blocks DHT conversion to reduce enlargement and improve urine flow.',
+    desc: 'The gold standard of prostate support, blocks DHT conversion to reduce enlargement and improve urine flow.',
   },
   {
     name: 'Chimaphila Umbellata',
@@ -58,7 +58,7 @@ export const INGREDIENTS = [
   {
     name: 'Pareira Brava',
     dose: '25mg',
-    desc: 'Soothes the urinary tract and eases difficult, straining urination — especially at night.',
+    desc: 'Soothes the urinary tract and eases difficult, straining urination, especially at night.',
   },
   {
     name: 'Hydrangea Arborescens',
@@ -68,9 +68,9 @@ export const INGREDIENTS = [
 ];
 
 export const STATS = [
-  { value: '5,000+', label: 'Men Helped' },
-  { value: '4–6 wks', label: 'To First Results' },
-  { value: '96%', label: 'Satisfaction Rate' },
+  { value: '1,000+', label: 'Men Helped' },
+  // { value: '4–6 wks', label: 'To First Results' },
+  // { value: '96%', label: 'Satisfaction Rate' },
   { value: 'NAFDAC', label: 'Reg. A7-4976L' },
 ];
 

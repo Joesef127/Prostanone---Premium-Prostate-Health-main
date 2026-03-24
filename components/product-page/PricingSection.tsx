@@ -2,11 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { images } from '@/lib';
-import { PACKAGES } from '../../constants';
+import { PACKAGES } from '../../lib/constants.ts';
 import { useApp } from '../../context/AppContext';
 import Button from '../Button';
 import { FadeIn, SectionHeader, CheckItem } from './shared';
-import { PACKAGE_IMAGES } from './data';
+import { PACKAGE_IMAGES } from '../../lib/data.ts';
 
 const PricingSection: React.FC = () => {
   const { addToCart } = useApp();
@@ -14,7 +14,7 @@ const PricingSection: React.FC = () => {
 
   const handleOrder = (packageId: string) => {
     addToCart(packageId, 1);
-    navigate('/checkout');
+    navigate('/summary');
   };
 
   return (
@@ -46,16 +46,6 @@ const PricingSection: React.FC = () => {
                   )}
 
                   <div className="flex flex-col grow bg-white p-7">
-                    {/* Product image */}
-                    <div className="flex justify-center mb-6">
-                      <img
-                        src={pkgImg}
-                        alt={pkg.name}
-                        className="h-36 object-contain drop-shadow-md"
-                        loading="lazy"
-                      />
-                    </div>
-
                     <h3 className="text-xl font-bold text-secondary mb-1">{pkg.name}</h3>
                     <p className="text-text-muted text-sm mb-4">{pkg.description}</p>
 

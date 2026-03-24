@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { PACKAGES } from '../constants';
+import { PACKAGES } from '../lib/constants.ts';
 import Button from '../components/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, ArrowRight, Truck, Minus, Plus, Clock } from 'lucide-react';
