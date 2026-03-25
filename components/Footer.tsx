@@ -67,10 +67,10 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-accent">Legal</h3>
             <ul className="space-y-3">
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Privacy Policy</Link></li>
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Terms of Service</Link></li>
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Refund Policy</Link></li>
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Shipping Policy</Link></li>
+              <li><Link to="/terms#4-privacy-policy" className="text-gray-300 hover:text-white text-sm transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms#1-legal-terms-of-use" className="text-gray-300 hover:text-white text-sm transition-colors">Terms of Service</Link></li>
+              <li><Link to="/terms#3-refund-return-policy" className="text-gray-300 hover:text-white text-sm transition-colors">Refund Policy</Link></li>
+              <li><Link to="/terms#2-shipping-policy" className="text-gray-300 hover:text-white text-sm transition-colors">Shipping Policy</Link></li>
             </ul>
           </div>
         </div>

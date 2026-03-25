@@ -13,15 +13,16 @@ import Contact from './pages/Contact';
 import Checkout from './pages/Checkout';
 import ThankYou from './pages/ThankYou';
 import Product from './pages/Product.tsx';
+import TermsAndConditions from './pages/TermsAndConditions';
 import { AppProvider } from './context/AppContext';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
   return null;
 };
 
@@ -47,6 +48,7 @@ const App: React.FC = () => {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/thank-you" element={<ThankYou />} />
               <Route path="/product" element={<Product />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
             </Routes>
           </main>
           <Footer />
