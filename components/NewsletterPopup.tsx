@@ -56,26 +56,21 @@ const NewsletterPopup: React.FC = () => {
         setStatus('loading');
 
         try {
-            const WEBHOOK_URL = import.meta.env.VITE_NEWSLETTER_WEBHOOK_URL || 'https://n8n.metrohyp.com/webhook/prostanone-newsletter';
+            const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
 
-            // Sending a flat object with explicit keys for n8n/Google Sheets
-            const response = await fetch(WEBHOOK_URL, {
+            await fetch(SHEETS_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     name: name.trim(),
                     email: email.trim().toLowerCase(),
                     source: 'Newsletter Popup',
-                    date: new Date(new Date().getTime() + (1 * 60 * 60 * 1000)).toISOString().replace('Z', '+01:00')
+                    message: '',
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error(`Webhook returned ${response.status}`);
-            }
-
+            // no-cors returns an opaque response — treat resolved fetch as success
             setStatus('success');
             setTimeout(handleClose, 3000);
         } catch (error) {
