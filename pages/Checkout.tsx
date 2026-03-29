@@ -72,16 +72,18 @@ const Checkout: React.FC = () => {
   const [reference] = useState(`PR-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
 
   const sendCheckoutProgress = (checkoutStep: number, status: string, paymentData?: any) => {
-    const ORDERS_WEBHOOK_URL = import.meta.env.VITE_ORDERS_WEBHOOK_URL || 'https://n8n.metrohyp.com/webhook/prostanone-orders';
+    const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
     const orderSummary = cart.map(item => {
       const pkg = PACKAGES.find(p => p.id === item.packageId);
       return `${item.quantity}x ${pkg?.name} (₦${pkg?.price.toLocaleString()})`;
     }).join(', ');
 
-    fetch(ORDERS_WEBHOOK_URL, {
+    fetch(SHEETS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
+        source: 'order',
         name: formData.name.trim() || '',
         email: formData.email.trim().toLowerCase() || '',
         phone: formData.phone.trim() || '',
@@ -94,9 +96,8 @@ const Checkout: React.FC = () => {
         payment_status: checkoutStep === 4 ? (paymentData?.status || status) : '',
         total_amount: total,
         checkout_step: status,
-        date: new Date(new Date().getTime() + (1 * 60 * 60 * 1000)).toISOString().replace('Z', '+01:00')
       })
-    }).catch(err => console.error('Checkout progress webhook error:', err));
+    }).catch(err => console.error('Checkout progress error:', err));
   };
 
   const handleNext = (e: React.FormEvent) => {
@@ -225,39 +226,37 @@ const Checkout: React.FC = () => {
     window.Korapay.initialize(checkoutData);
   };
 
-  const handleCODSubmit = async (e: React.FormEvent) => {
+  const handleCODSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
-    const WEBHOOK_URL = import.meta.env.VITE_ORDERS_WEBHOOK_URL || 'https://n8n.metrohyp.com/webhook/prostanone-orders';
+    const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
     const orderSummary = cart.map(item => {
       const pkg = PACKAGES.find(p => p.id === item.packageId);
       return `${item.quantity}x ${pkg?.name} (₦${pkg?.price.toLocaleString()})`;
     }).join(', ');
-    try {
-      await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim(),
-          alt_phone: formData.altPhone.trim(),
-          shipping_address: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
-          items_ordered: orderSummary,
-          delivery_fee: finalDeliveryFee,
-          total_amount: total,
-          payment_method: 'Cash on Delivery (COD)',
-          checkout_step: 'cod_order_placed',
-          date: new Date(new Date().getTime() + 60 * 60 * 1000).toISOString().replace('Z', '+01:00'),
-        }),
-      });
-      navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
-    } catch {
-      alert('Order submission failed. Please try again or call us directly.');
-    } finally {
-      setLoading(false);
-    }
+
+    // Fire-and-forget — no-cors returns opaque response; navigate regardless
+    fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        source: 'order',
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        alt_phone: formData.altPhone.trim(),
+        shipping_address: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
+        items_ordered: orderSummary,
+        delivery_fee: finalDeliveryFee,
+        total_amount: total,
+        payment_method: 'Cash on Delivery (COD)',
+        checkout_step: 'cod_order_placed',
+      }),
+    }).catch(err => console.error('COD order error:', err));
+
+    navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
   };
 
   if (cart.length === 0) {
