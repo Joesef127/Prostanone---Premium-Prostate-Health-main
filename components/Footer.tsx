@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center text-gray-300 text-sm">
                 <Mail className="w-4 h-4 mr-3" />
-                <span>support@prostanone.ng</span>
+                <span>support@prostanone.com</span>
               </li>
               <li className="text-gray-300 text-sm ml-7">
                 Mon-Sat, 9AM-6PM WAT

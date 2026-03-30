@@ -1,5 +1,26 @@
-import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { CartItem, QuizResult, QuizSeverity } from '../types';
+
+const CART_STORAGE_KEY = 'prostanone_cart';
+const QUIZ_STORAGE_KEY = 'prostanone_quiz_result';
+
+function readLocalStorage<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+function readSessionStorage<T>(key: string): T | null {
+  try {
+    const raw = sessionStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : null;
+  } catch {
+    return null;
+  }
+}
 
 interface AppContextType {
   cart: CartItem[];
@@ -18,10 +39,26 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode; initialQuizResult?: QuizResult | null }> = ({ children, initialQuizResult = null }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(initialQuizResult);
+  const [cart, setCart] = useState<CartItem[]>(() => readLocalStorage<CartItem[]>(CART_STORAGE_KEY) ?? []);
+  const [quizResult, setQuizResultState] = useState<QuizResult | null>(
+    () => initialQuizResult ?? readSessionStorage<QuizResult>(QUIZ_STORAGE_KEY),
+  );
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online' | null>(null);
   const [gatewayChoice, setGatewayChoice] = useState<'korapay' | 'payaza' | null>(null);
+
+  // Sync cart → localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch { /* storage full or unavailable — fail silently */ }
+  }, [cart]);
+
+  const setQuizResult = useCallback((result: QuizResult) => {
+    try {
+      sessionStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(result));
+    } catch { /* fail silently */ }
+    setQuizResultState(result);
+  }, []);
 
   const addToCart = useCallback((packageId: string, quantity = 1) => {
     setCart(prev => {
@@ -52,6 +89,7 @@ export const AppProvider: React.FC<{ children: ReactNode; initialQuizResult?: Qu
     setCart([]);
     setPaymentMethod(null);
     setGatewayChoice(null);
+    try { localStorage.removeItem(CART_STORAGE_KEY); } catch { /* fail silently */ }
   }, []);
 
   return (
