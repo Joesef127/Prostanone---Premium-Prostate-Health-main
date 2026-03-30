@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { images } from '@/lib';
 import { FadeIn, CheckItem } from './shared';
 import { ProductCarousel } from '../ProductCarousel';
+import { NAFDAC_REG_NO } from '../../lib/constants';
 
 const CAROUSEL_IMAGES = [
   { src: images.single_box,      alt: 'Prostanone single box' },
@@ -38,7 +39,7 @@ const ProductSection: React.FC = () => (
               // 'No artificial colour, flavour, preservatives, starch, yeast, fat or wheat',
               'Manufactured by Bhargava in collaboration with Alpha Organics, Great Britain',
               'Distributed exclusively by Holis Botanical Gardens',
-              'NAFDAC Reg. No. A7-4976L',
+              `NAFDAC Reg. No. ${NAFDAC_REG_NO}`,
             ].map(item => (
               <CheckItem key={item} text={item} />
             ))}
@@ -49,7 +50,7 @@ const ProductSection: React.FC = () => (
             <div>
               <p className="font-bold text-secondary">NAFDAC Approved</p>
               <p className="text-sm text-text-muted">
-                Reg. No. A7-4976L, Certified safe for Nigerian consumers by the National Agency for
+                Reg. No. {NAFDAC_REG_NO}, Certified safe for Nigerian consumers by the National Agency for
                 Food and Drug Administration and Control.
               </p>
             </div>

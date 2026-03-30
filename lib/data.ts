@@ -1,6 +1,7 @@
 import { ShieldCheck, Leaf, Award, Truck, CheckCircle2, Zap, FlaskConical, Users, Clock, Moon, Droplets, Hourglass, AlertCircle, Flame, Frown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { images } from '@/lib/index.ts';
+import { NAFDAC_REG_NO } from './constants';
 
 export const SYMPTOMS: Array<{ icon: LucideIcon; text: string }> = [
   { icon: Moon,         text: 'Waking up 3–5 times per night to urinate' },
@@ -30,7 +31,7 @@ export const BENEFITS: Array<{ icon: LucideIcon; title: string; desc: string }> 
   {
     icon: Award,
     title: 'NAFDAC Certified',
-    desc: "Fully approved by Nigeria's National Agency for Food and Drug Administration. Reg. No. A7-4976L.",
+    desc: `Fully approved by Nigeria's National Agency for Food and Drug Administration. Reg. No. ${NAFDAC_REG_NO}.`,
   },
   {
     icon: Users,
@@ -69,7 +70,7 @@ export const INGREDIENTS = [
 
 export const STATS = [
   // { value: '96%', label: 'Satisfaction Rate' },
-  { value: 'NAFDAC', label: 'Reg. A7-4976L' },
+  { value: 'NAFDAC', label: `Reg. ${NAFDAC_REG_NO}` },
   { value: '4–6 wks', label: 'To First Results' },
   { value: '1,000+', label: 'Men Helped' },
 ];

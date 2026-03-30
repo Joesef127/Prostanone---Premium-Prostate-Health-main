@@ -1,5 +1,8 @@
 import { ProductPackage, QuizQuestion, Testimonial } from '../types';
 
+// NAFDAC Registration Number — update here to change across the entire site
+export const NAFDAC_REG_NO = 'A7-4976L';
+
 // Pricing
 export const PACKAGES: ProductPackage[] = [
   {
@@ -272,11 +275,3 @@ export const FAQS = [
   }
 ];
 
-export const IMAGES = {
-  // Use a generic supplement box mockup or placeholder
-  productBox: "https://picsum.photos/id/1080/800/800", // Placeholder for box
-  heroBg: "https://picsum.photos/id/20/1920/1080", // Placeholder abstract
-  manSmiling: "https://picsum.photos/id/1005/600/400",
-  doctor: "https://picsum.photos/id/883/600/800",
-  facility: "https://picsum.photos/id/180/800/600",
-};

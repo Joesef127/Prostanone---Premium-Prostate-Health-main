@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Moon, Clock, AlertCircle, Droplets, ArrowRight, CheckCircle } from 'lucide-react';
 import Button from '../components/Button';
+import { NAFDAC_REG_NO } from '../lib/constants';
 import { PACKAGES, TESTIMONIALS, SMALL_PRINT } from '../lib/constants.ts';
 import { ProstateDiagram } from '../components/ProstateDiagram';
 import { useApp } from '../context/AppContext';
@@ -91,7 +92,7 @@ const Home: React.FC = () => {
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
                 <p className="text-xs text-gray-500 font-medium">Herbal Supplement</p>
-                <p className="text-[10px] text-gray-400">NAFDAC Reg No: A7-1234L</p>
+                <p className="text-[10px] text-gray-400">NAFDAC Reg No: {NAFDAC_REG_NO}</p>
               </div>
 
             </div>

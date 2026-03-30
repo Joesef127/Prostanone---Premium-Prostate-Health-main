@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { images } from '@/lib';
 import Button from '../Button';
+import { NAFDAC_REG_NO } from '../../lib/constants';
 import { STATS } from '../../lib/data.ts';
 
 const HeroSection: React.FC = () => (
@@ -30,7 +31,7 @@ const HeroSection: React.FC = () => (
         >
           <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover p-1 bg-white rounded-full" />
           <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-accent">
-            NAFDAC Approved — Reg. No. A7-4976L
+            NAFDAC Approved — Reg. No. {NAFDAC_REG_NO}
           </span>
         </motion.div>
 
