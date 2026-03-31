@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     setIsOpen(false);
-    setIsProductPage(location.pathname === "/product");
+    setIsProductPage(location.pathname === "/product" || location.pathname === "/blog" || location.pathname === "/distributor");
   }, [location]);
 
   return (

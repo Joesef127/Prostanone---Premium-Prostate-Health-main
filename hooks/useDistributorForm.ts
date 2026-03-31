@@ -24,9 +24,8 @@ const INITIAL_FORM: DistributorFormState = {
   message: '',
 };
 
-const FORMSUBMIT_EMAIL = 'sales@holisbotanicals.com';
-
 export function useDistributorForm() {
+  const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
   const [form, setForm] = useState<DistributorFormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<SubmitStatus>('idle');
@@ -60,24 +59,23 @@ export function useDistributorForm() {
     if (!validate() || status === 'loading') return;
     setStatus('loading');
     try {
-      const firstName = form.fullName.trim().split(' ')[0];
-      const res = await fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_EMAIL}`, {
+      const res = await fetch(SHEETS_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          _subject: 'New Distributor Application — Prostanone',
-          _autoresponse: `Dear ${firstName}, thank you for applying to become a Prostanone distributor. Our team will review your application and reach out within 2–3 business days. — Holis Botanical Gardens`,
-          _template: 'table',
-          'Full Name': form.fullName.trim(),
-          'Phone Number': form.phone.trim(),
-          'Email Address': form.email.trim(),
-          'State / Location': form.state,
-          'Business Type': form.businessType,
-          'Expected Monthly Order': form.orderQuantity,
-          'Additional Message': form.message.trim() || '—',
+          source: 'distributor',
+          full_name: form.fullName.trim(),
+          phone: form.phone.trim(),
+          email: form.email.trim(),
+          state: form.state,
+          business_type: form.businessType,
+          order_quantity: form.orderQuantity,
+          message: form.message.trim(),
         }),
       });
-      if (!res.ok) throw new Error('Submission failed');
+      // no-cors responses are always opaque (status 0) — treat any non-thrown fetch as success
+      void res;
       setStatus('success');
       setForm(INITIAL_FORM);
     } catch {
