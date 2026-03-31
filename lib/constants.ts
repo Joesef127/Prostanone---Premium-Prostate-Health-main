@@ -236,8 +236,27 @@ export const NAV_LINKS = [
   { label: 'Product', path: '/product' },
   { label: 'About', path: '/about' },
   { label: 'Science', path: '/science' },
+  { label: 'Blog', path: '/blog' },
   { label: 'Reviews', path: '/reviews' },
   { label: 'Contact', path: '/contact' },
+];
+
+export const BUSINESS_TYPES = [
+  'Online Retailer',
+  'Physical Store / Pharmacy',
+  'Clinic / Hospital',
+  'Supermarket / Superstore',
+  'Market Trader',
+  'Door-to-Door Sales',
+  'Other',
+];
+
+export const MONTHLY_ORDER_QUANTITIES = [
+  '1–5 packs',
+  '6–10 packs',
+  '11–20 packs',
+  '21–50 packs',
+  '50+ packs',
 ];
 
 export const FAQS = [

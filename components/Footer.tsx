@@ -36,6 +36,7 @@ const Footer: React.FC = () => {
                 </li>
               ))}
               <li><Link to="/quiz" className="text-gray-300 hover:text-white text-sm transition-colors">Check Prostate Health</Link></li>
+              <li><Link to="/distributor" className="text-gray-300 hover:text-white text-sm transition-colors">Become a Distributor</Link></li>
             </ul>
           </div>
 
