@@ -17,6 +17,7 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import Distributor from './pages/Distributor';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import CreateBlog from './pages/CreateBlog';
 import { AppProvider } from './context/AppContext';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
@@ -54,6 +55,8 @@ const App: React.FC = () => {
               <Route path="/terms" element={<TermsAndConditions />} />
               <Route path="/distributor" element={<Distributor />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/create" element={<CreateBlog />} />
+              <Route path="/blog/edit/:slug" element={<CreateBlog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
             </Routes>
           </main>

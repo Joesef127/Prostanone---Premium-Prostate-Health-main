@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, ArrowRight, BookOpen } from 'lucide-react';
+import { Clock, ArrowRight, BookOpen, PenSquare } from 'lucide-react';
 import {
-  BLOG_POSTS,
   BLOG_CATEGORIES,
   getBlogPostsByCategory,
   type BlogCategory,
@@ -29,7 +28,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Lifestyle: 'bg-purple-100 text-purple-700',
 };
 
-const BlogCard: React.FC<{ post: (typeof BLOG_POSTS)[number]; delay?: number }> = ({
+const BlogCard: React.FC<{ post: ReturnType<typeof getBlogPostsByCategory>[number]; delay?: number }> = ({
   post,
   delay = 0,
 }) => (
@@ -71,6 +70,7 @@ const BlogCard: React.FC<{ post: (typeof BLOG_POSTS)[number]; delay?: number }> 
 );
 
 const Blog: React.FC = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<BlogCategory>('All');
   const filtered = getBlogPostsByCategory(activeCategory);
 
@@ -88,6 +88,15 @@ const Blog: React.FC = () => {
               Evidence-based insights on prostate health, nutrition, and lifestyle — written for
               Nigerian men who want to take control of their wellbeing.
             </p>
+            <div className="mt-8">
+              <button
+                onClick={() => navigate('/blog/create')}
+                className="inline-flex items-center gap-2 bg-accent text-secondary font-bold px-6 py-3 rounded-xl hover:bg-accent/90 transition-colors shadow-md"
+              >
+                <PenSquare className="w-4 h-4" />
+                Create post
+              </button>
+            </div>
           </FadeIn>
         </div>
       </section>

@@ -2,11 +2,16 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
-  category: 'Prostate Health' | 'Nutrition' | 'Lifestyle';
+  /** Free-form category / tag */
+  category: string;
   date: string;
   readTime: string;
   coverImage: string;
   content: string;
+  /** 'markdown' for static posts, 'html' for Tiptap-created posts */
+  contentType?: 'markdown' | 'html';
+  /** true for posts created via the UI and stored in localStorage */
+  isLocal?: boolean;
 }
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -333,11 +338,24 @@ For men looking for a natural, scientifically-grounded approach to prostate heal
   },
 ];
 
-export const getBlogPost = (slug: string): BlogPost | undefined =>
-  BLOG_POSTS.find(post => post.slug === slug);
+import { getLocalBlogPosts } from './blogStorage';
 
-export const getBlogPostsByCategory = (category: string): BlogPost[] =>
-  category === 'All' ? BLOG_POSTS : BLOG_POSTS.filter(post => post.category === category);
+/** Returns all posts: localStorage-created first, then static. */
+export function getAllBlogPosts(): BlogPost[] {
+  const local = getLocalBlogPosts() as unknown as BlogPost[];
+  return [...local, ...BLOG_POSTS];
+}
+
+export const getBlogPost = (slug: string): BlogPost | undefined => {
+  const local = getLocalBlogPosts().find(p => p.slug === slug);
+  if (local) return local as unknown as BlogPost;
+  return BLOG_POSTS.find(post => post.slug === slug);
+};
+
+export const getBlogPostsByCategory = (category: string): BlogPost[] => {
+  const all = getAllBlogPosts();
+  return category === 'All' ? all : all.filter(post => post.category === category);
+};
 
 export const BLOG_CATEGORIES = ['All', 'Prostate Health', 'Nutrition', 'Lifestyle'] as const;
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
