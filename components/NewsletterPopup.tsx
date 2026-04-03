@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail } from 'lucide-react';
 import Button from './Button';
+import { useModal } from '../context/ModalContext';
 
 const NewsletterPopup: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const { showAlert } = useModal();
 
     useEffect(() => {
         // Check if the user has already seen the popup
@@ -44,12 +46,12 @@ const NewsletterPopup: React.FC = () => {
         e.preventDefault();
 
         if (!name || name.trim().length < 3 || /[^a-zA-Z\s.-]/.test(name)) {
-            alert('Please enter a valid name (at least 3 characters, no numbers or symbols).');
+            showAlert({ title: 'Invalid name', message: 'Please enter a valid name (at least 3 characters, no numbers or symbols).' });
             return;
         }
 
         if (!validateEmail(email)) {
-            alert('Please enter a valid email address.');
+            showAlert({ title: 'Invalid email', message: 'Please enter a valid email address.' });
             return;
         }
 

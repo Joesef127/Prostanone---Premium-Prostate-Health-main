@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Save, Eye, Clock, Tag, Upload, Link2, FileText, ChevronDown, X } from 'lucide-react';
 import RichTextEditor from '../components/blog/RichTextEditor';
+import { useModal } from '../context/ModalContext';
+import { getAllBlogPosts } from '../lib/blogData';
 import {
   saveLocalBlogPost,
   getLocalBlogPosts,
@@ -12,8 +14,6 @@ import {
   type LocalBlogPost,
 } from '../lib/blogStorage';
 import { BLOG_TEMPLATES, type BlogTemplate } from '../lib/blogTemplates';
-
-const PRESET_CATEGORIES = ['Prostate Health', 'Nutrition', 'Lifestyle'];
 
 const EMPTY_FORM = {
   title: '',
@@ -27,11 +27,17 @@ const CreateBlog: React.FC = () => {
   const navigate = useNavigate();
   const { slug: editSlug } = useParams<{ slug?: string }>();
   const isEditing = Boolean(editSlug);
+  const { showConfirm } = useModal();
+
+  const availableCategories = Array.from(
+    new Set(getAllBlogPosts().map(p => p.category).filter(Boolean))
+  );
 
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof typeof EMPTY_FORM, string>>>({});
   const [saving, setSaving] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   // Cover image mode
   const [imageMode, setImageMode] = useState<'url' | 'file'>('url');
@@ -61,6 +67,7 @@ const CreateBlog: React.FC = () => {
 
   const set = (field: keyof typeof EMPTY_FORM, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
+    setIsDirty(true);
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined }));
   };
 
@@ -93,6 +100,7 @@ const CreateBlog: React.FC = () => {
       coverImage: tpl.coverImage,
       content: tpl.content,
     });
+    setIsDirty(true);
     setEditorKey(k => k + 1); // force editor remount with new content
     setErrors({});
     setShowTemplates(false);
@@ -121,12 +129,20 @@ const CreateBlog: React.FC = () => {
 
     saveLocalBlogPost(post);
     setSaving(false);
+    setIsDirty(false);
     navigate(`/blog/${slug}`);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!editSlug) return;
-    if (!window.confirm('Delete this post? This cannot be undone.')) return;
+    const confirmed = await showConfirm({
+      title: 'Delete post',
+      message: 'Are you sure you want to delete this post? This cannot be undone.',
+      confirmLabel: 'Delete',
+      cancelLabel: 'Keep post',
+      destructive: true,
+    });
+    if (!confirmed) return;
     deleteLocalBlogPost(editSlug);
     navigate('/blog');
   };
@@ -137,7 +153,19 @@ const CreateBlog: React.FC = () => {
       <div className="sticky top-0 z-20 bg-white border-b border-gray-100 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
           <button
-            onClick={() => navigate('/blog')}
+            onClick={async () => {
+              if (isDirty) {
+                const ok = await showConfirm({
+                  title: 'Unsaved changes',
+                  message: 'You have unsaved changes. Are you sure you want to leave?',
+                  confirmLabel: 'Leave',
+                  cancelLabel: 'Stay',
+                  destructive: true,
+                });
+                if (!ok) return;
+              }
+              navigate('/blog');
+            }}
             className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-secondary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -390,7 +418,7 @@ const CreateBlog: React.FC = () => {
               Tag / Category <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <div className="flex flex-wrap gap-2 mb-2">
-              {PRESET_CATEGORIES.map(cat => (
+              {availableCategories.map(cat => (
                 <button
                   key={cat}
                   type="button"

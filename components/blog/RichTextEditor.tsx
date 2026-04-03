@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useModal } from "../../context/ModalContext";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
@@ -73,6 +74,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   content,
   onChange,
 }) => {
+  const { showPrompt } = useModal();
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -102,28 +104,39 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
   });
 
-  const setLink = useCallback(() => {
+  const setLink = useCallback(async () => {
     if (!editor) return;
     const prev = editor.getAttributes("link").href as string | undefined;
-    const url = window.prompt("Enter URL", prev ?? "https://");
+    const url = await showPrompt({
+      title: 'Insert link',
+      message: 'Enter the URL for this link.',
+      placeholder: 'https://',
+      defaultValue: prev ?? 'https://',
+      confirmLabel: 'Apply',
+    });
     if (url === null) return;
-    if (url === "") {
+    if (url.trim() === '') {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
     } else {
       editor
         .chain()
         .focus()
         .extendMarkRange("link")
-        .setLink({ href: url })
+        .setLink({ href: url.trim() })
         .run();
     }
-  }, [editor]);
+  }, [editor, showPrompt]);
 
-  const addImage = useCallback(() => {
+  const addImage = useCallback(async () => {
     if (!editor) return;
-    const url = window.prompt("Enter image URL");
-    if (url) editor.chain().focus().setImage({ src: url }).run();
-  }, [editor]);
+    const url = await showPrompt({
+      title: 'Insert image',
+      message: 'Paste an image URL to embed in the article.',
+      placeholder: 'https://example.com/image.jpg',
+      confirmLabel: 'Insert',
+    });
+    if (url) editor.chain().focus().setImage({ src: url.trim() }).run();
+  }, [editor, showPrompt]);
 
   if (!editor) return null;
 

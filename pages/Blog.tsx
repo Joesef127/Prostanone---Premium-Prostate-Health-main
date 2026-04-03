@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, ArrowRight, BookOpen, PenSquare } from 'lucide-react';
+import { Clock, ArrowRight, BookOpen, PenSquare, ImageOff } from 'lucide-react';
 import {
-  BLOG_CATEGORIES,
-  getBlogPostsByCategory,
-  type BlogCategory,
+  getAllBlogPosts,
 } from '../lib/blogData';
+import { getCategoryColor } from '../lib/categoryColors';
+import type { BlogPost } from '../lib/blogData';
 
 const FadeIn: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
@@ -22,13 +22,7 @@ const FadeIn: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   </motion.div>
 );
 
-const CATEGORY_COLORS: Record<string, string> = {
-  'Prostate Health': 'bg-blue-100 text-blue-700',
-  Nutrition: 'bg-green-100 text-green-700',
-  Lifestyle: 'bg-purple-100 text-purple-700',
-};
-
-const BlogCard: React.FC<{ post: ReturnType<typeof getBlogPostsByCategory>[number]; delay?: number }> = ({
+const BlogCard: React.FC<{ post: BlogPost; delay?: number }> = ({
   post,
   delay = 0,
 }) => (
@@ -37,18 +31,25 @@ const BlogCard: React.FC<{ post: ReturnType<typeof getBlogPostsByCategory>[numbe
       to={`/blog/${post.slug}`}
       className="group flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow h-full"
     >
-      <div className="aspect-[16/9] overflow-hidden bg-gray-100">
-        <img
-          src={post.coverImage}
-          alt={post.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-        />
+      <div className="aspect-video overflow-hidden bg-gray-100">
+        {post.coverImage ? (
+          <img
+            src={post.coverImage}
+            alt={post.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-gray-300">
+            <ImageOff className="w-8 h-8" />
+            <span className="text-xs font-medium">No cover image</span>
+          </div>
+        )}
       </div>
       <div className="flex flex-col flex-1 p-6">
         <div className="flex items-center justify-between mb-3">
           <span
-            className={`text-xs font-semibold px-2.5 py-1 rounded-full ${CATEGORY_COLORS[post.category] ?? 'bg-gray-100 text-gray-600'}`}
+            className={`text-xs font-semibold px-2.5 py-1 rounded-full ${getCategoryColor(post.category)}`}
           >
             {post.category}
           </span>
@@ -71,8 +72,22 @@ const BlogCard: React.FC<{ post: ReturnType<typeof getBlogPostsByCategory>[numbe
 
 const Blog: React.FC = () => {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState<BlogCategory>('All');
-  const filtered = getBlogPostsByCategory(activeCategory);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [allPosts, setAllPosts] = useState<BlogPost[]>(() => getAllBlogPosts());
+
+  // Re-read posts when the user navigates back to this page (e.g. after creating a post)
+  const refresh = useCallback(() => setAllPosts(getAllBlogPosts()), []);
+  useEffect(() => {
+    refresh();
+    window.addEventListener('focus', refresh);
+    return () => window.removeEventListener('focus', refresh);
+  }, [refresh]);
+
+  // Derive dynamic category list from actual posts
+  const categories = ['All', ...Array.from(new Set(allPosts.map(p => p.category)))];
+
+  const filtered =
+    activeCategory === 'All' ? allPosts : allPosts.filter(p => p.category === activeCategory);
 
   return (
     <div className="bg-white min-h-screen">
@@ -105,7 +120,7 @@ const Blog: React.FC = () => {
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-none">
-            {BLOG_CATEGORIES.map(cat => (
+            {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}

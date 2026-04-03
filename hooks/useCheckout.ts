@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { PACKAGES } from '../lib/constants';
 import { calcDeliveryFee } from '../utils/delivery';
+import { useModal } from '../context/ModalContext';
 
 declare global {
   interface Window {
@@ -50,6 +51,7 @@ const validatePhone = (phone: string): boolean => {
 export function useCheckout() {
   const { cart, paymentMethod, setPaymentMethod } = useApp();
   const navigate = useNavigate();
+  const { showAlert } = useModal();
 
   const [formData, setFormData] = useState<CheckoutFormData>(INITIAL_FORM);
   const [step, setStep] = useState(1);
@@ -133,26 +135,26 @@ export function useCheckout() {
       const nameRegex = /^[a-zA-Z\s.-]+$/;
 
       if (nameParts.length < 2 || nameParts.some(p => p.length < 2) || !nameRegex.test(name)) {
-        alert('Please enter a valid full name (e.g., John Doe). No numbers or symbols allowed.');
+        showAlert({ title: 'Invalid name', message: 'Please enter a valid full name (e.g., John Doe). No numbers or symbols allowed.' });
         return;
       }
       if (!validateEmail(formData.email)) {
-        alert('Please enter a valid email address.');
+        showAlert({ title: 'Invalid email', message: 'Please enter a valid email address.' });
         return;
       }
       if (!validatePhone(formData.phone) || formData.phone.trim().length < 10) {
-        alert('Please enter a valid 10-15 digit phone number.');
+        showAlert({ title: 'Invalid phone number', message: 'Please enter a valid 10-15 digit phone number.' });
         return;
       }
     }
 
     if (step === 2) {
       if (formData.address.trim().length < 10) {
-        alert('Please enter a more detailed delivery address (street, house number, etc).');
+        showAlert({ title: 'Incomplete address', message: 'Please enter a more detailed delivery address (street, house number, etc).' });
         return;
       }
       if (formData.city.trim().length < 3) {
-        alert('Please enter a valid city or local government area.');
+        showAlert({ title: 'City required', message: 'Please enter a valid city or local government area.' });
         return;
       }
     }
@@ -171,7 +173,7 @@ export function useCheckout() {
     setLoading(true);
 
     if (!window.Korapay) {
-      alert('Payment gateway is loading. Please try again in a moment.');
+      showAlert({ title: 'Payment loading', message: 'Payment gateway is loading. Please try again in a moment.' });
       setLoading(false);
       return;
     }
@@ -229,7 +231,7 @@ export function useCheckout() {
       },
       onFailed: (data: any) => {
         sendCheckoutProgress(4, 'payment_failed', data);
-        alert('Payment failed. Please try again.');
+        showAlert({ title: 'Payment failed', message: 'Payment failed. Please try again.' });
         setLoading(false);
       },
     });

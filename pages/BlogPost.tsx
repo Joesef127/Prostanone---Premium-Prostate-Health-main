@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { motion } from 'framer-motion';
 import { Clock, Calendar, Tag, Pencil } from 'lucide-react';
 import { getBlogPost, getAllBlogPosts } from '../lib/blogData';
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Prostate Health': 'bg-blue-100 text-blue-700',
-  Nutrition: 'bg-green-100 text-green-700',
-  Lifestyle: 'bg-purple-100 text-purple-700',
-};
+import { getCategoryColor } from '../lib/categoryColors';
 
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const post = slug ? getBlogPost(slug) : undefined;
+
+  useEffect(() => {
+    if (post) {
+      document.title = `${post.title} | Prostanone Blog`;
+      return () => { document.title = 'Prostanone — Premium Prostate Health'; };
+    }
+  }, [post]);
 
   if (!post) {
     return <Navigate to="/blog" replace />;
@@ -35,7 +37,7 @@ const BlogPost: React.FC = () => {
       >
         <div className="flex items-center justify-between mb-5">
           <span
-            className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${CATEGORY_COLORS[post.category] ?? 'bg-gray-100 text-gray-600'}`}
+            className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${getCategoryColor(post.category)}`}
           >
             <Tag className="w-3 h-3" />
             {post.category}
@@ -148,7 +150,7 @@ const BlogPost: React.FC = () => {
                   )}
                   <div className="p-5 flex flex-col flex-1">
                     <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full mb-2 self-start ${CATEGORY_COLORS[related.category] ?? 'bg-gray-100 text-gray-600'}`}
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full mb-2 self-start ${getCategoryColor(related.category)}`}
                     >
                       {related.category}
                     </span>

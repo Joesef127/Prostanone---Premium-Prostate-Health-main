@@ -348,4 +348,252 @@ export const BLOG_TEMPLATES: BlogTemplate[] = [
 <p>For men whose symptoms fluctuate with life circumstances, addressing the psychological dimension of prostate health is not a soft option. It is the most targeted intervention available.</p>
 <p>Combine it with dietary changes, appropriate supplementation, and regular movement — and the results compound in ways that no single intervention achieves alone.</p>`,
   },
+  {
+    id: 'understanding-bph',
+    name: 'Understanding BPH (Prostate Health)',
+    title: 'Understanding BPH: Why Men Over 50 Struggle with Urinary Problems',
+    excerpt: "Benign Prostatic Hyperplasia affects over 50% of men by age 60. Here's what's actually happening in your body — and what you can do about it.",
+    category: 'Prostate Health',
+    coverImage: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&auto=format&fit=crop',
+    content: `<h2>What Is BPH?</h2>
+<p>Benign Prostatic Hyperplasia (BPH) — commonly called an enlarged prostate — is one of the most prevalent health conditions among men over 50. By the age of 60, over <strong>half of all men</strong> have BPH. By age 85, the figure climbs to <strong>90%</strong>.</p>
+<p>Despite how common it is, many men suffer in silence, assuming the symptoms are simply an unavoidable part of growing older. They are not.</p>
+<hr>
+<h2>The Prostate: A Quick Overview</h2>
+<p>The prostate is a small, walnut-sized gland located just below the bladder and in front of the rectum. Its primary role is to produce fluid that nourishes and transports sperm.</p>
+<p>As men age, the prostate naturally grows. In some men, this growth is gradual and causes no symptoms. In others, the gland expands inward, squeezing the urethra — the tube that carries urine from the bladder out of the body.</p>
+<p>This is when problems begin.</p>
+<hr>
+<h2>Common Symptoms of BPH</h2>
+<p>The urinary symptoms of an enlarged prostate fall into two categories:</p>
+<p><strong>Obstructive symptoms</strong> (caused by the physical blockage):</p>
+<ul>
+  <li>Difficulty starting urination</li>
+  <li>A weak or interrupted urine stream</li>
+  <li>Straining or pushing to urinate</li>
+  <li>A feeling that the bladder does not fully empty</li>
+</ul>
+<p><strong>Irritative symptoms</strong> (caused by bladder compensation):</p>
+<ul>
+  <li>Frequent urination, especially at night (nocturia)</li>
+  <li>A sudden, urgent need to urinate</li>
+  <li>Leaking or dribbling</li>
+</ul>
+<p>If you find yourself waking two or more times a night to urinate, or if you notice your stream has weakened, these are signs worth taking seriously.</p>
+<hr>
+<h2>What Causes the Prostate to Enlarge?</h2>
+<p>The root cause of BPH is hormonal change. As men age, the balance between testosterone and oestrogen shifts. Simultaneously, a more potent form of testosterone called <strong>dihydrotestosterone (DHT)</strong> accumulates in the prostate.</p>
+<p>DHT is produced when testosterone is converted by an enzyme called 5-alpha reductase. High levels of DHT stimulate prostate cell growth — hence the enlargement.</p>
+<p>Chronic low-grade inflammation also plays a role. Research increasingly shows that oxidative stress and inflammation within prostate tissue accelerate the growth process.</p>
+<hr>
+<h2>How Serious Is BPH?</h2>
+<p>BPH is <em>benign</em> — it is not cancer and does not increase your risk of prostate cancer. However, if left unmanaged, it can lead to:</p>
+<ul>
+  <li><strong>Urinary tract infections (UTIs)</strong> from incomplete bladder emptying</li>
+  <li><strong>Bladder stones</strong></li>
+  <li><strong>Bladder damage</strong> from years of straining</li>
+  <li><strong>Kidney damage</strong> in severe, untreated cases</li>
+</ul>
+<p>The good news: BPH is manageable, and natural approaches — including plant-based supplementation — have shown real promise in clinical research.</p>
+<hr>
+<h2>Supporting Prostate Health Naturally</h2>
+<p>Several plant compounds have been studied for their ability to reduce BPH symptoms by addressing DHT accumulation and prostate inflammation:</p>
+<ul>
+  <li><strong>Saw Palmetto</strong> (<em>Serenoa repens</em>): Multiple trials show it reduces nocturia and improves urinary flow</li>
+  <li><strong>Beta-Sitosterol</strong>: A plant sterol that reduces urinary symptom scores in BPH patients</li>
+  <li><strong>Pygeum Africanum</strong>: An African tree bark extract with anti-inflammatory properties</li>
+  <li><strong>Zinc</strong>: Essential for prostate cell health; deficiency is linked to BPH progression</li>
+</ul>
+<p>Prostanone combines these and other clinically-studied ingredients in a single, NAFDAC-certified formulation designed specifically for Nigerian men.</p>
+<hr>
+<h2>When to See a Doctor</h2>
+<p>While natural supplements can be a powerful complement to prostate health, certain symptoms require immediate medical attention:</p>
+<ul>
+  <li>Blood in your urine or semen</li>
+  <li>Painful urination</li>
+  <li>Complete inability to urinate (urinary retention)</li>
+  <li>Pain in the lower back, hips, or pelvis that does not go away</li>
+</ul>
+<p>If you experience any of these, see a healthcare provider promptly.</p>
+<hr>
+<h2>Key Takeaways</h2>
+<ul>
+  <li>BPH is extremely common in men over 50 but is not inevitable or untreatable</li>
+  <li>It is caused by DHT accumulation and inflammation — not ageing alone</li>
+  <li>Symptoms disrupt sleep, confidence, and quality of life</li>
+  <li>Early management with lifestyle changes and targeted supplementation can slow or reverse symptoms</li>
+  <li>Natural plant compounds like Saw Palmetto and Beta-Sitosterol have strong clinical backing</li>
+</ul>
+<p><em>The first step to better prostate health is understanding what's happening — and knowing you have real options.</em></p>`,
+  },
+  {
+    id: '5-natural-prostate-tips',
+    name: '5 Natural Ways to Support Prostate Health (Lifestyle)',
+    title: '5 Natural Ways to Support Prostate Health (Before Problems Start)',
+    excerpt: 'Five evidence-based strategies — diet, movement, stress management, and targeted supplementation — that work best when started early.',
+    category: 'Lifestyle',
+    coverImage: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&auto=format&fit=crop',
+    content: `<h2>Prevention Is Easier Than Treatment</h2>
+<p>Most Nigerian men only start thinking about their prostate after something goes wrong — a weak stream, restless nights, or an uncomfortable conversation with a doctor.</p>
+<p>But the prostate is not something you have to wait to struggle with. The decisions you make at 40, 45, and 50 significantly shape what your prostate looks like at 60 and beyond.</p>
+<p>Here are five natural, practical strategies with real scientific backing.</p>
+<hr>
+<h2>1. Reduce Red Meat and Processed Foods</h2>
+<p>Diets high in red meat and processed foods have been consistently linked to higher rates of BPH and prostate inflammation in research studies.</p>
+<p>The likely mechanisms:</p>
+<ul>
+  <li><strong>Saturated fat</strong> increases DHT production, the hormone that drives prostate cell growth</li>
+  <li><strong>Advanced glycation end products (AGEs)</strong> — compounds formed during high-heat cooking — increase oxidative stress in prostate tissue</li>
+  <li><strong>Nitrates in processed meats</strong> can promote inflammation</li>
+</ul>
+<p><strong>What to do:</strong> Limit fried meat, suya, sausages, and processed snacks to occasional treats. Replace with fish (especially fatty fish like titus or mackerel), beans, and eggs as your primary protein sources.</p>
+<hr>
+<h2>2. Eat More Lycopene-Rich Foods</h2>
+<p>Lycopene is a carotenoid antioxidant with a strong evidence base for prostate protection. It concentrates in prostate tissue and neutralises the free radicals that contribute to cell damage and enlargement.</p>
+<p><strong>Rich sources in Nigerian foods:</strong></p>
+<ul>
+  <li><strong>Tomatoes</strong> (especially cooked or concentrated — as in tomato paste and stew)</li>
+  <li><strong>Watermelon</strong></li>
+  <li><strong>Red bell peppers</strong></li>
+  <li><strong>Guava</strong></li>
+</ul>
+<p>Cooking tomatoes in a small amount of oil actually increases lycopene bioavailability — so your pepper soup and tomato stew are doing your prostate a favour.</p>
+<hr>
+<h2>3. Exercise Consistently — and Walk</h2>
+<p>A sedentary lifestyle is an independent risk factor for BPH. Research published in the <em>Journal of Urology</em> found that men who walked 2–3 hours per week had significantly lower rates of BPH symptoms than inactive men.</p>
+<p>Exercise helps by:</p>
+<ul>
+  <li>Reducing circulating insulin (high insulin worsens prostate enlargement)</li>
+  <li>Lowering systemic inflammation</li>
+  <li>Improving testosterone-to-oestrogen balance</li>
+  <li>Strengthening pelvic floor muscles that support bladder control</li>
+</ul>
+<p>You don't need a gym. A 30-minute walk every morning, four days a week, is enough to make a measurable difference.</p>
+<hr>
+<h2>4. Manage Your Stress</h2>
+<p>Chronic psychological stress elevates cortisol and adrenaline, both of which increase pelvic muscle tension. This worsens urinary symptoms — even in men without a significantly enlarged prostate.</p>
+<p>Stress also:</p>
+<ul>
+  <li>Disrupts sleep (which already makes nocturia worse)</li>
+  <li>Raises inflammation markers across the body including in the prostate</li>
+  <li>Contributes to habits (alcohol, poor diet) that worsen prostate health</li>
+</ul>
+<p><strong>Practical stress management for men:</strong></p>
+<ul>
+  <li>Morning prayer or quiet time before checking your phone</li>
+  <li>Physical activity — even stretching or light exercise releases tension</li>
+  <li>Reducing alcohol, which disrupts sleep architecture and irritates the bladder</li>
+</ul>
+<hr>
+<h2>5. Take a Targeted Prostate Supplement</h2>
+<p>Whole foods and lifestyle changes form the foundation, but even a very good diet rarely delivers therapeutic doses of the compounds that specifically support the prostate.</p>
+<p>Targeted supplementation allows you to:</p>
+<ul>
+  <li>Get <strong>standardised doses</strong> of clinically-validated compounds like Saw Palmetto and Beta-Sitosterol</li>
+  <li>Address <strong>DHT suppression</strong> that food alone cannot achieve</li>
+  <li><strong>Reduce prostate inflammation</strong> with concentrated plant extracts</li>
+</ul>
+<p>Look for a supplement that is:</p>
+<ul>
+  <li>NAFDAC-certified</li>
+  <li>Transparent about ingredients and dosages</li>
+  <li>Formulated specifically for prostate health (not a general multivitamin)</li>
+</ul>
+<p>Prostanone was designed to meet all three criteria — combining eight clinically-studied ingredients in a single daily capsule.</p>
+<hr>
+<h2>Start Before You Have Symptoms</h2>
+<p>The best time to protect your prostate is before problems arise. But even if you're already noticing early signs — night-time urination, a slightly reduced stream — these changes are reversible with consistent effort.</p>
+<p>Pick one of the five strategies above and start this week. Your future self will thank you.</p>`,
+  },
+  {
+    id: 'saw-palmetto-science',
+    name: 'Saw Palmetto: The Science (Nutrition)',
+    title: 'Saw Palmetto: What the Science Actually Says About Prostate Health',
+    excerpt: 'Saw Palmetto is the most studied natural prostate compound in the world. Here is an honest look at the clinical evidence, the mechanisms, and how to choose a quality product.',
+    category: 'Nutrition',
+    coverImage: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=800&auto=format&fit=crop',
+    content: `<h2>A Herb With a 100-Year Track Record</h2>
+<p><em>Serenoa repens</em> — widely known as Saw Palmetto — is a small palm tree native to the south-eastern United States. Its berries have been used medicinally for well over a century, first by Native American peoples, and later integrated into formal botanical medicine.</p>
+<p>Today, Saw Palmetto extract is the <strong>most widely used natural supplement for prostate health in the world</strong>, and one of the most extensively studied.</p>
+<p>Here's what the science actually shows.</p>
+<hr>
+<h2>How Saw Palmetto Works</h2>
+<p>Saw Palmetto acts on the prostate through several complementary pathways:</p>
+<h3>1. 5-Alpha Reductase Inhibition</h3>
+<p>The primary mechanism is the inhibition of <strong>5-alpha reductase</strong>, the enzyme that converts testosterone into dihydrotestosterone (DHT). High DHT levels within the prostate drive the cell proliferation behind BPH.</p>
+<p>By reducing 5-alpha reductase activity, Saw Palmetto helps lower intra-prostatic DHT — slowing or reversing enlargement over time.</p>
+<p>This is actually the same mechanism as prescription drugs like finasteride, but Saw Palmetto achieves it with a significantly better side-effect profile.</p>
+<h3>2. Anti-Inflammatory Action</h3>
+<p>Saw Palmetto also inhibits <strong>cyclooxygenase (COX)</strong> and <strong>lipoxygenase (LOX)</strong> enzymes — two key drivers of prostatic inflammation. Since inflammation both contributes to and worsens BPH, this action is clinically meaningful.</p>
+<h3>3. Androgen Receptor Blocking</h3>
+<p>Some research suggests Saw Palmetto also partially blocks testosterone receptors within prostate cells, reducing the cell's sensitivity to androgens and further limiting growth signals.</p>
+<hr>
+<h2>What Clinical Trials Show</h2>
+<h3>The Cochrane Review</h3>
+<p>A 2009 Cochrane systematic review analysed <strong>30 randomised controlled trials</strong> involving over 5,000 men. The review found that Saw Palmetto significantly improved urinary symptom scores, reduced nocturia, and improved peak urinary flow rate.</p>
+<h3>The STEP Trial</h3>
+<p>The <em>Saw Palmetto for Treatment of Enlarged Prostates (STEP)</em> trial, published in the <em>New England Journal of Medicine</em>, studied 225 men over 12 months. Subsequent analyses noted that dosage matters: the standard 160 mg twice daily dose performs better than lower doses.</p>
+<h3>European Research</h3>
+<p>European physicians, particularly in Germany and France, have prescribed Saw Palmetto as a first-line treatment for BPH for decades. German Commission E officially endorses Saw Palmetto for treating urinary difficulties associated with BPH.</p>
+<hr>
+<h2>Comparing Saw Palmetto to Prescription Drugs</h2>
+<table>
+  <tbody>
+    <tr>
+      <th></th>
+      <th>Saw Palmetto</th>
+      <th>Finasteride (e.g. Proscar)</th>
+    </tr>
+    <tr>
+      <td>Mechanism</td>
+      <td>5-AR inhibition + anti-inflammatory</td>
+      <td>5-AR inhibition</td>
+    </tr>
+    <tr>
+      <td>Side effects</td>
+      <td>Minimal; mild GI upset rare</td>
+      <td>Sexual dysfunction, depression risk</td>
+    </tr>
+    <tr>
+      <td>Time to effect</td>
+      <td>4–8 weeks</td>
+      <td>6–12 months</td>
+    </tr>
+    <tr>
+      <td>Cost</td>
+      <td>Generally lower</td>
+      <td>Higher</td>
+    </tr>
+    <tr>
+      <td>PSA (cancer screening)</td>
+      <td>Does not affect PSA</td>
+      <td>Reduces PSA (masks cancer markers)</td>
+    </tr>
+  </tbody>
+</table>
+<p>The PSA point is clinically significant. Finasteride artificially lowers PSA — a key marker in prostate cancer screening — which can complicate diagnosis. Saw Palmetto does not have this effect.</p>
+<hr>
+<h2>How to Choose a Quality Saw Palmetto Product</h2>
+<p>Quality varies enormously between formulations. Key things to look for:</p>
+<ol>
+  <li><strong>Standardised extract</strong> — Look for a product standardised to <strong>85–95% fatty acids and sterols</strong>. Whole berry powder has inconsistent potency.</li>
+  <li><strong>Lipophilic extract</strong> — The active compounds are fat-soluble. The extract should be oil-based or in a gel capsule, not a simple powder tablet.</li>
+  <li><strong>Therapeutic dose</strong> — Clinical studies predominantly used <strong>160 mg twice daily</strong> or <strong>320 mg once daily</strong>. Lower doses have weaker evidence.</li>
+  <li><strong>Combination formulation</strong> — Saw Palmetto works synergistically with Beta-Sitosterol, Pygeum, and Zinc. A formulation combining these compounds addresses more of the mechanisms behind BPH.</li>
+</ol>
+<hr>
+<h2>Saw Palmetto in Prostanone</h2>
+<p>Prostanone's formulation was developed with these principles in mind. Each capsule contains a standardised Saw Palmetto extract at a therapeutic dose, combined with complementary compounds that address inflammation, DHT accumulation, and cellular repair.</p>
+<hr>
+<h2>The Bottom Line</h2>
+<p>Saw Palmetto has more clinical evidence behind it than any other natural prostate compound. When properly standardised and dosed, it:</p>
+<ul>
+  <li>Reduces DHT accumulation in the prostate</li>
+  <li>Decreases urinary frequency and urgency</li>
+  <li>Improves urinary flow</li>
+  <li>Reduces prostate inflammation</li>
+  <li>Does so without the sexual side-effects associated with pharmaceutical alternatives</li>
+</ul>
+<p><em>Always consult your healthcare provider before starting any new supplement, particularly if you are on prescription medications.</em></p>`,
+  },
 ];
