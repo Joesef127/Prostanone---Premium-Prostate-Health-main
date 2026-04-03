@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { IMAGES } from '../lib/constants.ts';
 import { CheckCircle } from 'lucide-react';
 import { images } from '@/lib';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const About: React.FC = () => {
+  useDynamicTitle('About Us');
    return (
       <div className="pt-20">
          <section className="py-24 bg-white">
@@ -36,10 +37,10 @@ const About: React.FC = () => {
                      initial={{ opacity: 0, scale: 0.9 }}
                      whileInView={{ opacity: 1, scale: 1 }}
                      viewport={{ once: true }}
-                     className="relative h-full min-h-[500px] rounded-3xl overflow-hidden shadow-2xl"
+                     className="relative h-full min-h-125 rounded-3xl overflow-hidden shadow-2xl"
                   >
                      <img src={images.prostanone_about} alt="Manufacturing Facility" className="w-full h-full object-cover" />
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+                     <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-8">
                         <div className="text-white">
                            <p className="font-bold text-xl">GMP Certified Facility</p>
                            <p className="text-sm opacity-80">Highest standards of production quality.</p>

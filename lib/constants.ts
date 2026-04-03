@@ -1,5 +1,8 @@
 import { ProductPackage, QuizQuestion, Testimonial } from '../types';
 
+// NAFDAC Registration Number — update here to change across the entire site
+export const NAFDAC_REG_NO = 'A7-4976L';
+
 // Pricing
 export const PACKAGES: ProductPackage[] = [
   {
@@ -233,8 +236,27 @@ export const NAV_LINKS = [
   { label: 'Product', path: '/product' },
   { label: 'About', path: '/about' },
   { label: 'Science', path: '/science' },
+  { label: 'Blog', path: '/blog' },
   { label: 'Reviews', path: '/reviews' },
   { label: 'Contact', path: '/contact' },
+];
+
+export const BUSINESS_TYPES = [
+  'Online Retailer',
+  'Physical Store / Pharmacy',
+  'Clinic / Hospital',
+  'Supermarket / Superstore',
+  'Market Trader',
+  'Door-to-Door Sales',
+  'Other',
+];
+
+export const MONTHLY_ORDER_QUANTITIES = [
+  '1–5 packs',
+  '6–10 packs',
+  '11–20 packs',
+  '21–50 packs',
+  '50+ packs',
 ];
 
 export const FAQS = [
@@ -252,7 +274,7 @@ export const FAQS = [
   },
   {
     question: "Are there side effects?",
-    answer: "Prostanone is made from natural herbal ingredients with no reported sexual side effects. Consult your doctor if you have existing medical conditions."
+    answer: "Prostanone is made from natural herbal ingredients with no reported side effects. Consult your doctor if you have existing medical conditions."
   },
   {
     question: "Can I take it with other medications?",
@@ -272,11 +294,3 @@ export const FAQS = [
   }
 ];
 
-export const IMAGES = {
-  // Use a generic supplement box mockup or placeholder
-  productBox: "https://picsum.photos/id/1080/800/800", // Placeholder for box
-  heroBg: "https://picsum.photos/id/20/1920/1080", // Placeholder abstract
-  manSmiling: "https://picsum.photos/id/1005/600/400",
-  doctor: "https://picsum.photos/id/883/600/800",
-  facility: "https://picsum.photos/id/180/800/600",
-};

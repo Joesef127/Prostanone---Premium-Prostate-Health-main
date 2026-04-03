@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { images } from '@/lib';
 import Button from '../Button';
+import { NAFDAC_REG_NO } from '../../lib/constants';
 import { STATS } from '../../lib/data.ts';
 
 const HeroSection: React.FC = () => (
@@ -30,7 +31,7 @@ const HeroSection: React.FC = () => (
         >
           <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover p-1 bg-white rounded-full" />
           <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-accent">
-            NAFDAC Approved — Reg. No. A7-4976L
+            NAFDAC Approved — Reg. No. {NAFDAC_REG_NO}
           </span>
         </motion.div>
 
@@ -50,7 +51,6 @@ const HeroSection: React.FC = () => (
           transition={{ duration: 0.7, delay: 0.35 }}
           className="text-sm sm:text-base md:text-lg text-white/75 leading-relaxed mb-8 max-w-xl text-start sm:text-center lg:text-start"
         >
-          Struggling with weak flow or incomplete emptying? <br/>
           Prostanone's NAFDAC-certified herbal formula targets the root cause, not just the symptoms.
           Supporting vitality and confidence for Nigerian men naturally.
         </motion.p>

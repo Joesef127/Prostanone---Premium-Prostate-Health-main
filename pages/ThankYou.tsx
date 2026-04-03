@@ -3,8 +3,10 @@ import { useApp } from '../context/AppContext';
 import { CheckCircle, ArrowRight, Truck, ShieldCheck, Phone } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../components/Button';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const ThankYou: React.FC = () => {
+  useDynamicTitle('Order Confirmed');
   const { clearCart } = useApp();
   const navigate = useNavigate();
   const location = useLocation();

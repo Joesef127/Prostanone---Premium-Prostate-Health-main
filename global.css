@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 @theme {
   /* Brand */
   --color-primary: #6b1b4d;
@@ -49,4 +48,273 @@
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* =============================================================
+  POLICY / MARKDOWN CONTENT
+   ============================================================= */
+
+.policy-content {
+  color: var(--color-text);
+  line-height: 1.75;
+  font-size: 16px;
+
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-secondary);
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-top: 0.625rem;
+    margin-bottom: 0.625rem;
+    color: var(--color-text-muted);
+  }
+
+  ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  li {
+    color: var(--color-text-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e5e5ea;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  em {
+    color: var(--color-text-light);
+    font-style: italic;
+  }
+}
+
+/* =============================================================
+  BLOG CONTENT  — used by BlogPost.tsx for both static (markdown)
+  and Tiptap-created (HTML) posts
+   ============================================================= */
+
+.blog-content {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;   /* 14px on mobile */
+  line-height: 1.85;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;   /* 16px from sm and above */
+  }
+
+  /* ── Headings ── */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--color-secondary);
+    line-height: 1.3;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-top: 2.75rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── Paragraphs ── */
+  p {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Lists ── */
+  ul, ol {
+    padding-left: 1.625rem;
+    margin-bottom: 1.5rem;
+  }
+
+  ul { list-style-type: disc; }
+  ol { list-style-type: decimal; }
+
+  li {
+    margin-bottom: 0.4rem;
+    color: var(--color-text-muted);
+  }
+
+  li > p {
+    margin-bottom: 0.25rem;
+  }
+
+  /* ── Inline ── */
+  strong {
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  em { font-style: italic; }
+
+  /* ── Links ── */
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 4px solid var(--color-primary);
+    padding: 0.75rem 1.25rem;
+    margin: 1.75rem 0;
+    background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+    border-radius: 0 0.5rem 0.5rem 0;
+    font-style: italic;
+    color: var(--color-text);
+  }
+
+  blockquote p:last-child { margin-bottom: 0; }
+
+  /* ── Code ── */
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.875em;
+    background: color-mix(in srgb, var(--color-secondary) 7%, transparent);
+    color: var(--color-secondary);
+    padding: 0.15em 0.4em;
+    border-radius: 0.3rem;
+  }
+
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+    margin: 1.75rem 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* ── Horizontal rule — subtle section divider ── */
+  hr {
+    border: none;
+    border-top: 1px solid #e5e5ea;
+    margin: 2.5rem 0;
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.75rem 0;
+    font-size: 0.9375rem;
+  }
+
+  th {
+    background: color-mix(in srgb, var(--color-secondary) 6%, transparent);
+    color: var(--color-secondary);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #e5e5ea;
+  }
+
+  td {
+    padding: 0.5rem 0.875rem;
+    border: 1px solid #e5e5ea;
+    color: var(--color-text-muted);
+  }
+
+  tbody tr:nth-child(even) td {
+    background: #fafafa;
+  }
+
+  /* ── Images ── */
+  img {
+    max-width: 100%;
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+  }
+}
+
+/* ── Tiptap editor wrapper — mirrors blog-content for WYSIWYG ── */
+.tiptap-editor .ProseMirror {
+  outline: none;
+  min-height: 400px;
+  caret-color: var(--color-primary);
+}
+
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--color-text-light);
+  pointer-events: none;
+  height: 0;
 }

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PACKAGES } from '../lib/constants.ts';
 import { calcDeliveryFee } from '../utils/delivery';
 import { useApp } from '../context/AppContext';
+import { useModal } from '../context/ModalContext';
 
 declare global {
   interface Window {
@@ -41,6 +42,7 @@ const INPUT_BASE =
 export function useFinalCTAForm() {
   const navigate = useNavigate();
   const { paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice } = useApp();
+  const { showAlert } = useModal();
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [reference] = useState(() => `PR-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
   const [loading, setLoading] = useState(false);
@@ -83,11 +85,11 @@ export function useFinalCTAForm() {
     if (form.address.trim().length < 10) errs.address = 'Enter a more detailed delivery address';
     setFieldErrors(errs);
     if (!paymentMethod) {
-      alert('Please select a payment method before placing your order.');
+      showAlert({ title: 'Payment method required', message: 'Please select a payment method before placing your order.' });
       return false;
     }
     if (paymentMethod === 'online' && !gatewayChoice) {
-      alert('Please select a payment gateway to continue.');
+      showAlert({ title: 'Payment gateway required', message: 'Please select a payment gateway to continue.' });
       return false;
     }
     return Object.keys(errs).length === 0;
@@ -130,7 +132,7 @@ export function useFinalCTAForm() {
       if (paymentMethod === 'online') {
         webhookPromise.catch(() => {});
         if (!window.Korapay) {
-          alert('Payment gateway is loading. Please try again in a moment.');
+          showAlert({ title: 'Payment loading', message: 'Payment gateway is loading. Please try again in a moment.' });
           setLoading(false);
           return;
         }
@@ -150,7 +152,7 @@ export function useFinalCTAForm() {
             navigate('/thank-you', { state: { paymentMethod: 'online' } });
           },
           onFailed: (_data: unknown) => {
-            alert('Payment failed. Please try again.');
+            showAlert({ title: 'Payment failed', message: 'Payment failed. Please try again.' });
             setLoading(false);
           },
         });
@@ -182,7 +184,7 @@ export function useFinalCTAForm() {
 
       navigate('/thank-you', { state: { paymentMethod: 'cod', phone: form.phone.trim() } });
     } catch {
-      alert('Order submission failed. Please try again or call us directly.');
+      showAlert({ title: 'Submission error', message: 'Order submission failed. Please try again or call us directly.' });
     } finally {
       setLoading(false);
     }

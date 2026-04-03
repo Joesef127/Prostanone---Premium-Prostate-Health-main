@@ -13,20 +13,28 @@ import Contact from './pages/Contact';
 import Checkout from './pages/Checkout';
 import ThankYou from './pages/ThankYou';
 import Product from './pages/Product.tsx';
+import TermsAndConditions from './pages/TermsAndConditions';
+import Distributor from './pages/Distributor';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import CreateBlog from './pages/CreateBlog';
 import { AppProvider } from './context/AppContext';
+import { ModalProvider } from './context/ModalContext';
+import Modal from './components/ui/Modal';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
   return null;
 };
 
 const App: React.FC = () => {
   return (
+    <ModalProvider>
     <AppProvider>
       <Router>
         <ScrollToTop />
@@ -34,7 +42,7 @@ const App: React.FC = () => {
           <Navbar />
           <WhatsAppButton />
           <NewsletterPopup />
-          <main className="flex-grow">
+          <main className="grow">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -47,12 +55,20 @@ const App: React.FC = () => {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/thank-you" element={<ThankYou />} />
               <Route path="/product" element={<Product />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
+              <Route path="/distributor" element={<Distributor />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/create" element={<CreateBlog />} />
+              <Route path="/blog/edit/:slug" element={<CreateBlog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
             </Routes>
           </main>
           <Footer />
         </div>
       </Router>
     </AppProvider>
+    <Modal />
+    </ModalProvider>
   );
 };
 

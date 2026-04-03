@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { Loader2, CreditCard } from 'lucide-react';
-import { PACKAGES } from '../../lib/constants.ts';
+import { PACKAGES, NAFDAC_REG_NO } from '../../lib/constants.ts';
 import { NIGERIAN_STATES } from '../../utils/delivery';
 import { useFinalCTAForm } from '../../hooks/useFinalCTAForm';
 import FormField from './FormField';
@@ -177,7 +177,7 @@ const FinalCTA: React.FC = () => {
             </button>
 
             <p className="text-center text-xs text-gray-400">
-              NAFDAC Reg. No. A7-4976L. Nationwide Delivery Available
+              NAFDAC Reg. No. {NAFDAC_REG_NO}. Nationwide Delivery Available
             </p>
           </form>
         </div>

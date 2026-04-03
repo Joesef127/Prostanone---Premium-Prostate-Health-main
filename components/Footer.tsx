@@ -36,6 +36,7 @@ const Footer: React.FC = () => {
                 </li>
               ))}
               <li><Link to="/quiz" className="text-gray-300 hover:text-white text-sm transition-colors">Check Prostate Health</Link></li>
+              <li><Link to="/distributor" className="text-gray-300 hover:text-white text-sm transition-colors">Become a Distributor</Link></li>
             </ul>
           </div>
 
@@ -49,7 +50,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center text-gray-300 text-sm">
                 <Mail className="w-4 h-4 mr-3" />
-                <span>support@prostanone.ng</span>
+                <a href="mailto:support@holisbotanicals.com" className="hover:text-green-400 transition-colors">support@holisbotanicals.com</a>
               </li>
               <li className="text-gray-300 text-sm ml-7">
                 Mon-Sat, 9AM-6PM WAT
@@ -67,10 +68,10 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-accent">Legal</h3>
             <ul className="space-y-3">
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Privacy Policy</Link></li>
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Terms of Service</Link></li>
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Refund Policy</Link></li>
-              <li><Link to="#" className="text-gray-300 hover:text-white text-sm">Shipping Policy</Link></li>
+              <li><Link to="/terms#4-privacy-policy" className="text-gray-300 hover:text-white text-sm transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms#1-legal-terms-of-use" className="text-gray-300 hover:text-white text-sm transition-colors">Terms of Service</Link></li>
+              <li><Link to="/terms#3-refund-return-policy" className="text-gray-300 hover:text-white text-sm transition-colors">Refund Policy</Link></li>
+              <li><Link to="/terms#2-shipping-policy" className="text-gray-300 hover:text-white text-sm transition-colors">Shipping Policy</Link></li>
             </ul>
           </div>
         </div>

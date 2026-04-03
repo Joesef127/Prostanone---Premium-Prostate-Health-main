@@ -8,7 +8,7 @@ const ProblemSection: React.FC = () => (
       <FadeIn>
         <SectionHeader
           eyebrow="The Silent Struggle"
-          title="Are These Symptoms Running Your Life?"
+          title="Are These Symptoms Affecting You?"
           subtitle="Millions of Nigerian men over 40 live with prostate problems, but most suffer in silence. You don't have to."
         />
       </FadeIn>

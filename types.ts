@@ -45,3 +45,28 @@ export interface QuizResult {
   severity: QuizSeverity;
   answers: Record<number, number>; // questionId -> score
 }
+
+export type ModalConfig =
+  | {
+      kind: 'alert';
+      title: string;
+      message: string;
+      confirmLabel?: string;
+    }
+  | {
+      kind: 'confirm';
+      title: string;
+      message: string;
+      confirmLabel?: string;
+      cancelLabel?: string;
+      destructive?: boolean;
+    }
+  | {
+      kind: 'prompt';
+      title: string;
+      message?: string;
+      placeholder?: string;
+      defaultValue?: string;
+      confirmLabel?: string;
+      cancelLabel?: string;
+    };

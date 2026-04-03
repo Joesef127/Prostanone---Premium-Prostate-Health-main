@@ -9,7 +9,7 @@ import { images } from "@/lib";
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isProductPage, setIsProductPage] = useState(false);
+  const [isAddedPage, setIsAddedPage] = useState(false);
 
   const location = useLocation();
   const { cart } = useApp();
@@ -26,7 +26,11 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     setIsOpen(false);
-    setIsProductPage(location.pathname === "/product");
+    setIsAddedPage(
+      location.pathname === "/product" ||
+        location.pathname === "/blog" ||
+        location.pathname === "/distributor",
+    );
   }, [location]);
 
   return (
@@ -34,7 +38,7 @@ const Navbar: React.FC = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
             ${
               scrolled || isOpen
-                ? `${isProductPage ? "bg-primary/90" : "bg-white/90"} 
+                ? `${isAddedPage ? "bg-primary/90" : "bg-white/90"} 
             backdrop-blur-md shadow-md py-4`
                 : "bg-transparent py-6"
             }`}
@@ -46,43 +50,43 @@ const Navbar: React.FC = () => {
             <img
               src={images.logo}
               alt="Prostanone Logo"
-              className={`h-10 w-auto ${isProductPage ? (isOpen ? "" : "brightness-0 invert") : ""}`}
+              className={`h-10 w-auto ${isAddedPage ? (isOpen ? "" : "brightness-0 invert") : ""}`}
             />
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-2 lg:space-x-8">
-            {/* {isProductPage ? (
+          <div className="hidden md:flex items-center space-x-2 lg:space-x-6 xl:space-x-8">
+            {/* {isAddedPage ? (
                 <Link
                     to={"#"}
                     className={`text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
                         location.pathname !== "/product"
                             ? "text-primary font-bold"
                             : "text-gray-600"
-                    } ${isProductPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
+                    } ${isAddedPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
                 >
                     Product
                 </Link>
             ) : (
               <> */}
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`text-xs lg:text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
-                      location.pathname === link.path
-                        ? `${isProductPage ? "bg-white text-primary!" : "text-primary font-bold"}`
-                        : "text-gray-600"
-                    } ${isProductPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              {/* </>
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`text-xs lg:text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
+                  location.pathname === link.path
+                    ? `${isAddedPage ? "bg-white text-primary!" : "text-primary font-bold"}`
+                    : "text-gray-600"
+                } ${isAddedPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {/* </>
             )} */}
             <Link to="/summary">
               <div
-                className={`relative py-1.5 px-2 ${isProductPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
+                className={`relative py-1.5 px-2 ${isAddedPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
               >
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -93,7 +97,12 @@ const Navbar: React.FC = () => {
               </div>
             </Link>
             <Link to="/quiz">
-              <Button size="sm" className={`${isProductPage && "text-primary! bg-white border border-transparent hover:text-white! hover:bg-transparent hover:border-white rounded-lg"}`}>Check Prostate Health</Button>
+              <Button
+                size="sm"
+                className={`sm:text-xs! xl:text-sm! ${isAddedPage && "text-primary! bg-white border border-transparent hover:text-white! hover:bg-transparent hover:border-white rounded-lg"}`}
+              >
+                Check Prostate Health
+              </Button>
             </Link>
           </div>
 
@@ -101,11 +110,11 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center gap-4 z-50">
             <Link to="/summary" className="relative text-gray-800">
               <div
-                  className={`py-1.5 px-2 ${isProductPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`}`}
+                className={`py-1.5 px-2 ${isAddedPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`}`}
               >
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-accent text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                  <span className="absolute top-0 right-0 bg-accent text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
                     {cartCount}
                   </span>
                 )}
@@ -114,7 +123,7 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`py-1 px-1.5 ${isProductPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`} focus:outline-none`}
+              className={`py-1 px-1.5 ${isAddedPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`} focus:outline-none`}
             >
               {isOpen ? (
                 <X className="w-8 h-8" />
@@ -134,16 +143,16 @@ const Navbar: React.FC = () => {
               key={link.path}
               to={link.path}
               className={`text-xl font-medium text-gray-800 hover:text-white p-2 hover:bg-primary w-full rounded-lg text-center ${
-                  location.pathname === link.path
-                      ? "bg-primary text-white!"
-                      : "text-gray-600"
+                location.pathname === link.path
+                  ? "bg-primary text-white!"
+                  : "text-gray-600"
               }`}
             >
               {link.label}
             </Link>
           ))}
           <Link to="/quiz" className="w-full">
-            <Button fullWidth size="md">
+            <Button fullWidth size="md" className="text-sm sm:text-base">
               Check Prostate Health
             </Button>
           </Link>

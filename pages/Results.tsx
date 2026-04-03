@@ -6,8 +6,10 @@ import { PACKAGES } from '../lib/constants.ts';
 import Button from '../components/Button';
 import { CheckCircle, AlertTriangle, Shield, Clock, ArrowRight, Activity } from 'lucide-react';
 import { QuizSeverity } from '../types';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Results: React.FC = () => {
+  useDynamicTitle('Your Results');
   const { quizResult, addToCart } = useApp();
   const navigate = useNavigate();
 
@@ -19,9 +21,9 @@ const Results: React.FC = () => {
   if (!quizResult) return null;
 
   // Logic for recommendation
-  let recommendedPackageId = 'option-a'; // MILD
-  if (quizResult.severity === QuizSeverity.MODERATE) recommendedPackageId = 'option-b';
-  if (quizResult.severity === QuizSeverity.SEVERE) recommendedPackageId = 'option-c';
+  let recommendedPackageId = 'starter'; // MILD
+  if (quizResult.severity === QuizSeverity.MODERATE) recommendedPackageId = 'most-valuable';
+  if (quizResult.severity === QuizSeverity.SEVERE) recommendedPackageId = 'loyalty';
 
   const recommendedPackage = PACKAGES.find(p => p.id === recommendedPackageId)!;
 

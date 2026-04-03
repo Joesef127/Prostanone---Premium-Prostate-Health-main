@@ -3,13 +3,16 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Moon, Clock, AlertCircle, Droplets, ArrowRight, CheckCircle } from 'lucide-react';
 import Button from '../components/Button';
+import { NAFDAC_REG_NO } from '../lib/constants';
 import { PACKAGES, TESTIMONIALS, SMALL_PRINT } from '../lib/constants.ts';
 import { ProstateDiagram } from '../components/ProstateDiagram';
 import { useApp } from '../context/AppContext';
 import FAQ from '../components/FAQ';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import { images } from '@/lib';
 
 const Home: React.FC = () => {
+  useDynamicTitle('Premium Prostate Health');
   const navigate = useNavigate();
   const { addToCart } = useApp();
   const { scrollY } = useScroll();
@@ -24,7 +27,7 @@ const Home: React.FC = () => {
   return (
     <div className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gradient-to-br from-background to-white">
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-linear-to-br from-background to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 grid md:grid-cols-2 gap-12 items-center">
 
           <motion.div
@@ -61,12 +64,12 @@ const Home: React.FC = () => {
 
           <motion.div style={{ rotate: rotation, opacity }} className="relative flex justify-center items-center">
             {/* Abstract Background Blob */}
-            <div className="absolute w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl -z-10" />
+            <div className="absolute w-125 h-125 bg-primary/10 rounded-full blur-3xl -z-10" />
 
             {/* Product Image Placeholder - 3D Card Effect */}
-            <div className="relative w-64 h-80 md:w-80 md:h-[450px] bg-white rounded-3xl shadow-2xl border-4 border-white transform hover:scale-105 transition-transform duration-500 overflow-hidden flex flex-col items-center">
+            <div className="relative w-64 h-80 md:w-80 md:h-112.5 bg-white rounded-3xl shadow-2xl border-4 border-white transform hover:scale-105 transition-transform duration-500 overflow-hidden flex flex-col items-center">
 
-              <div className="h-2/3 w-full bg-gradient-to-b from-primary to-secondary p-6 flex flex-col justify-between">
+              <div className="h-2/3 w-full bg-linear-to-b from-primary to-secondary p-6 flex flex-col justify-between">
                 <span className="text-white font-bold text-2xl tracking-widest uppercase text-center border-b border-white/20 pb-2">
                   Prostanone
                 </span>
@@ -91,7 +94,7 @@ const Home: React.FC = () => {
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
                 <p className="text-xs text-gray-500 font-medium">Herbal Supplement</p>
-                <p className="text-[10px] text-gray-400">NAFDAC Reg No: A7-1234L</p>
+                <p className="text-[10px] text-gray-400">NAFDAC Reg No: {NAFDAC_REG_NO}</p>
               </div>
 
             </div>
@@ -156,7 +159,7 @@ const Home: React.FC = () => {
                   { title: "Diuretic Action", desc: "Increases urine flow and flushes out bacteria naturally." }
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent/20 text-accent font-bold flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 rounded-full bg-accent/20 text-accent font-bold flex items-center justify-center">
                       {idx + 1}
                     </div>
                     <div>
@@ -183,7 +186,7 @@ const Home: React.FC = () => {
 
         <div className="flex overflow-x-auto pb-8 gap-6 px-4 no-scrollbar snap-x">
           {TESTIMONIALS.map((t) => (
-            <div key={t.id} className="flex-shrink-0 w-80 md:w-96 bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 snap-center">
+            <div key={t.id} className="shrink-0 w-80 md:w-96 bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 snap-center">
               <div className="flex gap-1 mb-4 text-accent">
                 {[...Array(5)].map((_, i) => <span key={i}>★</span>)}
               </div>
@@ -198,18 +201,18 @@ const Home: React.FC = () => {
       </section>
 
       {/* Modern Pricing Carousel */}
-      <section id="pricing" className="py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
+      <section id="pricing" className="py-24 bg-linear-to-b from-gray-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-6 tracking-tight">Choose Your Package</h2>
           <p className="text-xl text-text-muted max-w-2xl mx-auto">Simple transparent pricing. Experience the power of nature with guaranteed results.</p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 pb-12 px-4 md:px-8 max-w-[1400px] mx-auto lg:items-stretch">
+        <div className="flex flex-col lg:flex-row gap-8 pb-12 px-4 md:px-8 max-w-350 mx-auto lg:items-stretch">
 
           {/* Static Hero Image Card */}
-          <div className="relative flex-shrink-0 w-full lg:w-[450px] rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 lg:sticky lg:top-8 h-[400px] lg:h-auto lg:min-h-[500px]">
+          <div className="relative shrink-0 w-full lg:w-112.5 rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 lg:sticky lg:top-8 h-100 lg:h-auto lg:min-h-125">
             <img src={images.prostanone_home} alt="Prostanone Premium Product" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent flex flex-col justify-end p-8">
+            <div className="absolute inset-0 bg-linear-to-t from-primary/90 via-primary/30 to-transparent flex flex-col justify-end p-8">
               <div className="bg-accent text-primary text-xs font-bold uppercase py-1 px-3 rounded-full inline-block mb-3 self-start">Premium Quality</div>
               <h3 className="text-3xl font-bold text-white mb-2">100% Herbal</h3>
               <p className="text-white/90 text-sm">Manufactured in GMP-certified facilities using only the finest natural extracts.</p>
@@ -217,7 +220,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Scrolling Packages Wrapper */}
-          <div className="flex-grow flex flex-col w-full min-w-0">
+          <div className="grow flex flex-col w-full min-w-0">
             {/* Drag/Swipe Hint */}
             <div className="flex justify-center mb-2 xl:hidden">
               <motion.div
@@ -231,11 +234,11 @@ const Home: React.FC = () => {
             </div>
 
             {/* Scrolling Packages */}
-            <div className="flex overflow-x-auto gap-4 pb-12 snap-x snap-mandatory no-scrollbar flex-grow items-end px-4 pt-8">
+            <div className="flex overflow-x-auto gap-4 pb-12 snap-x snap-mandatory no-scrollbar grow items-end px-4 pt-8">
               {PACKAGES.map((pkg) => (
                 <div
                   key={pkg.id}
-                  className={`relative flex-shrink-0 w-[88vw] sm:w-72 lg:w-80 p-6 sm:p-8 rounded-3xl flex flex-col snap-center border transition-all duration-300 hover:shadow-2xl h-auto ${pkg.id === 'option-b'
+                  className={`relative shrink-0 w-[88vw] sm:w-72 lg:w-80 p-6 sm:p-8 rounded-3xl flex flex-col snap-center border transition-all duration-300 hover:shadow-2xl h-auto ${pkg.id === 'option-b'
                     ? 'border-primary bg-primary text-white shadow-xl scale-[1.02] z-10 mx-2'
                     : 'border-gray-200 bg-white'
                     }`}
@@ -270,7 +273,7 @@ const Home: React.FC = () => {
                     )}
                   </div>
 
-                  <p className={`text-sm mb-4 pb-4 border-b flex-grow ${pkg.id === 'option-b' ? 'text-white/80 border-white/10' : 'text-text-muted border-gray-100'}`}>
+                  <p className={`text-sm mb-4 pb-4 border-b grow ${pkg.id === 'option-b' ? 'text-white/80 border-white/10' : 'text-text-muted border-gray-100'}`}>
                     {pkg.description}
                     {pkg.recommendedFor && <><br /><br /><strong className={pkg.id === 'option-b' ? 'text-white' : 'text-gray-800'}>{pkg.recommendedFor}</strong></>}
                   </p>
