@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useLocation } from 'react-router-dom';
 import termsContent from '../policies/terms.md?raw';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -16,6 +17,7 @@ const components = {
 
 const TermsAndConditions: React.FC = () => {
   const { hash } = useLocation();
+    useDynamicTitle('Terms and Conditions | Prostanone');
 
   useEffect(() => {
     if (hash) {

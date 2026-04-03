@@ -6,8 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, ArrowRight, Truck, Minus, Plus, Clock } from 'lucide-react';
 import { images } from '@/lib';
 import { useModal } from '../context/ModalContext';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Summary: React.FC = () => {
+   useDynamicTitle('Cart Summary');
    const { cart, removeFromCart, updateQuantity } = useApp();
    const navigate = useNavigate();
    const { showConfirm } = useModal();
@@ -57,7 +59,7 @@ const Summary: React.FC = () => {
                                  className="h-28 w-auto object-contain"
                               />
                            </div>
-                           <div className="flex-grow text-center md:text-left">
+                           <div className="grow text-center md:text-left">
                               <h3 className="text-xl font-bold text-primary mb-2">{pkg.name}</h3>
                               <p className="text-text-muted text-sm mb-4">{pkg.description}</p>
                               <ul className="text-sm space-y-1 inline-block text-left">

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCheckout } from '../hooks/useCheckout';
 import Button from '../components/Button';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import CheckoutProgressBar from '../components/checkout/CheckoutProgressBar';
 import StepContact from '../components/checkout/StepContact';
 import StepShipping from '../components/checkout/StepShipping';
@@ -17,6 +18,7 @@ const slideVariants = {
 };
 
 const Checkout: React.FC = () => {
+  useDynamicTitle('Checkout');
   const navigate = useNavigate();
   const {
     cart,

@@ -14,6 +14,7 @@ import {
   type LocalBlogPost,
 } from '../lib/blogStorage';
 import { BLOG_TEMPLATES, type BlogTemplate } from '../lib/blogTemplates';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const EMPTY_FORM = {
   title: '',
@@ -27,6 +28,7 @@ const CreateBlog: React.FC = () => {
   const navigate = useNavigate();
   const { slug: editSlug } = useParams<{ slug?: string }>();
   const isEditing = Boolean(editSlug);
+  useDynamicTitle(isEditing ? 'Edit Post' : 'New Post');
   const { showConfirm } = useModal();
 
   const availableCategories = Array.from(

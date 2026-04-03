@@ -6,8 +6,10 @@ import { useApp } from '../context/AppContext';
 import { QuizSeverity } from '../types';
 import Button from '../components/Button';
 import { ArrowLeft, Check } from 'lucide-react';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Quiz: React.FC = () => {
+  useDynamicTitle('Prostate Health Check');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const { setQuizResult } = useApp();
@@ -65,7 +67,7 @@ const Quiz: React.FC = () => {
           />
         </div>
 
-        <div className="p-8 md:p-12 flex-grow flex flex-col relative">
+        <div className="p-8 md:p-12 grow flex flex-col relative">
           {currentQuestionIndex > 0 && (
             <button 
               onClick={prevQuestion}
@@ -75,7 +77,7 @@ const Quiz: React.FC = () => {
             </button>
           )}
 
-          <div className="flex-grow flex flex-col justify-center mt-8">
+          <div className="grow flex flex-col justify-center mt-8">
              <span className="text-accent font-bold uppercase tracking-wider text-sm mb-2">
                Question {currentQuestionIndex + 1} of {QUIZ_QUESTIONS.length}
              </span>

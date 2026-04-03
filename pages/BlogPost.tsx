@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -6,18 +6,14 @@ import { motion } from 'framer-motion';
 import { Clock, Calendar, Tag, Pencil } from 'lucide-react';
 import { getBlogPost, getAllBlogPosts } from '../lib/blogData';
 import { getCategoryColor } from '../lib/categoryColors';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const post = slug ? getBlogPost(slug) : undefined;
 
-  useEffect(() => {
-    if (post) {
-      document.title = `${post.title} | Prostanone Blog`;
-      return () => { document.title = 'Prostanone — Premium Prostate Health'; };
-    }
-  }, [post]);
+  useDynamicTitle(post?.title, 'Prostanone Blog');
 
   if (!post) {
     return <Navigate to="/blog" replace />;
@@ -81,7 +77,7 @@ const BlogPost: React.FC = () => {
       {/* Cover Image */}
       {post.coverImage && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-          <div className="aspect-[21/9] rounded-2xl overflow-hidden bg-gray-100">
+          <div className="aspect-21/9 rounded-2xl overflow-hidden bg-gray-100">
             <img
               src={post.coverImage}
               alt={post.title}
@@ -112,7 +108,7 @@ const BlogPost: React.FC = () => {
         )}
 
         {/* CTA */}
-        <div className="mt-14 bg-gradient-to-br from-primary/5 to-accent/10 border border-primary/20 rounded-2xl p-8 text-center">
+        <div className="mt-14 bg-linear-to-br from-primary/5 to-accent/10 border border-primary/20 rounded-2xl p-8 text-center">
           <h3 className="text-xl font-bold text-secondary mb-2">Ready to support your prostate?</h3>
           <p className="text-text-muted mb-6 text-sm max-w-md mx-auto">
             Prostanone combines eight clinically-studied plant compounds in a NAFDAC-certified formulation designed for Nigerian men.
@@ -139,7 +135,7 @@ const BlogPost: React.FC = () => {
                   className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col"
                 >
                   {related.coverImage && (
-                    <div className="aspect-[16/9] overflow-hidden bg-gray-100">
+                    <div className="aspect-video overflow-hidden bg-gray-100">
                       <img
                         src={related.coverImage}
                         alt={related.title}

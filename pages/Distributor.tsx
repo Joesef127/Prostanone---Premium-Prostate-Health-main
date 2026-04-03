@@ -13,6 +13,7 @@ import { FormInput, FormSelect, FormTextarea } from '../components/ui/FormFields
 import { BUSINESS_TYPES, MONTHLY_ORDER_QUANTITIES } from '../lib/constants';
 import { NIGERIAN_STATES } from '../utils/delivery';
 import { useDistributorForm } from '../hooks/useDistributorForm';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const BENEFITS = [
   {
@@ -52,6 +53,7 @@ const FadeIn: React.FC<{ children: React.ReactNode; delay?: number }> = ({
 );
 
 const Distributor: React.FC = () => {
+  useDynamicTitle('Become a Distributor');
   const { form, errors, status, handleChange, handleSubmit } = useDistributorForm();
 
   return (

@@ -1,4 +1,6 @@
-﻿export interface BlogPost {
+﻿import { getLocalBlogPosts } from './blogStorage';
+
+export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
@@ -15,8 +17,6 @@
 }
 
 export const BLOG_POSTS: BlogPost[] = [];
-
-import { getLocalBlogPosts } from './blogStorage';
 
 /** Returns all posts: localStorage-created first, then static. */
 export function getAllBlogPosts(): BlogPost[] {

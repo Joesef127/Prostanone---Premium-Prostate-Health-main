@@ -358,7 +358,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       </div>
 
       {/* ── Editor surface ── */}
-      <div className="tiptap-editor p-5 min-h-[400px]">
+      <div className="tiptap-editor p-5 min-h-100">
         <EditorContent editor={editor} />
       </div>
     </div>

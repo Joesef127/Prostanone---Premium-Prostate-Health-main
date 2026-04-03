@@ -7,6 +7,7 @@ import {
 } from '../lib/blogData';
 import { getCategoryColor } from '../lib/categoryColors';
 import type { BlogPost } from '../lib/blogData';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const FadeIn: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
@@ -71,6 +72,7 @@ const BlogCard: React.FC<{ post: BlogPost; delay?: number }> = ({
 );
 
 const Blog: React.FC = () => {
+  useDynamicTitle('Blog');
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
   const [allPosts, setAllPosts] = useState<BlogPost[]>(() => getAllBlogPosts());
@@ -92,7 +94,7 @@ const Blog: React.FC = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-secondary to-secondary/90 text-white py-20">
+      <section className="bg-linear-to-br from-secondary to-secondary/90 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <FadeIn>
             <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
@@ -141,7 +143,22 @@ const Blog: React.FC = () => {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {filtered.length === 0 ? (
-            <p className="text-center text-text-muted py-12">No articles in this category yet.</p>
+            <div className="text-center py-16">
+              {allPosts.length === 0 ? (
+                <>
+                  <p className="text-text-muted mb-4">No posts yet — be the first to publish one.</p>
+                  <button
+                    onClick={() => navigate('/blog/create')}
+                    className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-primary/90 transition-colors"
+                  >
+                    <PenSquare className="w-4 h-4" />
+                    Create first post
+                  </button>
+                </>
+              ) : (
+                <p className="text-text-muted">No articles in this category yet.</p>
+              )}
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filtered.map((post, i) => (

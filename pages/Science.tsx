@@ -2,8 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ProstateDiagram } from '../components/ProstateDiagram';
 import { images } from '@/lib';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Science: React.FC = () => {
+  useDynamicTitle('The Science');
   return (
     <div className="pt-20 bg-white">
       {/* Hero */}
@@ -86,7 +88,7 @@ const Science: React.FC = () => {
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold shrink-0">
                   {ing.dose}
                 </div>
-                <div className="flex-grow">
+                <div className="grow">
                   <h3 className="text-xl font-bold text-primary mb-2">{ing.name}</h3>
                   <p className="text-text-muted">{ing.desc}</p>
                 </div>

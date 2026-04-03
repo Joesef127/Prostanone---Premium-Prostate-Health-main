@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "../components/Button";
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import {
   Mail,
   Phone,
@@ -26,6 +27,7 @@ type SubmitStatus = "idle" | "loading" | "success" | "error";
 const SHEETS_WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
 
 const Contact: React.FC = () => {
+  useDynamicTitle('Contact Us');
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",

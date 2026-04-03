@@ -1,8 +1,10 @@
 import React from 'react';
 import { TESTIMONIALS } from '../lib/constants.ts';
 import { ShieldCheck, Star } from 'lucide-react';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Reviews: React.FC = () => {
+  useDynamicTitle('Customer Reviews');
   return (
     <div className="pt-20 bg-background min-h-screen">
        <section className="bg-primary text-white py-20 text-center">

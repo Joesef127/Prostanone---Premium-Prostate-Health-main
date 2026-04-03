@@ -6,8 +6,10 @@ import { PACKAGES } from '../lib/constants.ts';
 import Button from '../components/Button';
 import { CheckCircle, AlertTriangle, Shield, Clock, ArrowRight, Activity } from 'lucide-react';
 import { QuizSeverity } from '../types';
+import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Results: React.FC = () => {
+  useDynamicTitle('Your Results');
   const { quizResult, addToCart } = useApp();
   const navigate = useNavigate();
 
