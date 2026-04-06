@@ -1,15 +1,24 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useApp } from '../context/AppContext';
+import { PACKAGES } from '../lib/constants';
+
+const WHATSAPP_NUMBER = '2348155931140';
 
 const WhatsAppButton: React.FC = () => {
-    const location = useLocation();
+    const { cart } = useApp();
 
-    // Hide the button on checkout and quiz pages
-    if (location.pathname === '/checkout' || location.pathname === '/quiz') {
-        return null;
-    }
+    const buildMessage = () => {
+        if (cart.length > 0) {
+            const pkg = PACKAGES.find(p => p.id === cart[0].packageId);
+            const name = pkg ? pkg.name : cart[0].packageId;
+            return `Hi, I'd like to order Prostanone — ${name}. Please assist me.`;
+        }
+        return "Hi, I'd like to order Prostanone. Please assist me.";
+    };
+
+    const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
 
     return (
         <AnimatePresence>
@@ -19,7 +28,7 @@ const WhatsAppButton: React.FC = () => {
                 exit={{ scale: 0, opacity: 0 }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                href="https://wa.me/2348155931140"
+                href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-green-500 text-white rounded-full shadow-lg shadow-green-500/30 hover:bg-green-600 transition-colors"
