@@ -16,8 +16,15 @@ import box_and_satchet from "../public/images/box_and_satchet.png";
 import boxed_up from "../public/images/boxed_up.png";
 import nylon_wrapped from "../public/images/nylon_wrapped.png";
 import single_box from "../public/images/single_box.png";
+
 import nafdac_approved_badge from "../public/images/nafdac_approved_badge.webp";
 
+import prostanone_closeup from "../public/images/prostanone_closeup.png";
+import prostanone_couple from "../public/images/prostanone_couple.png";
+import prostanone_couple2 from "../public/images/prostanone_couple2.png";
+import prostanone_man from "../public/images/prostanone_man.png";
+import prostanone_showcase from "../public/images/prostanone_showcase.png";
+import prostanone_tablets from "../public/images/prostanone_tablets.png";
 
 export const images = {
     logo,
@@ -38,5 +45,12 @@ export const images = {
     boxed_up,
     nylon_wrapped,
     single_box,
-    nafdac_approved_badge
+    nafdac_approved_badge,
+
+    prostanone_closeup,
+    prostanone_couple,
+    prostanone_couple2,
+    prostanone_man,
+    prostanone_showcase,
+    prostanone_tablets,
 }

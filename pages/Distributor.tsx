@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { FormInput, FormSelect, FormTextarea } from '../components/ui/FormFields';
 import { BUSINESS_TYPES, MONTHLY_ORDER_QUANTITIES } from '../lib/constants';
-import { NIGERIAN_STATES } from '../utils/delivery';
+import { STATE_DELIVERY_ZONES } from '../utils/delivery';
 import { useDistributorForm } from '../hooks/useDistributorForm';
 import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
@@ -193,8 +193,8 @@ const Distributor: React.FC = () => {
                     label="State / Location"
                     name="state"
                     value={form.state}
-                    onChange={handleChange}
-                    options={['', ...NIGERIAN_STATES]}
+                    onChange={(v) => handleChange({ target: { name: 'state', value: v } } as React.ChangeEvent<HTMLSelectElement>)}
+                    groups={STATE_DELIVERY_ZONES}
                     required
                   />
                   {errors.state && (
@@ -209,7 +209,7 @@ const Distributor: React.FC = () => {
                     label="Business Type"
                     name="businessType"
                     value={form.businessType}
-                    onChange={handleChange}
+                    onChange={(v) => handleChange({ target: { name: 'businessType', value: v } } as React.ChangeEvent<HTMLSelectElement>)}
                     options={['', ...BUSINESS_TYPES]}
                     required
                   />
@@ -225,7 +225,7 @@ const Distributor: React.FC = () => {
                     label="Expected Monthly Order Quantity"
                     name="orderQuantity"
                     value={form.orderQuantity}
-                    onChange={handleChange}
+                    onChange={(v) => handleChange({ target: { name: 'orderQuantity', value: v } } as React.ChangeEvent<HTMLSelectElement>)}
                     options={['', ...MONTHLY_ORDER_QUANTITIES]}
                     required
                   />

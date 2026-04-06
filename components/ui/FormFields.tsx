@@ -1,4 +1,6 @@
 import React from 'react';
+import CustomDropdown from './CustomDropdown';
+import type { DropdownOption, DropdownGroup } from './CustomDropdown';
 
 const INPUT_BASE =
   'w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white focus:border-primary transition-colors';
@@ -54,35 +56,48 @@ export const FormInput: React.FC<FormInputProps> = ({
 };
 
 /* ─── FormSelect ─────────────────────────────────────────────────── */
-export interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface FormSelectProps {
   label: string;
-  options: string[];
+  name?: string;
+  id?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  /** Flat list — each item may be a plain string or { value, label }. */
+  options?: (string | DropdownOption)[];
+  /** Grouped list (mutually exclusive with `options`). */
+  groups?: DropdownGroup[];
+  placeholder?: string;
+  required?: boolean;
+  optional?: boolean;
   wrapperClassName?: string;
 }
 
 export const FormSelect: React.FC<FormSelectProps> = ({
   label,
-  options,
-  wrapperClassName,
-  id,
   name,
-  className,
-  ...rest
+  id,
+  value = '',
+  onChange,
+  options,
+  groups,
+  placeholder,
+  required,
+  optional,
+  wrapperClassName,
 }) => {
   const fieldId = id ?? name;
   return (
     <div className={wrapperClassName}>
-      <FormLabel htmlFor={fieldId}>{label}</FormLabel>
-      <select
-        id={fieldId}
-        name={name}
-        className={`${INPUT_BASE} ${className ?? ''}`}
-        {...rest}
-      >
-        {options.map(opt => (
-          <option key={opt}>{opt}</option>
-        ))}
-      </select>
+      <FormLabel htmlFor={fieldId} required={required} optional={optional}>
+        {label}
+      </FormLabel>
+      <CustomDropdown
+        value={value}
+        onChange={onChange ?? (() => {})}
+        options={options}
+        groups={groups}
+        placeholder={placeholder ?? 'Select…'}
+      />
     </div>
   );
 };

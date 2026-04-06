@@ -13,6 +13,56 @@ export const NIGERIAN_STATES: string[] = [
 /** South West states (excluding Lagos) attract lower delivery rates */
 const SOUTH_WEST = new Set(['ogun', 'ondo', 'osun', 'oyo', 'ekiti']);
 
+/** Dropdown option shape used by CustomDropdown */
+export type DropdownOption = { value: string; label: string };
+
+/** Zone group shape for the state picker */
+export type DeliveryZoneGroup = { label: string; options: DropdownOption[] };
+
+const SW_STATES = ['Ekiti', 'Ogun', 'Ondo', 'Osun', 'Oyo'];
+
+/**
+ * States grouped by delivery zone with fee labels.
+ * Used to build the custom-dropdown for state selection across the site.
+ */
+export const STATE_DELIVERY_ZONES: DeliveryZoneGroup[] = [
+  {
+    label: 'Lagos',
+    options: [
+      { value: 'Lagos', label: 'Lagos — Free (except Epe & Badagry ₦4,000)' },
+    ],
+  },
+  {
+    label: 'South West',
+    options: SW_STATES.map(s => ({ value: s, label: s })),
+  },
+  {
+    label: 'South East',
+    options: ['Abia', 'Anambra', 'Ebonyi', 'Enugu', 'Imo']
+      .map(s => ({ value: s, label: s })),
+  },
+  {
+    label: 'South South',
+    options: ['Akwa Ibom', 'Bayelsa', 'Cross River', 'Delta', 'Edo', 'Rivers']
+      .map(s => ({ value: s, label: s })),
+  },
+  {
+    label: 'North Central',
+    options: ['Benue', 'FCT (Abuja)', 'Kogi', 'Kwara', 'Nasarawa', 'Niger', 'Plateau']
+      .map(s => ({ value: s, label: s })),
+  },
+  {
+    label: 'North West',
+    options: ['Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Sokoto', 'Zamfara']
+      .map(s => ({ value: s, label: s })),
+  },
+  {
+    label: 'North East',
+    options: ['Adamawa', 'Bauchi', 'Borno', 'Gombe', 'Taraba', 'Yobe']
+      .map(s => ({ value: s, label: s })),
+  },
+];
+
 /** [maxKg, fee] — fee applies when totalWeight ≤ maxKg */
 const SW_TIERS: [number, number][] = [
   [1, 5000], [3, 7000], [5, 9000], [7, 11000], [10, 13000],

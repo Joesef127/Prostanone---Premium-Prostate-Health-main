@@ -24,7 +24,7 @@ export const ProductCarousel: React.FC<{ images: { src: string; alt: string }[] 
   };
 
   return (
-    <FadeIn className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg group">
+    <FadeIn className="relative w-full aspect-square rounded-2xl overflow-hidden group">
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={index}
@@ -36,7 +36,7 @@ export const ProductCarousel: React.FC<{ images: { src: string; alt: string }[] 
           transition={{ duration: 0.45, ease: 'easeInOut' }}
           src={images[index].src}
           alt={images[index].alt}
-          className="absolute inset-0 w-full h-[90%] object-contain p-4"
+          className="absolute inset-0 w-full h-[90%] object-cover object-top p-4 rounded-2xl"
           draggable={false}
         />
       </AnimatePresence>

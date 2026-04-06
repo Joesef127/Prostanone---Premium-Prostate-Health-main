@@ -5,11 +5,11 @@ import { ProductCarousel } from '../ProductCarousel';
 import { NAFDAC_REG_NO } from '../../lib/constants';
 
 const CAROUSEL_IMAGES = [
-  { src: images.single_box,      alt: 'Prostanone single box' },
-  { src: images.box_and_satchet, alt: 'Prostanone with tablet blister packs' },
+  { src: images.prostanone_closeup,      alt: 'Prostanone single box' },
+  { src: images.prostanone_showcase, alt: 'Prostanone with tablet blister packs' },
   { src: images.prostanone,     alt: 'Prostanone product view' },
-  { src: images.box_and_nylon,   alt: 'Prostanone full pack contents' },
-  { src: images.boxed_up,        alt: 'Prostanone boxed up' },
+  { src: images.prostanone_tablets,   alt: 'Prostanone full pack contents' },
+  // { src: images.boxed_up,        alt: 'Prostanone boxed up' },
 ];
 
 
