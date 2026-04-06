@@ -26,8 +26,8 @@ const HomeHeroSection: React.FC = () => {
       </motion.div>
 
       {/* Layered gradient overlays for depth */}
-      <div className="absolute inset-0 z-10 bg-linear-to-t from-black/85 via-black/45 to-black/30" />
-      <div className="absolute inset-0 z-10 bg-linear-to-r from-primary/30 via-transparent to-transparent" />
+      <div className="absolute inset-0 z-10 bg-linear-to-t from-black/90 via-black/60 to-black/55" />
+      <div className="absolute inset-0 z-10 bg-linear-to-r from-primary/20 via-transparent to-transparent" />
 
       {/* Content */}
       <motion.div
