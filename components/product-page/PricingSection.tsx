@@ -89,7 +89,7 @@ const PricingSection: React.FC = () => {
                       )}
                     </div>
                     {pkg.savingsText && (
-                      <span className="inline-block bg-success/10 text-success text-xs px-2.5 py-1 rounded-full mb-4">
+                      <span className="inline-block bg-success/10 text-success text-xs px-2.5 py-1 rounded-full mb-4 w-fit">
                         {pkg.savingsText}
                       </span>
                     )}
