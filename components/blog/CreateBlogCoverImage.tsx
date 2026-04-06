@@ -80,7 +80,7 @@ const CreateBlogCoverImage: React.FC<CreateBlogCoverImageProps> = ({
     {coverImage && (
       <div className="mt-3 relative group">
         <div className="aspect-21/9 rounded-xl overflow-hidden bg-gray-100">
-          <img src={coverImage} alt="Cover preview" className="w-full h-full object-cover" />
+          <img src={coverImage} alt="Cover preview" className="w-full h-full object-cover" loading="lazy" />
         </div>
         <button
           type="button"

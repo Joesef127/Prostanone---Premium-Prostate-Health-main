@@ -27,7 +27,7 @@ const CreateBlogPreviewPane: React.FC<CreateBlogPreviewPaneProps> = ({
   >
     {coverImage && (
       <div className="aspect-21/9 rounded-2xl overflow-hidden bg-gray-100 mb-8">
-        <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+        <img src={coverImage} alt="Cover" className="w-full h-full object-cover" loading="lazy" />
       </div>
     )}
 

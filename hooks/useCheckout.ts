@@ -146,6 +146,9 @@ export function useCheckout() {
         showAlert({ title: 'Invalid phone number', message: 'Please enter a valid 10-15 digit phone number.' });
         return;
       }
+
+      // Capture contact info immediately for abandoned cart recovery
+      sendCheckoutProgress(1, 'contact_info_entered');
     }
 
     if (step === 2) {

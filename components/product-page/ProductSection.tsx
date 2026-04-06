@@ -46,7 +46,7 @@ const ProductSection: React.FC = () => (
           </ul>
 
           <div className="flex items-center gap-4 bg-success/5 border border-success/20 rounded-2xl p-4">
-            <img src={images.nafdac_approved_badge} alt="NAFDAC Approved" className="h-14 w-14 shrink-0" />
+            <img src={images.nafdac_approved_badge} alt="NAFDAC Approved" className="h-14 w-14 shrink-0" loading="lazy" />
             <div>
               <p className="font-bold text-secondary">NAFDAC Approved</p>
               <p className="text-sm text-text-muted">

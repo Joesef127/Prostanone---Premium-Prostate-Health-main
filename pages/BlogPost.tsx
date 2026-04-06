@@ -22,7 +22,7 @@ const BlogPost: React.FC = () => {
       {post.coverImage && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
           <div className="aspect-21/9 rounded-2xl overflow-hidden bg-gray-100">
-            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" loading="lazy" />
           </div>
         </div>
       )}
