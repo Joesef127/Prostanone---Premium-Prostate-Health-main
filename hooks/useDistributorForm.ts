@@ -59,23 +59,40 @@ export function useDistributorForm() {
     if (!validate() || status === 'loading') return;
     setStatus('loading');
     try {
-      const res = await fetch(SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          source: 'distributor',
-          full_name: form.fullName.trim(),
-          phone: form.phone.trim(),
-          email: form.email.trim(),
-          state: form.state,
-          business_type: form.businessType,
-          order_quantity: form.orderQuantity,
-          message: form.message.trim(),
+      const gasPayload = {
+        source: 'distributor',
+        full_name: form.fullName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        state: form.state,
+        business_type: form.businessType,
+        order_quantity: form.orderQuantity,
+        message: form.message.trim(),
+      };
+
+      await Promise.allSettled([
+        fetch(SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(gasPayload),
         }),
-      });
+        fetch('/api/distributors', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullName: form.fullName.trim(),
+            phone: form.phone.trim(),
+            email: form.email.trim(),
+            state: form.state,
+            businessType: form.businessType,
+            expectedMonthlyOrder: form.orderQuantity,
+            message: form.message.trim(),
+          }),
+        }),
+      ]);
+
       // no-cors responses are always opaque (status 0) — treat any non-thrown fetch as success
-      void res;
       setStatus('success');
       setForm(INITIAL_FORM);
     } catch {

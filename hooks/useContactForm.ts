@@ -47,20 +47,30 @@ const useContactForm = () => {
     if (!validate()) return;
     setStatus('loading');
     try {
-      await fetch(SHEETS_WEBHOOK_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim().toLowerCase(),
-          message: form.message.trim(),
-          source: 'Contact Form',
-          date: new Date(new Date().getTime() + 1 * 60 * 60 * 1000)
-            .toISOString()
-            .replace('Z', '+01:00'),
+      const payload = {
+        name: form.name.trim(),
+        email: form.email.trim().toLowerCase(),
+        message: form.message.trim(),
+        source: 'Contact Form',
+        date: new Date(new Date().getTime() + 1 * 60 * 60 * 1000)
+          .toISOString()
+          .replace('Z', '+01:00'),
+      };
+
+      await Promise.allSettled([
+        fetch(SHEETS_WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload),
         }),
-      });
+        fetch('/api/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: payload.name, email: payload.email, message: payload.message }),
+        }),
+      ]);
+
       setStatus('success');
       setForm({ name: '', email: '', message: '' });
     } catch {

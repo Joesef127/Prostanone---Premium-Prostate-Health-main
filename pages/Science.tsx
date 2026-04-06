@@ -20,8 +20,8 @@ const Science: React.FC = () => {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-8 mb-12 justify-center items-center">
-            <img src={images.prostanone_science1} alt="Prostanone Science" className="w-full md:w-1/2 max-w-sm h-auto rounded-3xl shadow-md object-cover" />
-            <img src={images.prostanone_science2} alt="Prostanone Science" className="w-full md:w-1/2 max-w-sm h-auto rounded-3xl shadow-md object-cover" />
+            <img src={images.prostanone_science1} alt="Prostanone Science" className="w-full md:w-1/2 max-w-sm h-auto rounded-3xl shadow-md object-cover" loading="lazy" />
+            <img src={images.prostanone_science2} alt="Prostanone Science" className="w-full md:w-1/2 max-w-sm h-auto rounded-3xl shadow-md object-cover" loading="lazy" />
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>

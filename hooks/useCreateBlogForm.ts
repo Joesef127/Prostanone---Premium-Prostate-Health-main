@@ -1,14 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useModal } from '../context/ModalContext';
-import { getAllBlogPosts } from '../lib/blogData';
 import {
-  saveLocalBlogPost,
-  getLocalBlogPosts,
   generateSlug,
   calculateReadTime,
-  deleteLocalBlogPost,
-  type LocalBlogPost,
 } from '../lib/blogStorage';
 import { BLOG_TEMPLATES, type BlogTemplate } from '../lib/blogTemplates';
 
@@ -29,7 +24,7 @@ const useCreateBlogForm = () => {
   const { showConfirm } = useModal();
 
   const availableCategories = Array.from(
-    new Set(getAllBlogPosts().map(p => p.category).filter(Boolean))
+    new Set([] as string[]) // Categories will be derived dynamically in the editor
   );
 
   const [form, setForm] = useState(EMPTY_FORM);
@@ -47,17 +42,20 @@ const useCreateBlogForm = () => {
 
   useEffect(() => {
     if (!editSlug) return;
-    const post = getLocalBlogPosts().find(p => p.slug === editSlug);
-    if (post) {
-      setForm({
-        title: post.title,
-        excerpt: post.excerpt,
-        category: post.category,
-        coverImage: post.coverImage,
-        content: post.content,
-      });
-      setEditorKey(k => k + 1);
-    }
+    fetch(`/api/blog/${editSlug}`, { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then((post: { title: string; excerpt: string; category: string; coverImage: string; content: string } | null) => {
+        if (!post) return;
+        setForm({
+          title: post.title,
+          excerpt: post.excerpt,
+          category: post.category,
+          coverImage: post.coverImage,
+          content: post.content,
+        });
+        setEditorKey(k => k + 1);
+      })
+      .catch(() => {});
   }, [editSlug]);
 
   const readTime = calculateReadTime(form.content);
@@ -102,31 +100,43 @@ const useCreateBlogForm = () => {
     setShowTemplates(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
 
     const slug = isEditing && editSlug ? editSlug : generateSlug(form.title);
-
-    const post: LocalBlogPost = {
+    const body = {
       slug,
       title: form.title.trim(),
       excerpt: form.excerpt.trim(),
       category: form.category.trim() || 'General',
-      date: isEditing
-        ? (getLocalBlogPosts().find(p => p.slug === editSlug)?.date ?? new Date().toISOString().slice(0, 10))
-        : new Date().toISOString().slice(0, 10),
+      date: new Date().toISOString().slice(0, 10),
       readTime,
       coverImage: form.coverImage.trim(),
       content: form.content,
       contentType: 'html',
-      isLocal: true,
     };
 
-    saveLocalBlogPost(post);
-    setSaving(false);
-    setIsDirty(false);
-    navigate(`/blog/${slug}`);
+    try {
+      const url = isEditing ? `/api/blog/${editSlug}` : '/api/blog';
+      const method = isEditing ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('Save failed:', err);
+      } else {
+        setIsDirty(false);
+        navigate(`/blog/${slug}`);
+      }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -139,7 +149,7 @@ const useCreateBlogForm = () => {
       destructive: true,
     });
     if (!confirmed) return;
-    deleteLocalBlogPost(editSlug);
+    await fetch(`/api/blog/${editSlug}`, { method: 'DELETE', credentials: 'include' });
     navigate('/blog');
   };
 

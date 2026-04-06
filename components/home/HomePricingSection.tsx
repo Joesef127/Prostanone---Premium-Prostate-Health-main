@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, CheckCircle, Clock, ArrowRight } from 'lucide-react';
+import { ShieldCheck, CheckCircle, Clock, ArrowRight, MoreVertical, Pencil } from 'lucide-react';
 import Button from '../Button';
-import { PACKAGES, SMALL_PRINT } from '../../lib/constants';
+import { SMALL_PRINT } from '../../lib/constants';
 import { useApp } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
+import { usePackages } from '../../hooks/usePackages';
 import { images } from '../../lib';
+import PackageEditModal from '../product-page/PackageEditModal';
+import { ProductPackage } from '../../types';
 
 const HomePricingSection: React.FC = () => {
   const navigate = useNavigate();
   const { addToCart } = useApp();
+  const { isAdmin } = useAuth();
+  const { packages, refetch } = usePackages();
+  const [editingPkg, setEditingPkg] = useState<ProductPackage | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const handlePackageSelect = (pkgId: string) => {
     addToCart(pkgId);
@@ -27,7 +35,7 @@ const HomePricingSection: React.FC = () => {
 
         {/* Static Hero Image Card */}
         <div className="relative shrink-0 w-full lg:w-112.5 rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 lg:sticky lg:top-8 h-100 lg:h-auto min-h-125">
-          <img src={images.prostanone_home} alt="Prostanone Premium Product" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <img src={images.prostanone_home} alt="Prostanone Premium Product" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
           <div className="absolute inset-0 bg-linear-to-t from-primary/90 via-primary/30 to-transparent flex flex-col justify-end p-8">
             <div className="bg-accent text-primary text-xs font-bold uppercase py-1 px-3 rounded-full inline-block mb-3 self-start">Premium Quality</div>
             <h3 className="text-3xl font-bold text-white mb-2">100% Herbal</h3>
@@ -51,7 +59,7 @@ const HomePricingSection: React.FC = () => {
 
           {/* Scrolling Packages */}
           <div className="flex overflow-x-auto gap-4 pb-12 snap-x snap-mandatory grow items-stretch px-4 pt-8 no-scrollbar">
-            {PACKAGES.map((pkg) => (
+            {packages.map((pkg) => (
               <div
                 key={pkg.id}
                 className={`relative shrink-0 w-72 sm:w-80 lg:w-88 min-h-125 p-6 sm:p-8 rounded-3xl flex flex-col snap-center border transition-all duration-300 hover:shadow-2xl ${
@@ -60,6 +68,26 @@ const HomePricingSection: React.FC = () => {
                     : 'border-gray-200 bg-white'
                 }`}
               >
+                {isAdmin && (
+                  <div className="absolute top-3 right-3 z-20">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === pkg.id ? null : pkg.id); }}
+                      className="p-1.5 rounded-full bg-white/80 hover:bg-white shadow text-gray-600 transition-colors"
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                    {openMenuId === pkg.id && (
+                      <div className="absolute right-0 top-8 bg-white border border-border rounded-xl shadow-lg py-1 min-w-[140px]">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setEditingPkg(pkg); setOpenMenuId(null); }}
+                          className="w-full px-4 py-2 text-sm text-left flex items-center gap-2 hover:bg-surface text-text"
+                        >
+                          <Pencil className="w-3.5 h-3.5" /> Edit Package
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {pkg.id === 'option-b' && (
                   <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-accent/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
@@ -146,6 +174,14 @@ const HomePricingSection: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {editingPkg && (
+        <PackageEditModal
+          pkg={editingPkg}
+          onClose={() => setEditingPkg(null)}
+          onSaved={() => { refetch(); setEditingPkg(null); }}
+        />
+      )}
     </section>
   );
 };

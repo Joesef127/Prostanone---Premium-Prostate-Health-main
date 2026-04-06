@@ -60,19 +60,29 @@ const NewsletterPopup: React.FC = () => {
         try {
             const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
 
-            await fetch(SHEETS_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({
-                    name: name.trim(),
-                    email: email.trim().toLowerCase(),
-                    source: 'Newsletter Popup',
-                    message: '',
+            await Promise.allSettled([
+                fetch(SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        name: name.trim(),
+                        email: email.trim().toLowerCase(),
+                        source: 'Newsletter Popup',
+                        message: '',
+                    }),
                 }),
-            });
+                fetch('/api/subscribers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email.trim().toLowerCase(),
+                        name: name.trim(),
+                    }),
+                }),
+            ]);
 
-            // no-cors returns an opaque response — treat resolved fetch as success
+            // treat resolved as success
             setStatus('success');
             setTimeout(handleClose, 3000);
         } catch (error) {

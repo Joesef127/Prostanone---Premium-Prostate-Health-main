@@ -119,7 +119,7 @@ const HomeHeroSection: React.FC = () => {
           <div className="relative w-64 h-80 md:w-80 md:h-112.5 bg-white rounded-3xl shadow-2xl border-4 border-white transform hover:scale-105 transition-transform duration-500 overflow-hidden flex flex-col items-center">
             <div className="h-2/3 w-full bg-linear-to-b from-primary to-secondary p-6 flex flex-col justify-between">
               <span className="text-white font-bold text-2xl tracking-widest uppercase text-center border-b border-white/20 pb-2">Prostanone</span>
-              <img src={images.prostanone} alt="Prostanone Bottle" className="w-28 h-28 object-contain mx-auto my-2 drop-shadow-xl" />
+              <img src={images.prostanone} alt="Prostanone Bottle" className="w-28 h-28 object-contain mx-auto my-2 drop-shadow-xl" loading="lazy" />
               <div className="text-center text-white/90">
                 <p className="text-4xl font-bold">60</p>
                 <p className="text-sm uppercase tracking-wide">Tablets</p>

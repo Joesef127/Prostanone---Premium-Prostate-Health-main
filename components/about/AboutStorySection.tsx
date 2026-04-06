@@ -34,7 +34,7 @@ const AboutStorySection: React.FC = () => (
           viewport={{ once: true }}
           className="relative h-full min-h-125 rounded-3xl overflow-hidden shadow-2xl"
         >
-          <img src={images.prostanone_about} alt="Manufacturing Facility" className="w-full h-full object-cover" />
+          <img src={images.prostanone_about} alt="Manufacturing Facility" className="w-full h-full object-cover" loading="lazy" />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-8">
             <div className="text-white">
               <p className="font-bold text-xl">GMP Certified Facility</p>

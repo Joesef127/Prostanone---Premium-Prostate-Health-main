@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center mb-6">
-              <img src={images.logo} alt="Prostanone Logo" className="h-10 w-auto brightness-0 invert" />
+              <img src={images.logo} alt="Prostanone Logo" className="h-10 w-auto brightness-0 invert" loading="lazy" />
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
               NAFDAC-certified herbal prostate health supplement. Restoring vitality and confidence for Nigerian men naturally.
