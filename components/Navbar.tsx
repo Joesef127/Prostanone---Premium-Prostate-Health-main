@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { NAV_LINKS } from "../lib/constants.ts";
 import Button from "./Button";
+import ThemeToggle from "./ThemeToggle";
 import { useApp } from "../context/AppContext";
 import { images } from "@/lib";
 
@@ -10,6 +11,7 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isAddedPage, setIsAddedPage] = useState(false);
+  const [isHomePage, setIsHomePage] = useState(false);
 
   const location = useLocation();
   const { cart } = useApp();
@@ -31,6 +33,7 @@ const Navbar: React.FC = () => {
         location.pathname === "/blog" ||
         location.pathname === "/distributor",
     );
+    setIsHomePage(location.pathname === "/");
   }, [location]);
 
   return (
@@ -56,37 +59,43 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-2 lg:space-x-6 xl:space-x-8">
-            {/* {isAddedPage ? (
-                <Link
-                    to={"#"}
-                    className={`text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
-                        location.pathname !== "/product"
-                            ? "text-primary font-bold"
-                            : "text-gray-600"
-                    } ${isAddedPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
-                >
-                    Product
-                </Link>
-            ) : (
-              <> */}
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-xs lg:text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium hover:text-primary transition-colors ${
-                  location.pathname === link.path
-                    ? `${isAddedPage ? "bg-white text-primary!" : "text-primary font-bold"}`
-                    : "text-gray-600"
-                } ${isAddedPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
+                className={`text-xs lg:text-sm py-1 lg:py-1.5 px-1.5 lg:px-2.5 font-medium transition-colors
+                  ${isAddedPage || isHomePage ? "rounded-lg" : ""}
+                  ${
+                    isAddedPage
+                      ? "text-white hover:bg-white hover:text-primary"
+                      : isHomePage
+                        ? `${scrolled ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                        : "text-gray-600 hover:text-primary"
+                  }
+                  ${
+                    location.pathname === link.path
+                      ? isAddedPage
+                        ? "bg-white text-primary!"
+                        : isHomePage
+                          ? "font-bold"
+                          : "text-primary font-bold"
+                      : ""
+                  }
+                `}
               >
                 {link.label}
               </Link>
             ))}
-            {/* </>
-            )} */}
             <Link to="/summary">
               <div
-                className={`relative py-1.5 px-2 ${isAddedPage && "text-white hover:bg-white hover:text-primary rounded-lg"}`}
+                className={`relative py-1.5 px-2 rounded-lg transition-colors
+                  ${
+                    isAddedPage
+                      ? "text-white hover:bg-white hover:text-primary"
+                      : isHomePage
+                        ? `${scrolled ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                        : "text-gray-600 hover:text-primary"
+                  }`}
               >
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -104,13 +113,40 @@ const Navbar: React.FC = () => {
                 Check Prostate Health
               </Button>
             </Link>
+            <ThemeToggle
+              className={
+                isAddedPage
+                  ? "text-white hover:bg-white hover:text-primary"
+                  : isHomePage
+                    ? `${scrolled ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                    : "text-gray-600 hover:text-primary"
+              }
+            />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4 z-50">
-            <Link to="/summary" className="relative text-gray-800">
+            <ThemeToggle
+              className={
+                isAddedPage
+                  ? isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"
+                  : isHomePage
+                    ? `${scrolled || isOpen ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                    : "text-gray-600 hover:text-primary"
+              }
+            />
+            <Link to="/summary" className="relative">
               <div
-                className={`py-1.5 px-2 ${isAddedPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`}`}
+                className={`py-1.5 px-2 rounded-lg transition-colors
+                  ${
+                    isAddedPage
+                      ? isOpen
+                        ? "text-primary hover:bg-primary hover:text-white"
+                        : "text-white hover:bg-white hover:text-primary"
+                      : isHomePage
+                        ? `${scrolled || isOpen ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                        : "text-gray-600 hover:text-primary"
+                  }`}
               >
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -123,7 +159,16 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`py-1 px-1.5 ${isAddedPage && `${isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"} rounded-lg`} focus:outline-none`}
+              className={`py-1 px-1.5 rounded-lg transition-colors focus:outline-none
+                ${
+                  isAddedPage
+                    ? isOpen
+                      ? "text-primary hover:bg-primary hover:text-white"
+                      : "text-white hover:bg-white hover:text-primary"
+                    : isHomePage
+                      ? `${scrolled || isOpen ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                      : "text-gray-600 hover:text-primary"
+                }`}
             >
               {isOpen ? (
                 <X className="w-8 h-8" />

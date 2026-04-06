@@ -26,6 +26,88 @@
 }
 
 /* =============================================================
+  DARK THEME OVERRIDES
+  Applied when <html data-theme="dark"> is set by ThemeContext
+   ============================================================= */
+
+[data-theme="dark"] {
+  --color-background: #0f0f11;
+  --color-surface: #1c1c1e;
+  --color-text: #f0f0f2;
+  --color-text-muted: #a1a1a6;
+  --color-text-light: #6e6e73;
+
+  /* Slightly brighten brand colours for dark backgrounds */
+  --color-primary: #a3346e;
+  --color-secondary: #7a2460;
+  --color-accent: #e8c84a;
+}
+
+/* Smooth colour transitions site-wide */
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* =============================================================
+  DARK MODE — Surface & text utility overrides
+  Remaps common Tailwind utility classes for dark mode without
+  touching tailwind.config. Applied when html[data-theme="dark"].
+   ============================================================= */
+
+[data-theme="dark"] {
+
+  /* ── Page shell ── */
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  /* ── White backgrounds → dark surface ── */
+  .bg-white    { background-color: var(--color-surface) !important; }
+  .bg-gray-50  { background-color: #18181b !important; }
+  .bg-gray-100 { background-color: #1f1f23 !important; }
+  .bg-gray-200 { background-color: #27272a !important; }
+
+  /* ── White / light text on dark cards ── */
+  .text-gray-900, .text-gray-800 { color: #f4f4f5 !important; }
+  .text-gray-700, .text-gray-600 { color: #a1a1aa !important; }
+  .text-gray-500, .text-gray-400 { color: #71717a !important; }
+
+  /* ── Borders ── */
+  .border-gray-100 { border-color: #27272a !important; }
+  .border-gray-200 { border-color: #3f3f46 !important; }
+  .border-gray-300 { border-color: #52525b !important; }
+
+  /* ── Inputs ── */
+  input, textarea, select {
+    background-color: #1c1c1e;
+    color: var(--color-text);
+    border-color: #3f3f46;
+
+    &::placeholder { color: var(--color-text-light); }
+    &:focus { border-color: var(--color-primary); }
+  }
+
+  /* ── Cards / panels that use explicit white ── */
+  .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    --tw-shadow-color: rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Navbar white background ── */
+  .bg-white\/90 { background-color: rgba(28, 28, 30, 0.92) !important; }
+
+  /* ── Policy / blog markdown content ── */
+  .policy-content,
+  .blog-content {
+    color: var(--color-text-muted);
+
+    h1, h2, h3, h4, h5, h6 { color: var(--color-text); }
+    strong { color: var(--color-text); }
+    hr { border-color: #3f3f46; }
+  }
+}
+
+/* =============================================================
   BASE STYLES
    ============================================================= */
 
@@ -48,6 +130,33 @@
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* =============================================================
+  CUSTOM SCROLLBAR — slim, branded
+   ============================================================= */
+
+:root {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-primary) 40%, transparent) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-primary) 35%, transparent);
+  border-radius: 999px;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-primary) 60%, transparent);
+  }
 }
 
 /* =============================================================

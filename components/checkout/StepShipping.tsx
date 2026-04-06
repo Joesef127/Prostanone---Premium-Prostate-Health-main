@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Button from '../Button';
 import { FormInput, FormSelect, FormTextarea } from '../ui/FormFields';
-import { NIGERIAN_STATES } from '../../utils/delivery';
+import { STATE_DELIVERY_ZONES } from '../../utils/delivery';
 import type { CheckoutFormData } from '../../hooks/useCheckout';
 
 interface Props {
@@ -41,8 +41,9 @@ const StepShipping: React.FC<Props> = ({ formData, onChange, onSubmit, onBack })
           label="State"
           name="state"
           value={formData.state}
-          onChange={onChange}
-          options={NIGERIAN_STATES}
+          onChange={(v) => onChange({ target: { name: 'state', value: v } } as React.ChangeEvent<HTMLSelectElement>)}
+          groups={STATE_DELIVERY_ZONES}
+          required
         />
         <FormInput
           label="City"

@@ -1,7 +1,8 @@
 ﻿import React from 'react';
 import { Loader2, CreditCard } from 'lucide-react';
 import { PACKAGES, NAFDAC_REG_NO } from '../../lib/constants.ts';
-import { NIGERIAN_STATES } from '../../utils/delivery';
+import { STATE_DELIVERY_ZONES } from '../../utils/delivery';
+import CustomDropdown from '../ui/CustomDropdown';
 import { useFinalCTAForm } from '../../hooks/useFinalCTAForm';
 import FormField from './FormField';
 import OrderSummaryBox from './OrderSummaryBox';
@@ -104,31 +105,22 @@ const FinalCTA: React.FC = () => {
             </FormField>
 
             <FormField label="Choose Your Order Quantity" required>
-              <select
-                name="packageId"
+              <CustomDropdown
                 value={form.packageId}
-                onChange={handleChange}
-                className={inputClass('packageId')}
-              >
-                {PACKAGES.map(p => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} - ₦{p.price.toLocaleString()} ({p.description})
-                  </option>
-                ))}
-              </select>
+                onChange={(v) => handleChange({ target: { name: 'packageId', value: v } } as React.ChangeEvent<HTMLSelectElement>)}
+                options={PACKAGES.map(p => ({
+                  value: p.id,
+                  label: `${p.name} - ₦${p.price.toLocaleString()} (${p.description})`,
+                }))}
+              />
             </FormField>
 
             <FormField label="Your State" required>
-              <select
-                name="state"
+              <CustomDropdown
                 value={form.state}
-                onChange={handleChange}
-                className={inputClass('state')}
-              >
-                {NIGERIAN_STATES.map(s => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
+                onChange={(v) => handleChange({ target: { name: 'state', value: v } } as React.ChangeEvent<HTMLSelectElement>)}
+                groups={STATE_DELIVERY_ZONES}
+              />
             </FormField>
 
             <FormField label="Exact Delivery Address" required error={fieldErrors.address}>
@@ -168,8 +160,8 @@ const FinalCTA: React.FC = () => {
                 </>
               ) : paymentMethod === 'online' ? (
                 <>
-                  <CreditCard size={18} /> Pay Now â€”{' '}
-                  {gatewayChoice === 'korapay' ? 'Korapay' : 'Select Gateway'}
+                  <CreditCard size={18} /> 
+                  {gatewayChoice === 'korapay' ? 'Pay with Korapay' : 'Select Payment Gateway'}
                 </>
               ) : (
                 'Place Order, Pay on Delivery'
