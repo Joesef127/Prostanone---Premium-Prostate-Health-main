@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { NAV_LINKS } from "../lib/constants.ts";
 import Button from "./Button";
+import ThemeToggle from "./ThemeToggle";
 import { useApp } from "../context/AppContext";
 import { images } from "@/lib";
 
@@ -112,10 +113,28 @@ const Navbar: React.FC = () => {
                 Check Prostate Health
               </Button>
             </Link>
+            <ThemeToggle
+              className={
+                isAddedPage
+                  ? "text-white hover:bg-white hover:text-primary"
+                  : isHomePage
+                    ? `${scrolled ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                    : "text-gray-600 hover:text-primary"
+              }
+            />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4 z-50">
+            <ThemeToggle
+              className={
+                isAddedPage
+                  ? isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"
+                  : isHomePage
+                    ? `${scrolled || isOpen ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                    : "text-gray-600 hover:text-primary"
+              }
+            />
             <Link to="/summary" className="relative">
               <div
                 className={`py-1.5 px-2 rounded-lg transition-colors

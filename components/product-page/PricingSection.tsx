@@ -31,7 +31,7 @@ const PricingSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {PACKAGES.map((pkg, i) => {
             const isBest = !!pkg.badge;
-            const pkgImg = PACKAGE_IMAGES[pkg.containers] ?? images.single_box;
+            const pkgImg = PACKAGE_IMAGES[pkg.containers] ?? images.prostanone;
 
             return (
               <FadeIn key={pkg.id} delay={i * 0.1}>

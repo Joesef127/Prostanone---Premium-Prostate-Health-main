@@ -20,6 +20,7 @@ import BlogPost from './pages/BlogPost';
 import CreateBlog from './pages/CreateBlog';
 import { AppProvider } from './context/AppContext';
 import { ModalProvider } from './context/ModalContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Modal from './components/ui/Modal';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
@@ -34,6 +35,7 @@ const ScrollToTop = () => {
 
 const App: React.FC = () => {
   return (
+    <ThemeProvider>
     <ModalProvider>
     <AppProvider>
       <Router>
@@ -69,6 +71,7 @@ const App: React.FC = () => {
     </AppProvider>
     <Modal />
     </ModalProvider>
+    </ThemeProvider>
   );
 };
 

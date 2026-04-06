@@ -56,6 +56,7 @@ const useCreateBlogForm = () => {
         coverImage: post.coverImage,
         content: post.content,
       });
+      setEditorKey(k => k + 1);
     }
   }, [editSlug]);
 

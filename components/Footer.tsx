@@ -19,8 +19,8 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               {/* <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Twitter size={20} /></a> */}
-              <a href="https://youtube.com/@prostanone?si=g5r9czALpAdS3WIJ" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Youtube size={24} /></a>
-              <a href="https://instagram.com/prostanone" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Instagram size={20} /></a>
+              <a href="https://youtube.com/@prostanone?si=g5r9czALpAdS3WIJ" target="_blank" rel="noopener noreferrer" className="text-color-text hover:text-accent transition-colors"><Youtube size={24} /></a>
+              <a href="https://instagram.com/prostanone" target="_blank" rel="noopener noreferrer" className="text-color-text hover:text-accent transition-colors"><Instagram size={20} /></a>
             </div>
           </div>
 
@@ -28,13 +28,13 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-accent">Quick Links</h3>
             <ul className="space-y-3">
-              {NAV_LINKS.map((link) => (
+              {/* {NAV_LINKS.map((link) => (
                 <li key={link.path}>
                   <Link to={link.path} className="text-gray-300 hover:text-white text-sm transition-colors">
                     {link.label}
                   </Link>
                 </li>
-              ))}
+              ))} */}
               <li><Link to="/quiz" className="text-gray-300 hover:text-white text-sm transition-colors">Check Prostate Health</Link></li>
               <li><Link to="/distributor" className="text-gray-300 hover:text-white text-sm transition-colors">Become a Distributor</Link></li>
             </ul>

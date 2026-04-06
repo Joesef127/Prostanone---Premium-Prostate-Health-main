@@ -160,8 +160,8 @@ const FinalCTA: React.FC = () => {
                 </>
               ) : paymentMethod === 'online' ? (
                 <>
-                  <CreditCard size={18} /> Pay Now â€”{' '}
-                  {gatewayChoice === 'korapay' ? 'Korapay' : 'Select Gateway'}
+                  <CreditCard size={18} /> 
+                  {gatewayChoice === 'korapay' ? 'Pay with Korapay' : 'Select Payment Gateway'}
                 </>
               ) : (
                 'Place Order, Pay on Delivery'

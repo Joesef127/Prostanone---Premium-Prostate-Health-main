@@ -17,16 +17,16 @@ const HomePricingSection: React.FC = () => {
   };
 
   return (
-    <section id="pricing" className="py-24 bg-linear-to-b from-gray-50 to-white overflow-hidden">
+    <section id="pricing" className="py-24 bg-linear-to-b from-color-background to-color-surface overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-6 tracking-tight">Choose Your Package</h2>
         <p className="text-xl text-text-muted max-w-2xl mx-auto">Simple transparent pricing. Experience the power of nature with guaranteed results.</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 pb-12 px-4 md:px-8 max-w-350 mx-auto lg:items-stretch">
+      <div className="flex flex-col-reverse lg:flex-row gap-8 pb-12 px-4 md:px-8 max-w-350 mx-auto lg:items-stretch">
 
         {/* Static Hero Image Card */}
-        <div className="relative shrink-0 w-full lg:w-112.5 rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 lg:sticky lg:top-8 h-100 lg:h-auto lg:min-h-125">
+        <div className="relative shrink-0 w-full lg:w-112.5 rounded-3xl overflow-hidden shadow-2xl group border border-gray-200 lg:sticky lg:top-8 h-100 lg:h-auto min-h-125">
           <img src={images.prostanone_home} alt="Prostanone Premium Product" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
           <div className="absolute inset-0 bg-linear-to-t from-primary/90 via-primary/30 to-transparent flex flex-col justify-end p-8">
             <div className="bg-accent text-primary text-xs font-bold uppercase py-1 px-3 rounded-full inline-block mb-3 self-start">Premium Quality</div>
@@ -38,7 +38,7 @@ const HomePricingSection: React.FC = () => {
         {/* Scrolling Packages Wrapper */}
         <div className="grow flex flex-col w-full min-w-0">
           {/* Drag/Swipe Hint */}
-          <div className="flex justify-center mb-2 xl:hidden">
+          <div className="flex justify-center mb-2">
             <motion.div
               animate={{ x: [-8, 8, -8] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -50,11 +50,11 @@ const HomePricingSection: React.FC = () => {
           </div>
 
           {/* Scrolling Packages */}
-          <div className="flex overflow-x-auto gap-4 pb-12 snap-x snap-mandatory no-scrollbar grow items-end px-4 pt-8">
+          <div className="flex overflow-x-auto gap-4 pb-12 snap-x snap-mandatory grow items-stretch px-4 pt-8 no-scrollbar">
             {PACKAGES.map((pkg) => (
               <div
                 key={pkg.id}
-                className={`relative shrink-0 w-[88vw] sm:w-72 lg:w-80 p-6 sm:p-8 rounded-3xl flex flex-col snap-center border transition-all duration-300 hover:shadow-2xl h-auto ${
+                className={`relative shrink-0 w-72 sm:w-80 lg:w-88 min-h-125 p-6 sm:p-8 rounded-3xl flex flex-col snap-center border transition-all duration-300 hover:shadow-2xl ${
                   pkg.id === 'option-b'
                     ? 'border-primary bg-primary text-white shadow-xl scale-[1.02] z-10 mx-2'
                     : 'border-gray-200 bg-white'
@@ -120,7 +120,7 @@ const HomePricingSection: React.FC = () => {
                 </ul>
 
                 <Button
-                  size="lg"
+                  size="sm"
                   variant={pkg.id === 'option-b' ? 'secondary' : 'outline'}
                   className={pkg.id === 'option-b' ? 'w-full shadow-lg shadow-accent/20 text-primary hover:bg-white hover:text-primary transition-colors relative z-10' : 'w-full border-gray-300 relative z-10'}
                   onClick={() => handlePackageSelect(pkg.id)}
@@ -133,7 +133,7 @@ const HomePricingSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto bg-white/50 backdrop-blur border border-gray-200 rounded-2xl p-8 shadow-sm">
+      <div className="max-w-4xl mx-auto bg-color-background backdrop-blur border border-gray-200 rounded-2xl p-8 shadow-sm">
         <h4 className="font-bold flex items-center gap-2 mb-6 text-gray-800 text-lg">
           <span className="text-2xl">📌</span> Everything You Need To Know
         </h4>

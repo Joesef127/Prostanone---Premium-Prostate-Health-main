@@ -7,6 +7,7 @@ import HomeTestimonialsSection from '../components/home/HomeTestimonialsSection'
 import HomePricingSection from '../components/home/HomePricingSection';
 import HomeQuizCTASection from '../components/home/HomeQuizCTASection';
 import FAQ from '../components/FAQ';
+import FAQSection from '@/components/product-page/FAQSection';
 
 const Home: React.FC = () => {
   useDynamicTitle('Premium Prostate Health');
@@ -17,7 +18,7 @@ const Home: React.FC = () => {
       <HomeHowItWorksSection />
       <HomeTestimonialsSection />
       <HomePricingSection />
-      <FAQ />
+      <FAQSection />
       <HomeQuizCTASection />
     </div>
   );
