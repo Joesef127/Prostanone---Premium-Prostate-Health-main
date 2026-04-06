@@ -8,9 +8,10 @@ import { useAuth } from '../../context/AuthContext';
 interface BlogArticleGridProps {
   posts: BlogPost[];
   totalPostCount: number;
+  onPostDeleted?: (slug: string) => void;
 }
 
-const BlogArticleGrid: React.FC<BlogArticleGridProps> = ({ posts, totalPostCount }) => {
+const BlogArticleGrid: React.FC<BlogArticleGridProps> = ({ posts, totalPostCount, onPostDeleted }) => {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
 
@@ -39,7 +40,7 @@ const BlogArticleGrid: React.FC<BlogArticleGridProps> = ({ posts, totalPostCount
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, i) => (
-              <BlogCard key={post.slug} post={post} delay={i * 0.08} />
+              <BlogCard key={post.slug} post={post} delay={i * 0.08} onDeleted={onPostDeleted} />
             ))}
           </div>
         )}

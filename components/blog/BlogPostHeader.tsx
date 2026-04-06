@@ -27,7 +27,6 @@ const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
           {post.category}
         </span>
 
-        {post.isLocal && (
           <button
             onClick={() => navigate(`/blog/edit/${post.slug}`)}
             className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-primary border border-gray-200 hover:border-primary rounded-lg px-3 py-1.5 transition-colors"
@@ -35,7 +34,7 @@ const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
             <Pencil className="w-3.5 h-3.5" />
             Edit
           </button>
-        )}
+        
       </div>
 
       <h1 className="text-3xl sm:text-4xl font-extrabold text-secondary leading-tight mb-5">

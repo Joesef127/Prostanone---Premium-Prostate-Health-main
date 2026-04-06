@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, UserCircle } from "lucide-react";
 import { NAV_LINKS } from "../lib/constants.ts";
 import Button from "./Button";
 import ThemeToggle from "./ThemeToggle";
 import { useApp } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
 import { images } from "@/lib";
 
 const Navbar: React.FC = () => {
@@ -15,6 +16,7 @@ const Navbar: React.FC = () => {
 
   const location = useLocation();
   const { cart } = useApp();
+  const { isAdmin } = useAuth();
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -86,6 +88,21 @@ const Navbar: React.FC = () => {
                 {link.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin/profile"
+                className={`py-1.5 px-2 rounded-lg transition-colors
+                  ${
+                    isAddedPage
+                      ? "text-white hover:bg-white hover:text-primary"
+                      : isHomePage
+                        ? `${scrolled ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                        : "text-gray-600 hover:text-primary"
+                  }`}
+              >
+                <UserCircle className="w-6 h-6" />
+              </Link>
+            )}
             <Link to="/summary">
               <div
                 className={`relative py-1.5 px-2 rounded-lg transition-colors
@@ -126,6 +143,21 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4 z-50">
+            {isAdmin && (
+              <Link
+                to="/admin/profile"
+                className={`py-1.5 px-2 rounded-lg transition-colors
+                  ${
+                    isAddedPage
+                      ? isOpen ? "text-primary hover:bg-primary hover:text-white" : "text-white hover:bg-white hover:text-primary"
+                      : isHomePage
+                        ? `${scrolled || isOpen ? "text-primary" : "text-white"} hover:bg-primary hover:text-white`
+                        : "text-gray-600 hover:text-primary"
+                  }`}
+              >
+                <UserCircle className="w-6 h-6" />
+              </Link>
+            )}
             <ThemeToggle
               className={
                 isAddedPage

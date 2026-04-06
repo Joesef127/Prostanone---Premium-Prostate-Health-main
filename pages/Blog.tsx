@@ -28,7 +28,11 @@ const Blog: React.FC = () => {
         activeCategory={activeCategory}
         onCategoryChange={setActiveCategory}
       />
-      <BlogArticleGrid posts={filtered} totalPostCount={allPosts.length} />
+      <BlogArticleGrid
+        posts={filtered}
+        totalPostCount={allPosts.length}
+        onPostDeleted={(slug) => setAllPosts(prev => prev.filter(p => p.slug !== slug))}
+      />
     </div>
   );
 };

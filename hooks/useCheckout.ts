@@ -114,7 +114,7 @@ export function useCheckout() {
         shipping_address: formData.address.trim()
           ? `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`
           : '',
-          notes: formData.notes.trim(),
+        notes: formData.notes.trim(),
         items_ordered: buildOrderSummary(),
         delivery_fee: finalDeliveryFee,
         total_amount: total,
@@ -224,6 +224,28 @@ export function useCheckout() {
           });
 
           sendCheckoutProgress(4, 'payment_completed', data);
+
+          // Log the confirmed order to the backend
+          fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: formData.name.trim(),
+              email: formData.email.trim().toLowerCase(),
+              phone: formData.phone.trim(),
+              altPhone: formData.altPhone.trim(),
+              shippingAddress: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
+              notes: formData.notes.trim(),
+              itemsOrdered: orderSummary,
+              deliveryFee: finalDeliveryFee,
+              totalAmount: total,
+              paymentMethod: 'Online (Korapay)',
+              paymentReference: data?.reference || reference,
+              paymentStatus: data?.status || 'success',
+              checkoutStep: 'payment_completed',
+            }),
+          }).catch(err => console.error('Order log error:', err));
+
           navigate('/thank-you', { state: { paymentMethod: 'online' } });
         } catch (error) {
           console.error('Post-payment error:', error);
@@ -246,26 +268,46 @@ export function useCheckout() {
     setLoading(true);
 
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+    const shippingAddress = `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`;
 
-    fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        source: 'order',
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
-        alt_phone: formData.altPhone.trim(),
-        shipping_address: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
-        notes: formData.notes.trim(),
-        items_ordered: buildOrderSummary(),
-        delivery_fee: finalDeliveryFee,
-        total_amount: total,
-        payment_method: 'Cash on Delivery (COD)',
-        checkout_step: 'cod_order_placed',
+    Promise.allSettled([
+      fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          source: 'order',
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          alt_phone: formData.altPhone.trim(),
+          shipping_address: shippingAddress,
+          notes: formData.notes.trim(),
+          items_ordered: buildOrderSummary(),
+          delivery_fee: finalDeliveryFee,
+          total_amount: total,
+          payment_method: 'Cash on Delivery (COD)',
+          checkout_step: 'cod_order_placed',
+        }),
       }),
-    }).catch(err => console.error('COD order error:', err));
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          altPhone: formData.altPhone.trim(),
+          shippingAddress,
+          notes: formData.notes.trim(),
+          itemsOrdered: buildOrderSummary(),
+          deliveryFee: finalDeliveryFee,
+          totalAmount: total,
+          paymentMethod: 'Cash on Delivery (COD)',
+          checkoutStep: 'cod_order_placed',
+        }),
+      }),
+    ]).catch(err => console.error('COD order error:', err));
 
     navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
   };

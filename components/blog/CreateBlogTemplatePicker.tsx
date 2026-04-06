@@ -18,7 +18,7 @@ const CreateBlogTemplatePicker: React.FC<CreateBlogTemplatePickerProps> = ({
     <button
       type="button"
       onClick={onToggle}
-      className="inline-flex items-center gap-1.5 text-sm font-semibold border border-gray-200 hover:border-primary text-gray-600 hover:text-primary rounded-xl px-4 py-2 transition-colors"
+      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold border border-gray-200 hover:border-primary text-gray-600 hover:text-primary rounded-xl px-4 py-2 transition-colors"
     >
       <FileText className="w-4 h-4" />
       Load template
