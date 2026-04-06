@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MoreVertical, Pencil } from 'lucide-react';
 import { images } from '@/lib';
-import { PACKAGES } from '../../lib/constants.ts';
 import { useApp } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
+import { usePackages } from '../../hooks/usePackages';
 import Button from '../Button';
 import { FadeIn, SectionHeader, CheckItem } from './shared';
 import { PACKAGE_IMAGES } from '../../lib/data.ts';
+import PackageEditModal from './PackageEditModal';
+import { ProductPackage } from '../../types';
 
 const PricingSection: React.FC = () => {
   const { addToCart } = useApp();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
+  const { packages, refetch } = usePackages();
+  const [editingPkg, setEditingPkg] = useState<ProductPackage | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const handleOrder = (packageId: string) => {
     addToCart(packageId, 1);
@@ -29,7 +36,7 @@ const PricingSection: React.FC = () => {
         </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {PACKAGES.map((pkg, i) => {
+          {packages.map((pkg, i) => {
             const isBest = !!pkg.badge;
             const pkgImg = PACKAGE_IMAGES[pkg.containers] ?? images.prostanone;
 
@@ -39,6 +46,27 @@ const PricingSection: React.FC = () => {
                   className={`relative flex flex-col rounded-3xl overflow-hidden border-2 shadow-sm hover:shadow-xl transition-shadow h-full
                     ${isBest ? 'border-primary' : 'border-gray-200 bg-white'}`}
                 >
+                  {isAdmin && (
+                    <div className="absolute top-2 right-2 z-10">
+                      <button
+                        onClick={() => setOpenMenuId(openMenuId === pkg.id ? null : pkg.id)}
+                        className="p-1.5 rounded-full bg-white/80 hover:bg-white shadow text-gray-500 hover:text-gray-800 transition-colors"
+                        title="Package options"
+                      >
+                        <MoreVertical size={16} />
+                      </button>
+                      {openMenuId === pkg.id && (
+                        <div className="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-20">
+                          <button
+                            onClick={() => { setEditingPkg(pkg); setOpenMenuId(null); }}
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          >
+                            <Pencil size={14} /> Edit Package
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {isBest && (
                     <div className="bg-primary text-white text-xs font-bold tracking-widest uppercase text-center py-2.5">
                       {pkg.badge}
@@ -93,6 +121,14 @@ const PricingSection: React.FC = () => {
             );
           })}
         </div>
+
+        {editingPkg && (
+          <PackageEditModal
+            pkg={editingPkg}
+            onClose={() => setEditingPkg(null)}
+            onSaved={() => { refetch(); setEditingPkg(null); }}
+          />
+        )}
 
         {/* Trust footnotes */}
         <FadeIn className="flex flex-wrap justify-center gap-x-6 gap-y-2">

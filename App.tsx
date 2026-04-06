@@ -18,9 +18,13 @@ import Distributor from './pages/Distributor';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import CreateBlog from './pages/CreateBlog';
+import AdminLogin from './pages/AdminLogin';
+import AdminProfile from './pages/AdminProfile';
 import { AppProvider } from './context/AppContext';
 import { ModalProvider } from './context/ModalContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Modal from './components/ui/Modal';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
@@ -37,6 +41,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
     <ModalProvider>
+    <AuthProvider>
     <AppProvider>
       <Router>
         <ScrollToTop />
@@ -60,9 +65,11 @@ const App: React.FC = () => {
               <Route path="/terms" element={<TermsAndConditions />} />
               <Route path="/distributor" element={<Distributor />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/create" element={<CreateBlog />} />
-              <Route path="/blog/edit/:slug" element={<CreateBlog />} />
+              <Route path="/blog/create" element={<ProtectedRoute><CreateBlog /></ProtectedRoute>} />
+              <Route path="/blog/edit/:slug" element={<ProtectedRoute><CreateBlog /></ProtectedRoute>} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/admin-login" element={<AdminLogin />} />
+              <Route path="/admin/profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
             </Routes>
           </main>
           <Footer />
@@ -70,6 +77,7 @@ const App: React.FC = () => {
       </Router>
     </AppProvider>
     <Modal />
+    </AuthProvider>
     </ModalProvider>
     </ThemeProvider>
   );

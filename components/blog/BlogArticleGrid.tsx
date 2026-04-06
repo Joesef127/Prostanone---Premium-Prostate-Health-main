@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PenSquare } from 'lucide-react';
 import type { BlogPost } from '../../lib/blogData';
 import BlogCard from './BlogCard';
+import { useAuth } from '../../context/AuthContext';
 
 interface BlogArticleGridProps {
   posts: BlogPost[];
@@ -11,6 +12,7 @@ interface BlogArticleGridProps {
 
 const BlogArticleGrid: React.FC<BlogArticleGridProps> = ({ posts, totalPostCount }) => {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
 
   return (
     <section className="py-16">
@@ -19,14 +21,16 @@ const BlogArticleGrid: React.FC<BlogArticleGridProps> = ({ posts, totalPostCount
           <div className="text-center py-16">
             {totalPostCount === 0 ? (
               <>
-                <p className="text-text-muted mb-4">No posts yet — be the first to publish one.</p>
-                <button
-                  onClick={() => navigate('/blog/create')}
-                  className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-primary/90 transition-colors"
-                >
-                  <PenSquare className="w-4 h-4" />
-                  Create first post
-                </button>
+                <p className="text-text-muted mb-4">No posts yet.</p>
+                {isAdmin && (
+                  <button
+                    onClick={() => navigate('/blog/create')}
+                    className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-primary/90 transition-colors"
+                  >
+                    <PenSquare className="w-4 h-4" />
+                    Create first post
+                  </button>
+                )}
               </>
             ) : (
               <p className="text-text-muted">No articles in this category yet.</p>

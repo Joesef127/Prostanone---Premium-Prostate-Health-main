@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { getBlogPost, getAllBlogPosts } from '../lib/blogData';
+import type { BlogPost as BlogPostType } from '../lib/blogData';
 import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogPostHeader from '../components/blog/BlogPostHeader';
 import BlogPostBody from '../components/blog/BlogPostBody';
@@ -8,13 +8,27 @@ import BlogRelatedPosts from '../components/blog/BlogRelatedPosts';
 
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const post = slug ? getBlogPost(slug) : undefined;
+  const [post, setPost] = useState<BlogPostType | null | undefined>(undefined);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
+
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`/api/blog/${slug}`)
+      .then(r => r.ok ? r.json() : null)
+      .then((data: BlogPostType | null) => setPost(data))
+      .catch(() => setPost(null));
+    fetch('/api/blog')
+      .then(r => r.json())
+      .then((all: BlogPostType[]) =>
+        setRelatedPosts(Array.isArray(all) ? all.filter(p => p.slug !== slug).slice(0, 2) : [])
+      )
+      .catch(() => {});
+  }, [slug]);
 
   useDynamicTitle(post?.title, 'Prostanone Blog');
 
+  if (post === undefined) return null; // still loading
   if (!post) return <Navigate to="/blog" replace />;
-
-  const relatedPosts = getAllBlogPosts().filter(p => p.slug !== post.slug).slice(0, 2);
 
   return (
     <div className="bg-white pt-16">
