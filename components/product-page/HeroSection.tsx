@@ -1,68 +1,87 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { images } from '@/lib';
 import Button from '../Button';
 import { NAFDAC_REG_NO } from '../../lib/constants';
 import { STATS } from '../../lib/data.ts';
 
-const HeroSection: React.FC = () => (
-  <section className="relative min-h-screen bg-linear-to-br from-secondary via-primary to-[#3d0f2b] flex items-center overflow-hidden">
-    {/* dot-grid texture */}
-    <div
-      aria-hidden
-      className="absolute inset-0 opacity-[0.04]"
-      style={{
-        backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-        backgroundSize: '32px 32px',
-      }}
-    />
+const HeroSection: React.FC = () => {
+  const { scrollY } = useScroll();
+  const bgY = useTransform(scrollY, [0, 600], ['0%', '20%']);
+  const contentOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
-    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-      {/* ── Left: copy ── */}
-      <div className="text-white flex flex-col items-center lg:items-start max-w-[460px] mx-auto">
+      {/* Background image with parallax */}
+      <motion.div
+        style={{ y: bgY }}
+        className="absolute inset-0 -top-20 -bottom-20 z-0"
+      >
+        <img
+          src={images.prostanone_showcase}
+          alt="Prostanone Hero"
+          className="w-full h-full object-cover object-center"
+          loading="eager"
+        />
+      </motion.div>
+
+      {/* Layered overlays */}
+      <div className="absolute inset-0 z-10 bg-linear-to-t from-black/90 via-black/70 to-black/55" />
+      <div className="absolute inset-0 z-10 bg-linear-to-r from-secondary/40 via-transparent to-transparent" />
+
+      {/* Content */}
+      <motion.div
+        style={{ opacity: contentOpacity }}
+        className="relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-36 flex flex-col items-center text-center"
+      >
         {/* NAFDAC pill */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6"
+          className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8"
         >
-          <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover p-1 bg-white rounded-full" />
+          <img src={images.nafdac_approved_badge} alt="NAFDAC" className="h-5 w-5 rounded-full object-cover bg-white p-0.5" />
           <span className="text-[10px] sm:text-xs font-bold tracking-wider uppercase text-accent">
             NAFDAC Approved — Reg. No. {NAFDAC_REG_NO}
           </span>
         </motion.div>
 
+        {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] mb-6 text-start sm:text-center lg:text-start"
+          className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight tracking-tight mb-6"
         >
           Reclaim Control of Your{' '}
-          <span className="text-accent">Prostate Health</span>
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-accent to-amber-300">
+            Prostate Health
+          </span>
         </motion.h1>
 
+        {/* Subtext */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="text-sm sm:text-base md:text-lg text-white/75 leading-relaxed mb-8 max-w-xl text-start sm:text-center lg:text-start"
+          className="text-sm sm:text-base md:text-lg text-white/75 max-w-2xl mb-10 leading-relaxed"
         >
           Prostanone's NAFDAC-certified herbal formula targets the root cause, not just the symptoms.
           Supporting vitality and confidence for Nigerian men naturally.
         </motion.p>
 
+        {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4 mb-12 w-full"
+          className="flex flex-col sm:flex-row gap-4 mb-14 justify-center"
         >
           <a href="#pricing">
-            <Button size="md" variant="secondary" className="gap-2 font-bold w-full sm:w-fit">
+            <Button size="md" variant="secondary" className="gap-2 font-bold w-full sm:w-auto shadow-lg shadow-secondary/40">
               Order Now <ArrowRight size={18} />
             </Button>
           </a>
@@ -70,7 +89,7 @@ const HeroSection: React.FC = () => (
             <Button
               size="md"
               variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 focus:ring-white/20 w-full sm:w-fit"
+              className="border-white/40 text-white hover:bg-white/10 backdrop-blur-sm w-full sm:w-auto"
             >
               Take Free Prostate Check
             </Button>
@@ -82,55 +101,28 @@ const HeroSection: React.FC = () => (
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.65 }}
-          className="flex flex-wrap sm:grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-2"
+          className="flex flex-wrap justify-center gap-8 sm:gap-12"
         >
           {STATS.map(({ value, label }) => (
-            <div key={label}>
-              <div className="text-lg sm:text-xl font-bold text-accent">{value}</div>
-              <div className="text-xs text-white/55 uppercase tracking-wide mt-0.5">{label}</div>
+            <div key={label} className="flex flex-col items-center">
+              <div className="text-xl sm:text-2xl font-bold text-accent">{value}</div>
+              <div className="text-[10px] sm:text-xs text-white/55 uppercase tracking-wide mt-0.5">{label}</div>
             </div>
           ))}
         </motion.div>
-      </div>
-
-      {/* ── Right: product ── */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.88 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="relative flex items-center justify-center"
-      >
-        {/* ambient glow */}
-        <div aria-hidden className="absolute w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
-
-        <div className="relative">
-          <img
-            src={images.prostanone}
-            alt="Prostanone — Premium Prostate Health"
-            className="relative z-10 w-full max-w-sm lg:max-w-md xl:max-w-lg mx-auto drop-shadow-2xl"
-            loading="eager"
-          />
-          {/* floating NAFDAC badge */}
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            className="absolute -top-6 right-1 sm:-right-4 z-20 p-2.5 rounded-full bg-white"
-          >
-            <img src={images.nafdac_approved_badge} alt="NAFDAC Approved" className="w-16 sm:w-20 h-16 sm:h-20 drop-shadow-xl" />
-          </motion.div>
-        </div>
       </motion.div>
-    </div>
 
-    {/* scroll nudge */}
-    <motion.div
-      animate={{ y: [0, 8, 0] }}
-      transition={{ repeat: Infinity, duration: 1.6 }}
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/30 z-10"
-    >
-      <ChevronDown size={28} />
-    </motion.div>
-  </section>
-);
+      {/* Scroll nudge */}
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 1.6 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/30 z-20"
+      >
+        <ChevronDown size={28} />
+      </motion.div>
+
+    </section>
+  );
+};
 
 export default HeroSection;
