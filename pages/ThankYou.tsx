@@ -66,7 +66,7 @@ const ThankYou: React.FC = () => {
             <ul className="space-y-2 text-sm text-text-muted">
               <li>1. Check your email for tracking info.</li>
               <li>2. Delivery expected in 3-5 business days.</li>
-              <li>3. Take 1 tablet, 3 times daily with meals.</li>
+              <li>3. Take 1 tablet, 3 times daily</li>
             </ul>
           </div>
         )}
