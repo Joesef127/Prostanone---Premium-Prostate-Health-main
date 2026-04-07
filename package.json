@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "tsx --env-file=.env --watch server/dev.ts",
-    "build": "vite build",
+    "build": "vite build && npx esbuild api/index.ts --bundle --platform=node --target=node20 --format=cjs --packages=external --outfile=api/_handler.js",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",

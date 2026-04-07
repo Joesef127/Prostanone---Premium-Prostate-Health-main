@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Generated API bundle
+api/_handler.js
+
 # Environment variables
 .env
 .env.local
