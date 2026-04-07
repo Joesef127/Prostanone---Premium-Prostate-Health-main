@@ -2,6 +2,7 @@
   "name": "prostanone---premium-prostate-health",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "dev:api": "tsx --env-file=.env --watch server/dev.ts",
