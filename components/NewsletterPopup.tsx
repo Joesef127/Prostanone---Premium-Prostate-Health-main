@@ -59,7 +59,7 @@ const NewsletterPopup: React.FC = () => {
         setStatus('loading');
 
         try {
-            const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+            const SHEETS_URL = import.meta.env.SHEETS_WEBHOOK_URL;
 
             await Promise.allSettled([
                 fetch(SHEETS_URL, {

@@ -1,8 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-    readonly VITE_KORAPAY_PUBLIC_KEY: string
-    readonly VITE_SHEETS_WEBHOOK_URL: string
+    readonly KORAPAY_PUBLIC_KEY: string
+    readonly SHEETS_WEBHOOK_URL: string
 }
 
 interface ImportMeta {

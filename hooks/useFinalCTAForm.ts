@@ -101,7 +101,7 @@ export function useFinalCTAForm() {
     setLoading(true);
 
     const WEBHOOK_URL =
-      import.meta.env.VITE_ORDERS_WEBHOOK_URL ||
+      import.meta.env.ORDERS_WEBHOOK_URL ||
       'https://n8n.metrohyp.com/webhook/prostanone-orders';
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
     const paymentLabel = paymentMethod === 'online' ? 'Online Payment' : 'Cash on Delivery (COD)';
@@ -138,7 +138,7 @@ export function useFinalCTAForm() {
         }
         window.Korapay.initialize({
           key:
-            import.meta.env.VITE_KORAPAY_PUBLIC_KEY ||
+            import.meta.env.KORAPAY_PUBLIC_KEY ||
             'pk_test_qPwbCqQCurnRJCuhoQZTZxstUvpjsGqBbBq44bKZ',
           amount: total,
           currency: 'NGN',

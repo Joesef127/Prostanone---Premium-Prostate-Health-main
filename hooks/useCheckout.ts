@@ -99,7 +99,7 @@ export function useCheckout() {
       .join(', ');
 
   const sendCheckoutProgress = (checkoutStep: number, status: string, paymentData?: any) => {
-    const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+    const SHEETS_URL = import.meta.env.SHEETS_WEBHOOK_URL;
 
     fetch(SHEETS_URL, {
       method: 'POST',
@@ -182,7 +182,7 @@ export function useCheckout() {
     }
 
     window.Korapay.initialize({
-      key: import.meta.env.VITE_KORAPAY_PUBLIC_KEY,
+      key: import.meta.env.KORAPAY_PUBLIC_KEY,
       amount: total,
       currency: 'NGN',
       reference,
@@ -267,7 +267,7 @@ export function useCheckout() {
     if (loading) return;
     setLoading(true);
 
-    const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+    const SHEETS_URL = import.meta.env.SHEETS_WEBHOOK_URL;
     const shippingAddress = `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`;
 
     Promise.allSettled([

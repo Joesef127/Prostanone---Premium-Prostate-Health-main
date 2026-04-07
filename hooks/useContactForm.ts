@@ -15,7 +15,7 @@ interface FieldErrors {
 
 export type SubmitStatus = 'idle' | 'loading' | 'success' | 'error';
 
-const SHEETS_WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+const SHEETS_WEBHOOK_URL = import.meta.env.SHEETS_WEBHOOK_URL;
 
 const useContactForm = () => {
   const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' });
