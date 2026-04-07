@@ -1,7 +1,4 @@
 {
-  "functions": {
-    "api/_handler.js": {}
-  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/_handler" },
     { "source": "/(.*)", "destination": "/index.html" }
