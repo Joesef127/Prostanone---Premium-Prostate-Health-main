@@ -21,6 +21,7 @@ app.use(
         ? [
             "https://prostanone-premium-prostate-heal-git-b1d987-joesef127s-projects.vercel.app",
             "https://prostanone-premium-prostate-health.vercel.app",
+            "https://prostanone.vercel.app"
           ]
         : ["http://localhost:3000"],
     credentials: true,
