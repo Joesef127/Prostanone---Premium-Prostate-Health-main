@@ -8,6 +8,11 @@ import data from "../server/routes/data";
 
 const app = new Hono().basePath("/api");
 
+app.onError((err, c) => {
+  console.error("[unhandled]", err);
+  return c.json({ error: "Internal server error" }, 500);
+});
+
 app.use(
   "*",
   cors({
