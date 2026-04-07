@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { API_BASE } from '../lib/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail } from 'lucide-react';
 import Button from './Button';
@@ -72,7 +72,7 @@ const NewsletterPopup: React.FC = () => {
                         message: '',
                     }),
                 }),
-                fetch('/api/subscribers', {
+                fetch(`${API_BASE}/api/subscribers`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

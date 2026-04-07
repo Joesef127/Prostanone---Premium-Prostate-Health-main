@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE } from '../lib/constants';
 
 interface FormState {
   name: string;
@@ -64,7 +65,7 @@ const useContactForm = () => {
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(payload),
         }),
-        fetch('/api/contacts', {
+        fetch(`${API_BASE}/api/contacts`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: payload.name, email: payload.email, message: payload.message }),

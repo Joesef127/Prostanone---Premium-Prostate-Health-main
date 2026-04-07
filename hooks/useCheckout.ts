@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { PACKAGES } from '../lib/constants';
+import { PACKAGES, API_BASE } from '../lib/constants';
 import { calcDeliveryFee } from '../utils/delivery';
 import { useModal } from '../context/ModalContext';
 
@@ -226,7 +226,7 @@ export function useCheckout() {
           sendCheckoutProgress(4, 'payment_completed', data);
 
           // Log the confirmed order to the backend
-          fetch('/api/orders', {
+          fetch(`${API_BASE}/api/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -290,7 +290,7 @@ export function useCheckout() {
           checkout_step: 'cod_order_placed',
         }),
       }),
-      fetch('/api/orders', {
+      fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

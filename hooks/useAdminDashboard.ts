@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Tab, TimeRange, ViewMode, Stats, getTimeCutoff } from '../components/admin/adminTypes';
+import { API_BASE } from '../lib/constants';
 
 export function useAdminDashboard() {
   const { adminEmail, logout } = useAuth();
@@ -23,7 +24,7 @@ export function useAdminDashboard() {
   const [deleting, setDeleting] = useState(false);
 
   const fetchStats = useCallback(() => {
-    fetch('/api/stats', { credentials: 'include' })
+    fetch(`${API_BASE}/api/stats`, { credentials: 'include' })
       .then((r) => r.json())
       .then((s: Stats) => setStats(s))
       .catch(() => {});

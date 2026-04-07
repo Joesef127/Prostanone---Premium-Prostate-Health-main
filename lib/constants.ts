@@ -1,5 +1,9 @@
 import { ProductPackage, QuizQuestion, Testimonial } from '../types';
 
+// API base URL — empty string means relative (works in dev via Vite proxy and in prod when on same domain)
+// Set VITE_API_URL in Vercel env vars to your Railway backend URL e.g. https://your-app.railway.app
+export const API_BASE = import.meta.env.VITE_API_URL ?? '';
+
 // NAFDAC Registration Number — update here to change across the entire site
 export const NAFDAC_REG_NO = 'A7-4976L';
 
