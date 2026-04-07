@@ -1,10 +1,11 @@
 {
-  "buildCommand": "vite build && node_modules/.bin/esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/_bundle.mjs",
   "functions": {
-    "api/_bundle.mjs": {}
+    "api/index.ts": {
+      "includeFiles": "server/**"
+    }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/_bundle" },
+    { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
