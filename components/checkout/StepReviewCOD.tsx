@@ -37,7 +37,7 @@ const StepReviewCOD: React.FC<Props> = ({
       <h2 className="text-2xl font-bold">Confirm Your Order</h2>
     </div>
 
-    <div className="bg-green-50 border border-green-200 rounded-2xl p-5 mb-5 flex gap-4 items-start">
+    <div className="bg-green-50 border border-green-200 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row gap-4 items-start">
       <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
         <Truck size={22} className="text-green-600" />
       </div>
