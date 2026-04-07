@@ -1,8 +1,8 @@
 export interface Testimonial {
   id: number;
   name: string;
-  age: number;
-  location: string;
+  age: number | null;
+  location: string | null;
   text: string;
   rating: number;
 }
