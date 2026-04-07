@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail } from 'lucide-react';
 import Button from './Button';
 import { useModal } from '../context/ModalContext';
+import React, { useState, useEffect } from 'react';
 
 const NewsletterPopup: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);

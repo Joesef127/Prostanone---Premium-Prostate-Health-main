@@ -4,6 +4,7 @@ import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogHeroSection from '../components/blog/BlogHeroSection';
 import BlogCategoryFilter from '../components/blog/BlogCategoryFilter';
 import BlogArticleGrid from '../components/blog/BlogArticleGrid';
+import { useState, useEffect } from 'react';
 
 const Blog: React.FC = () => {
   useDynamicTitle('Blog');

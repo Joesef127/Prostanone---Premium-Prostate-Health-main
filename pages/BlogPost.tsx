@@ -5,6 +5,7 @@ import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogPostHeader from '../components/blog/BlogPostHeader';
 import BlogPostBody from '../components/blog/BlogPostBody';
 import BlogRelatedPosts from '../components/blog/BlogRelatedPosts';
+import { useState, useEffect } from 'react';
 
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
