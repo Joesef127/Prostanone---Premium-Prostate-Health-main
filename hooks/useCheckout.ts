@@ -269,32 +269,9 @@ export function useCheckout() {
     setLoading(true);
 
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
-    if (!SHEETS_URL) {
-      navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
-      return;
-    }
     const shippingAddress = `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`;
 
-    Promise.allSettled([
-      fetch(SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          source: 'order',
-          name: formData.name.trim(),
-          email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim(),
-          alt_phone: formData.altPhone.trim(),
-          shipping_address: shippingAddress,
-          notes: formData.notes.trim(),
-          items_ordered: buildOrderSummary(),
-          delivery_fee: finalDeliveryFee,
-          total_amount: total,
-          payment_method: 'Cash on Delivery (COD)',
-          checkout_step: 'cod_order_placed',
-        }),
-      }),
+    const requests: Promise<unknown>[] = [
       fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -312,7 +289,33 @@ export function useCheckout() {
           checkoutStep: 'cod_order_placed',
         }),
       }),
-    ]).catch(err => console.error('COD order error:', err));
+    ];
+
+    if (SHEETS_URL) {
+      requests.push(
+        fetch(SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            source: 'order',
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            phone: formData.phone.trim(),
+            alt_phone: formData.altPhone.trim(),
+            shipping_address: shippingAddress,
+            notes: formData.notes.trim(),
+            items_ordered: buildOrderSummary(),
+            delivery_fee: finalDeliveryFee,
+            total_amount: total,
+            payment_method: 'Cash on Delivery (COD)',
+            checkout_step: 'cod_order_placed',
+          }),
+        }),
+      );
+    }
+
+    Promise.allSettled(requests).catch(err => console.error('COD order error:', err));
 
     navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
   };
