@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PACKAGES as FALLBACK_PACKAGES } from '../lib/constants';
+import { PACKAGES as FALLBACK_PACKAGES, API_BASE } from '../lib/constants';
 import { ProductPackage } from '../types';
 
 interface UsePackagesResult {
@@ -15,7 +15,7 @@ export function usePackages(): UsePackagesResult {
 
   useEffect(() => {
     setLoading(true);
-    fetch('/api/packages')
+    fetch(`${API_BASE}/api/packages`)
       .then((r) => (r.ok ? r.json() : null))
       .then((rows: ProductPackage[] | null) => {
         if (rows && rows.length > 0) setPackages(rows);

@@ -6,6 +6,9 @@ import { requireAdmin } from '../middleware/auth';
 
 const data = new Hono();
 
+// GET /api/ping — lightweight health check / keep-alive
+data.get('/ping', (c) => c.json({ ok: true }));
+
 // POST /api/orders — captures a new order from the frontend
 data.post('/orders', async (c) => {
   const body = await c.req.json<{

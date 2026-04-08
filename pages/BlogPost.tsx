@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { API_BASE } from '../lib/constants';
 import { useParams, Navigate } from 'react-router-dom';
 import type { BlogPost as BlogPostType } from '../lib/blogData';
 import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogPostHeader from '../components/blog/BlogPostHeader';
 import BlogPostBody from '../components/blog/BlogPostBody';
 import BlogRelatedPosts from '../components/blog/BlogRelatedPosts';
+import { useState, useEffect } from 'react';
 
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -13,11 +14,11 @@ const BlogPost: React.FC = () => {
 
   useEffect(() => {
     if (!slug) return;
-    fetch(`/api/blog/${slug}`)
+    fetch(`${API_BASE}/api/blog/${slug}`)
       .then(r => r.ok ? r.json() : null)
       .then((data: BlogPostType | null) => setPost(data))
       .catch(() => setPost(null));
-    fetch('/api/blog')
+    fetch(`${API_BASE}/api/blog`)
       .then(r => r.json())
       .then((all: BlogPostType[]) =>
         setRelatedPosts(Array.isArray(all) ? all.filter(p => p.slug !== slug).slice(0, 2) : [])

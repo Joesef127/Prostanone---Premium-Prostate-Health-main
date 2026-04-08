@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { API_BASE } from '../lib/constants';
 import type { BlogPost } from '../lib/blogData';
 import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogHeroSection from '../components/blog/BlogHeroSection';
 import BlogCategoryFilter from '../components/blog/BlogCategoryFilter';
 import BlogArticleGrid from '../components/blog/BlogArticleGrid';
+import { useState, useEffect } from 'react';
 
 const Blog: React.FC = () => {
   useDynamicTitle('Blog');
@@ -11,7 +12,7 @@ const Blog: React.FC = () => {
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    fetch('/api/blog')
+    fetch(`${API_BASE}/api/blog`)
       .then(r => r.json())
       .then((data: BlogPost[]) => setAllPosts(Array.isArray(data) ? data : []))
       .catch(() => {});

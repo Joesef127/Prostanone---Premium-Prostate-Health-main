@@ -1,5 +1,9 @@
 import { ProductPackage, QuizQuestion, Testimonial } from '../types';
 
+// API base URL — empty string means relative (works in dev via Vite proxy)
+// Set VITE_API_URL in Vercel env vars to your Render backend URL e.g. https://prostanone-api.onrender.com
+export const API_BASE: string = import.meta.env.VITE_API_URL ?? '';
+
 // NAFDAC Registration Number — update here to change across the entire site
 export const NAFDAC_REG_NO = 'A7-4976L';
 

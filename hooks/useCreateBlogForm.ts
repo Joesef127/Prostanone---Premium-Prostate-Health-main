@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { API_BASE } from '../lib/constants';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useModal } from '../context/ModalContext';
 import {
@@ -22,6 +24,7 @@ const useCreateBlogForm = () => {
   const { slug: editSlug } = useParams<{ slug?: string }>();
   const isEditing = Boolean(editSlug);
   const { showConfirm } = useModal();
+  const { token } = useAuth();
 
   const availableCategories = Array.from(
     new Set([] as string[]) // Categories will be derived dynamically in the editor
@@ -42,7 +45,10 @@ const useCreateBlogForm = () => {
 
   useEffect(() => {
     if (!editSlug) return;
-    fetch(`/api/blog/${editSlug}`, { credentials: 'include' })
+    fetch(`${API_BASE}/api/blog/${editSlug}`, {
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
       .then(r => r.ok ? r.json() : null)
       .then((post: { title: string; excerpt: string; category: string; coverImage: string; content: string } | null) => {
         if (!post) return;
@@ -118,11 +124,11 @@ const useCreateBlogForm = () => {
     };
 
     try {
-      const url = isEditing ? `/api/blog/${editSlug}` : '/api/blog';
+      const url = isEditing ? `${API_BASE}/api/blog/${editSlug}` : `${API_BASE}/api/blog`;
       const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         credentials: 'include',
         body: JSON.stringify(body),
       });
@@ -149,7 +155,11 @@ const useCreateBlogForm = () => {
       destructive: true,
     });
     if (!confirmed) return;
-    await fetch(`/api/blog/${editSlug}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`${API_BASE}/api/blog/${editSlug}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
     navigate('/blog');
   };
 

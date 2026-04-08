@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE } from '../lib/constants';
 
 interface FormState {
   name: string;
@@ -14,7 +15,7 @@ interface FieldErrors {
 
 export type SubmitStatus = 'idle' | 'loading' | 'success' | 'error';
 
-const SHEETS_WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+const VITE_SHEETS_WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
 
 const useContactForm = () => {
   const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' });
@@ -58,13 +59,13 @@ const useContactForm = () => {
       };
 
       await Promise.allSettled([
-        fetch(SHEETS_WEBHOOK_URL, {
+        fetch(VITE_SHEETS_WEBHOOK_URL, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(payload),
         }),
-        fetch('/api/contacts', {
+        fetch(`${API_BASE}/api/contacts`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: payload.name, email: payload.email, message: payload.message }),

@@ -28,6 +28,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Modal from './components/ui/Modal';
 import WhatsAppButton from './components/WhatsAppButton';
 import NewsletterPopup from './components/NewsletterPopup';
+import { API_BASE } from './lib/constants';
+
+// Wake up Render backend on first load (prevents cold-start delay on first real request)
+if (API_BASE) {
+  fetch(`${API_BASE}/api/ping`).catch(() => {});
+}
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();

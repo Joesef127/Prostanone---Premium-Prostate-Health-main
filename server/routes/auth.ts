@@ -36,13 +36,13 @@ auth.post('/login', async (c) => {
 
     setCookie(c, 'admin_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      secure: true,
+      sameSite: 'None',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     });
 
-    return c.json({ success: true, email: admin.email });
+    return c.json({ success: true, email: admin.email, token });
   } catch (err) {
     console.error('[/api/auth/login]', err);
     return c.json({ error: 'Internal server error' }, 500);
@@ -51,7 +51,7 @@ auth.post('/login', async (c) => {
 
 // POST /api/auth/logout
 auth.post('/logout', (c) => {
-  deleteCookie(c, 'admin_token', { path: '/' });
+  deleteCookie(c, 'admin_token', { path: '/', secure: true, sameSite: 'None' });
   return c.json({ success: true });
 });
 

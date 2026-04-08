@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+import { API_BASE } from '../lib/constants';
 
 export interface DistributorFormState {
   fullName: string;
@@ -77,7 +78,7 @@ export function useDistributorForm() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(gasPayload),
         }),
-        fetch('/api/distributors', {
+        fetch(`${API_BASE}/api/distributors`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

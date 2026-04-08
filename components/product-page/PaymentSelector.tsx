@@ -30,7 +30,7 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
 
 const GATEWAY_OPTIONS: GatewayOption[] = [
   { id: 'korapay', label: 'Korapay', subtitle: 'Card, Transfer, USSD' },
-  { id: 'payaza', label: 'Payaza', subtitle: 'Coming Soon', disabled: true },
+  { id: 'payaza', label: 'Payaza', subtitle: 'Card, Transfer, USSD' },
 ];
 
 const PaymentSelector: React.FC<Props> = ({

@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { PACKAGES } from '../lib/constants';
+import { PACKAGES, API_BASE } from '../lib/constants';
 import { calcDeliveryFee } from '../utils/delivery';
 import { useModal } from '../context/ModalContext';
 
@@ -49,7 +49,7 @@ const validatePhone = (phone: string): boolean => {
 };
 
 export function useCheckout() {
-  const { cart, paymentMethod, setPaymentMethod } = useApp();
+  const { cart, paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice } = useApp();
   const navigate = useNavigate();
   const { showAlert } = useModal();
 
@@ -100,6 +100,7 @@ export function useCheckout() {
 
   const sendCheckoutProgress = (checkoutStep: number, status: string, paymentData?: any) => {
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+    if (!SHEETS_URL) return;
 
     fetch(SHEETS_URL, {
       method: 'POST',
@@ -118,7 +119,7 @@ export function useCheckout() {
         items_ordered: buildOrderSummary(),
         delivery_fee: finalDeliveryFee,
         total_amount: total,
-        payment_method: 'Online (Korapay)',
+        payment_method: 'Online',
         payment_reference: paymentData?.reference || reference,
         payment_status: checkoutStep === 4 ? (paymentData?.status || status) : '',
         checkout_step: status,
@@ -175,6 +176,52 @@ export function useCheckout() {
     e.preventDefault();
     setLoading(true);
 
+    if (gatewayChoice === 'payaza') {
+      const nameParts = formData.name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || firstName;
+      const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online`;
+
+      sendCheckoutProgress(4, 'payaza_payment_initiated');
+
+      // Log order as initiated before redirect
+      fetch(`${API_BASE}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          altPhone: formData.altPhone.trim(),
+          shippingAddress: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
+          notes: formData.notes.trim(),
+          itemsOrdered: buildOrderSummary(),
+          deliveryFee: finalDeliveryFee,
+          totalAmount: total,
+          paymentMethod: 'Online (Payaza)',
+          paymentReference: reference,
+          paymentStatus: 'initiated',
+          checkoutStep: 'payaza_payment_initiated',
+        }),
+      }).catch(err => console.error('Order log error:', err));
+
+      const payazaUrl =
+        `https://business.payaza.africa/payment-page` +
+        `?merchant_key=${encodeURIComponent(import.meta.env.VITE_PAYAZA_PUBLIC_KEY)}` +
+        `&connection_mode=Live` +
+        `&checkout_amount=${encodeURIComponent(total)}` +
+        `&currency_code=NGN` +
+        `&email_address=${encodeURIComponent(formData.email.trim().toLowerCase())}` +
+        `&first_name=${encodeURIComponent(firstName)}` +
+        `&last_name=${encodeURIComponent(lastName)}` +
+        `&phone_number=${encodeURIComponent(formData.phone.trim())}` +
+        `&transaction_reference=${encodeURIComponent(reference)}` +
+        `&redirect_url=${encodeURIComponent(redirectUrl)}`;
+
+      window.location.href = payazaUrl;
+      return;
+    }
+
     if (!window.Korapay) {
       showAlert({ title: 'Payment loading', message: 'Payment gateway is loading. Please try again in a moment.' });
       setLoading(false);
@@ -226,7 +273,7 @@ export function useCheckout() {
           sendCheckoutProgress(4, 'payment_completed', data);
 
           // Log the confirmed order to the backend
-          fetch('/api/orders', {
+          fetch(`${API_BASE}/api/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -239,7 +286,7 @@ export function useCheckout() {
               itemsOrdered: orderSummary,
               deliveryFee: finalDeliveryFee,
               totalAmount: total,
-              paymentMethod: 'Online (Korapay)',
+              paymentMethod: 'Online',
               paymentReference: data?.reference || reference,
               paymentStatus: data?.status || 'success',
               checkoutStep: 'payment_completed',
@@ -270,27 +317,8 @@ export function useCheckout() {
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
     const shippingAddress = `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`;
 
-    Promise.allSettled([
-      fetch(SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          source: 'order',
-          name: formData.name.trim(),
-          email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim(),
-          alt_phone: formData.altPhone.trim(),
-          shipping_address: shippingAddress,
-          notes: formData.notes.trim(),
-          items_ordered: buildOrderSummary(),
-          delivery_fee: finalDeliveryFee,
-          total_amount: total,
-          payment_method: 'Cash on Delivery (COD)',
-          checkout_step: 'cod_order_placed',
-        }),
-      }),
-      fetch('/api/orders', {
+    const requests: Promise<unknown>[] = [
+      fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -307,7 +335,33 @@ export function useCheckout() {
           checkoutStep: 'cod_order_placed',
         }),
       }),
-    ]).catch(err => console.error('COD order error:', err));
+    ];
+
+    if (SHEETS_URL) {
+      requests.push(
+        fetch(SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            source: 'order',
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            phone: formData.phone.trim(),
+            alt_phone: formData.altPhone.trim(),
+            shipping_address: shippingAddress,
+            notes: formData.notes.trim(),
+            items_ordered: buildOrderSummary(),
+            delivery_fee: finalDeliveryFee,
+            total_amount: total,
+            payment_method: 'Cash on Delivery (COD)',
+            checkout_step: 'cod_order_placed',
+          }),
+        }),
+      );
+    }
+
+    Promise.allSettled(requests).catch(err => console.error('COD order error:', err));
 
     navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
   };
@@ -321,6 +375,8 @@ export function useCheckout() {
     loading,
     paymentMethod,
     setPaymentMethod,
+    gatewayChoice,
+    setGatewayChoice,
     // computed
     subtotal,
     finalDeliveryFee,
