@@ -28,6 +28,8 @@ const Checkout: React.FC = () => {
     loading,
     paymentMethod,
     setPaymentMethod,
+    gatewayChoice,
+    setGatewayChoice,
     subtotal,
     finalDeliveryFee,
     total,
@@ -80,6 +82,8 @@ const Checkout: React.FC = () => {
                 <StepPaymentMethod
                   paymentMethod={paymentMethod}
                   setPaymentMethod={setPaymentMethod}
+                  gatewayChoice={gatewayChoice}
+                  setGatewayChoice={setGatewayChoice}
                   onBack={handleBack}
                   onContinue={() => {
                     setStep(4);
@@ -96,6 +100,7 @@ const Checkout: React.FC = () => {
                   finalDeliveryFee={finalDeliveryFee}
                   total={total}
                   state={formData.state}
+                  gatewayChoice={gatewayChoice}
                   loading={loading}
                   onSubmit={handlePayment}
                   onBack={handleBack}

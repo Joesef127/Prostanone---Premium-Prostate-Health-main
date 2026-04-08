@@ -10,7 +10,10 @@ const ThankYou: React.FC = () => {
   const { clearCart } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
-  const { paymentMethod, phone } = (location.state ?? {}) as { paymentMethod?: string; phone?: string };
+  const { paymentMethod: stateMethod, phone } = (location.state ?? {}) as { paymentMethod?: string; phone?: string };
+  // Payaza redirect lands with ?paymentMethod=online in the URL (no router state)
+  const queryMethod = new URLSearchParams(location.search).get('paymentMethod') ?? undefined;
+  const paymentMethod = stateMethod ?? queryMethod;
   const isCOD = paymentMethod === 'cod';
 
   useEffect(() => {

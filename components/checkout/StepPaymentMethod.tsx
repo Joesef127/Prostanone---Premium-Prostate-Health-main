@@ -1,10 +1,12 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, CheckCircle, Truck } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Truck, CreditCard, Lock } from 'lucide-react';
 import Button from '../Button';
 
 interface Props {
   paymentMethod: string | null;
   setPaymentMethod: (method: 'online' | 'cod') => void;
+  gatewayChoice: 'korapay' | 'payaza' | null;
+  setGatewayChoice: (g: 'korapay' | 'payaza' | null) => void;
   onBack: () => void;
   onContinue: () => void;
 }
@@ -12,6 +14,8 @@ interface Props {
 const StepPaymentMethod: React.FC<Props> = ({
   paymentMethod,
   setPaymentMethod,
+  gatewayChoice,
+  setGatewayChoice,
   onBack,
   onContinue,
 }) => (
@@ -51,6 +55,34 @@ const StepPaymentMethod: React.FC<Props> = ({
         )}
       </button>
 
+      {paymentMethod === 'online' && (
+        <div className="space-y-2 pl-1">
+          <p className="text-xs font-semibold text-gray-700">Select Gateway <span className="text-red-500">*</span></p>
+          <div className="grid grid-cols-2 gap-3">
+            {(['korapay', 'payaza'] as const).map(gw => (
+              <button
+                key={gw}
+                type="button"
+                onClick={() => setGatewayChoice(gw)}
+                className={`p-3 rounded-xl border-2 flex flex-col items-center gap-1 transition-all text-center ${
+                  gatewayChoice === gw
+                    ? 'border-primary bg-primary/5'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <CreditCard size={18} className={gatewayChoice === gw ? 'text-primary' : 'text-gray-400'} />
+                <span className="text-xs font-bold text-gray-700 capitalize">{gw}</span>
+                <span className="text-[10px] text-gray-400">Card, Transfer, USSD</span>
+                {gatewayChoice === gw && <CheckCircle size={13} className="text-primary" />}
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] text-gray-400 flex items-center gap-1.5 pt-0.5">
+            <Lock size={11} className="shrink-0" /> Secured &amp; encrypted payment processing.
+          </p>
+        </div>
+      )}
+
       <button
         type="button"
         onClick={() => setPaymentMethod('cod')}
@@ -77,7 +109,7 @@ const StepPaymentMethod: React.FC<Props> = ({
       type="button"
       fullWidth
       size="lg"
-      disabled={!paymentMethod}
+      disabled={!paymentMethod || (paymentMethod === 'online' && !gatewayChoice)}
       onClick={onContinue}
     >
       Continue <ChevronRight className="ml-2 w-4 h-4" />

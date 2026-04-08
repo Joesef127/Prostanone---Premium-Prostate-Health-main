@@ -106,7 +106,11 @@ export function useFinalCTAForm() {
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
     const paymentLabel = paymentMethod === 'online' ? 'Online Payment' : 'Cash on Delivery (COD)';
     const checkoutStep =
-      paymentMethod === 'online' ? 'korapay_payment_initiated' : 'cod_order_placed';
+      paymentMethod === 'online'
+        ? gatewayChoice === 'payaza'
+          ? 'payaza_payment_initiated'
+          : 'korapay_payment_initiated'
+        : 'cod_order_placed';
 
     try {
       const webhookPromise = fetch(WEBHOOK_URL, {
@@ -131,6 +135,29 @@ export function useFinalCTAForm() {
 
       if (paymentMethod === 'online') {
         webhookPromise.catch(() => {});
+
+        if (gatewayChoice === 'payaza') {
+          const [firstName, ...rest] = fullName.split(' ');
+          const lastName = rest.join(' ') || firstName;
+          const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online`;
+
+          const payazaUrl =
+            `https://business.payaza.africa/payment-page` +
+            `?merchant_key=${encodeURIComponent(import.meta.env.VITE_PAYAZA_PUBLIC_KEY)}` +
+            `&connection_mode=Live` +
+            `&checkout_amount=${encodeURIComponent(total)}` +
+            `&currency_code=NGN` +
+            `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com')}` +
+            `&first_name=${encodeURIComponent(firstName)}` +
+            `&last_name=${encodeURIComponent(lastName)}` +
+            `&phone_number=${encodeURIComponent(form.phone.trim())}` +
+            `&transaction_reference=${encodeURIComponent(reference)}` +
+            `&redirect_url=${encodeURIComponent(redirectUrl)}`;
+
+          window.location.href = payazaUrl;
+          return;
+        }
+
         if (!window.Korapay) {
           showAlert({ title: 'Payment loading', message: 'Payment gateway is loading. Please try again in a moment.' });
           setLoading(false);

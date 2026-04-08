@@ -7,6 +7,7 @@ interface Props {
   finalDeliveryFee: number;
   total: number;
   state: string;
+  gatewayChoice: 'korapay' | 'payaza' | null;
   loading: boolean;
   onSubmit: React.FormEventHandler;
   onBack: () => void;
@@ -17,6 +18,7 @@ const StepReviewOnline: React.FC<Props> = ({
   finalDeliveryFee,
   total,
   state,
+  gatewayChoice,
   loading,
   onSubmit,
   onBack,
@@ -56,13 +58,13 @@ const StepReviewOnline: React.FC<Props> = ({
     </div>
 
     <div className="mb-8">
-      <h3 className="font-semibold mb-4">Payment via Korapay</h3>
+      <h3 className="font-semibold mb-4">Payment via {gatewayChoice === 'payaza' ? 'Payaza' : 'Korapay'}</h3>
       <div className="p-4 border-2 border-primary bg-primary/5 rounded-xl flex items-center gap-4">
-        <div className="w-10 h-10 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-xs">
-          Kora
+        <div className={`w-10 h-10 ${gatewayChoice === 'payaza' ? 'bg-green-600' : 'bg-blue-600'} rounded-md flex items-center justify-center text-white font-bold text-xs`}>
+          {gatewayChoice === 'payaza' ? 'Pay' : 'Kora'}
         </div>
         <div>
-          <p className="font-bold text-sm">Pay with Korapay</p>
+          <p className="font-bold text-sm">Pay with {gatewayChoice === 'payaza' ? 'Payaza' : 'Korapay'}</p>
           <p className="text-xs text-gray-500">Cards, Transfer, USSD</p>
         </div>
         <CheckCircle className="w-5 h-5 text-primary ml-auto" />
