@@ -3,6 +3,10 @@ import { API_BASE } from '../lib/constants';
 
 const TOKEN_KEY = 'admin_token';
 
+function saveToken(t: string) { localStorage.setItem(TOKEN_KEY, t); }
+function loadToken(): string | null { return localStorage.getItem(TOKEN_KEY); }
+function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
 interface AuthState {
   isAdmin: boolean;
   adminEmail: string | null;
@@ -26,21 +30,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   useEffect(() => {
-    const stored = sessionStorage.getItem(TOKEN_KEY);
-    if (!stored) {
-      setState({ isAdmin: false, adminEmail: null, isLoading: false, token: null });
-      return;
-    }
+    const stored = loadToken();
     fetch(`${API_BASE}/api/auth/me`, {
       credentials: 'include',
-      headers: { Authorization: `Bearer ${stored}` },
+      headers: stored ? { Authorization: `Bearer ${stored}` } : {},
     })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.email) {
           setState({ isAdmin: true, adminEmail: data.email, isLoading: false, token: stored });
         } else {
-          sessionStorage.removeItem(TOKEN_KEY);
+          clearToken();
           setState({ isAdmin: false, adminEmail: null, isLoading: false, token: null });
         }
       })
@@ -57,17 +57,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    if (res.ok && data.token) {
-      sessionStorage.setItem(TOKEN_KEY, data.token);
-      setState({ isAdmin: true, adminEmail: data.email, isLoading: false, token: data.token });
+    if (res.ok) {
+      // Server may or may not return a token (backwards compat with older deploys)
+      if (data.token) {
+        saveToken(data.token);
+      }
+      setState({ isAdmin: true, adminEmail: data.email, isLoading: false, token: data.token ?? null });
       return { success: true };
     }
     return { success: false, error: data.error ?? 'Login failed' };
   };
 
   const logout = async () => {
-    const stored = sessionStorage.getItem(TOKEN_KEY);
-    sessionStorage.removeItem(TOKEN_KEY);
+    const stored = loadToken();
+    clearToken();
     await fetch(`${API_BASE}/api/auth/logout`, {
       method: 'POST',
       credentials: 'include',
