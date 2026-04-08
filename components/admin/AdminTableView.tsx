@@ -12,7 +12,7 @@ const AdminTableView: React.FC<AdminTableViewProps> = ({
   rows, selected, allSelected, onToggleSelect, onToggleSelectAll,
 }) => (
   <div className="overflow-x-auto rounded-xl border border-border">
-    <table className="w-full text-sm text-left">
+    <table className="w-full text-xs md:text-sm text-left">
       <thead className="bg-surface border-b border-border">
         <tr>
           <th className="px-4 py-3 w-10">

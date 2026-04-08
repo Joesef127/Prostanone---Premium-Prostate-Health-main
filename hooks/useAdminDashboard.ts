@@ -18,7 +18,9 @@ export function useAdminDashboard() {
 
   const [timeRange, setTimeRange] = useState<TimeRange>('all');
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => 
+    typeof window !== 'undefined' && window.innerWidth < 640 ? 'cards' : 'table'
+  );
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [confirmClear, setConfirmClear] = useState<'all' | 'selected' | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -55,6 +57,16 @@ export function useAdminDashboard() {
     fetchTab(activeTab);
     setSelected(new Set());
   }, [activeTab, fetchTab]);
+
+  // Adjust view mode on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      setViewMode(isMobile ? 'cards' : 'table');
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = async () => {
     await logout();

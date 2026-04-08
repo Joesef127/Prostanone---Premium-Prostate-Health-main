@@ -77,24 +77,24 @@ const OrderCard: React.FC<OrderCardProps> = ({ row }) => {
         )}
         {row.phone != null && (
           <InfoRow icon={<Phone className="w-3.5 h-3.5" />}>
-            <span className="whitespace-normal text-xs sm:text-sm">{String(row.phone)}</span>
+            <span className="whitespace-normal text-xs md:text-sm">{String(row.phone)}</span>
           </InfoRow>
         )}
         {(row.shipping_address ?? row.shippingAddress) != null && (
           <InfoRow icon={<MapPin className="w-3.5 h-3.5" />}>
-            <span className="whitespace-normal text-xs sm:text-sm">
+            <span className="whitespace-normal text-xs md:text-sm">
               {String(row.shipping_address ?? row.shippingAddress)}
             </span>
           </InfoRow>
         )}
         {items != null && (
           <InfoRow icon={<Package className="w-3.5 h-3.5" />}>
-            <span className="whitespace-normal text-xs sm:text-sm">{String(items)}</span>
+            <span className="whitespace-normal text-xs md:text-sm">{String(items)}</span>
           </InfoRow>
         )}
         {(row.payment_method ?? row.paymentMethod) != null && (
           <InfoRow icon={<CreditCard className="w-3.5 h-3.5" />}>
-            <span className="whitespace-normal text-xs sm:text-sm">
+            <span className="whitespace-normal text-xs md:text-sm">
               {String(row.payment_method ?? row.paymentMethod)}
             </span>
           </InfoRow>
