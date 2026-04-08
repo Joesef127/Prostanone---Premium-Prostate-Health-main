@@ -13,10 +13,17 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal server error' }, 500);
 });
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://prostanone.vercel.app',
+  'https://prostanone-premium-prostate-health.vercel.app',
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+];
+
 app.use(
   '*',
   cors({
-    origin: process.env.FRONTEND_URL || 'https://prostanone-premium-prostate-health.vercel.app',
+    origin: (origin) => (allowedOrigins.includes(origin) ? origin : allowedOrigins[1]),
     credentials: true,
   }),
 );
