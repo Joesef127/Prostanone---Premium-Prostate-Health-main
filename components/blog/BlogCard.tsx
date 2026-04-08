@@ -9,7 +9,7 @@ import { useModal } from '../../context/ModalContext';
 import { API_BASE } from '../../lib/constants';
 
 const BlogCard: React.FC<{ post: BlogPost; delay?: number; onDeleted?: (slug: string) => void }> = ({ post, delay = 0, onDeleted }) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, token } = useAuth();
   const { showConfirm } = useModal();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,7 +38,11 @@ const BlogCard: React.FC<{ post: BlogPost; delay?: number; onDeleted?: (slug: st
       destructive: true,
     });
     if (!confirmed) return;
-    await fetch(`${API_BASE}/api/blog/${post.slug}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`${API_BASE}/api/blog/${post.slug}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
     onDeleted?.(post.slug);
   };
 

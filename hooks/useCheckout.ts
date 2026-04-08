@@ -100,6 +100,7 @@ export function useCheckout() {
 
   const sendCheckoutProgress = (checkoutStep: number, status: string, paymentData?: any) => {
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+    if (!SHEETS_URL) return;
 
     fetch(SHEETS_URL, {
       method: 'POST',
@@ -268,6 +269,10 @@ export function useCheckout() {
     setLoading(true);
 
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+    if (!SHEETS_URL) {
+      navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
+      return;
+    }
     const shippingAddress = `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`;
 
     Promise.allSettled([

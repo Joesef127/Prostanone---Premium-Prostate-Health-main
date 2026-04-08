@@ -42,7 +42,7 @@ auth.post('/login', async (c) => {
       path: '/',
     });
 
-    return c.json({ success: true, email: admin.email });
+    return c.json({ success: true, email: admin.email, token });
   } catch (err) {
     console.error('[/api/auth/login]', err);
     return c.json({ error: 'Internal server error' }, 500);

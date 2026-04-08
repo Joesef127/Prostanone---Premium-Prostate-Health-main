@@ -10,7 +10,12 @@ export interface AdminPayload {
 export type AdminEnv = { Variables: { admin: AdminPayload } };
 
 export async function requireAdmin(c: Context<AdminEnv>, next: Next) {
-  const token = getCookie(c, 'admin_token');
+  // Prefer Authorization: Bearer header (works cross-origin), fall back to httpOnly cookie
+  const authHeader = c.req.header('Authorization');
+  const token = authHeader?.startsWith('Bearer ')
+    ? authHeader.slice(7)
+    : getCookie(c, 'admin_token');
+
   if (!token) {
     return c.json({ error: 'Unauthorized' }, 401);
   }

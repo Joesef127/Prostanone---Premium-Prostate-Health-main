@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { ProductPackage } from '../../types';
 import { API_BASE } from '../../lib/constants';
+import { useAuth } from '../../context/AuthContext';
 
 interface Props {
   pkg: ProductPackage;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved }) => {
+  const { token } = useAuth();
   const [form, setForm] = useState({
     name: pkg.name,
     price: String(pkg.price),
@@ -49,7 +51,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved }) => {
 
     const res = await fetch(`${API_BASE}/api/packages/${pkg.id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       credentials: 'include',
       body: JSON.stringify(body),
     });
