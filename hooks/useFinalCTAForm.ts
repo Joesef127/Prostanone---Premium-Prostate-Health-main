@@ -138,7 +138,7 @@ export function useFinalCTAForm() {
         }
         window.Korapay.initialize({
           key:
-            import.meta.env.KORAPAY_PUBLIC_KEY ||
+            import.meta.env.VITE_KORAPAY_PUBLIC_KEY ||
             'pk_test_qPwbCqQCurnRJCuhoQZTZxstUvpjsGqBbBq44bKZ',
           amount: total,
           currency: 'NGN',

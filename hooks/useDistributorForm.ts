@@ -26,7 +26,7 @@ const INITIAL_FORM: DistributorFormState = {
 };
 
 export function useDistributorForm() {
-  const SHEETS_URL = import.meta.env.SHEETS_WEBHOOK_URL;
+  const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
   const [form, setForm] = useState<DistributorFormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<SubmitStatus>('idle');

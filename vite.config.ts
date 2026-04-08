@@ -18,9 +18,6 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [tailwindcss(), react()],
-    define: {
-      __API_URL__: JSON.stringify(env.API_URL ?? ''),
-    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

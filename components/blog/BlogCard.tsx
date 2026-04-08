@@ -6,6 +6,7 @@ import type { BlogPost } from '../../lib/blogData';
 import FadeIn from './FadeIn';
 import { useAuth } from '../../context/AuthContext';
 import { useModal } from '../../context/ModalContext';
+import { API_BASE } from '../../lib/constants';
 
 const BlogCard: React.FC<{ post: BlogPost; delay?: number; onDeleted?: (slug: string) => void }> = ({ post, delay = 0, onDeleted }) => {
   const { isAdmin } = useAuth();
@@ -37,7 +38,7 @@ const BlogCard: React.FC<{ post: BlogPost; delay?: number; onDeleted?: (slug: st
       destructive: true,
     });
     if (!confirmed) return;
-    await fetch(`/api/blog/${post.slug}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`${API_BASE}/api/blog/${post.slug}`, { method: 'DELETE', credentials: 'include' });
     onDeleted?.(post.slug);
   };
 

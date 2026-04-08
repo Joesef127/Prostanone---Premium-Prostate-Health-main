@@ -32,7 +32,7 @@ export function useAdminDashboard() {
 
   const fetchTab = useCallback((tab: Tab) => {
     setLoading(true);
-    fetch(`/api/${tab}`, { credentials: 'include' })
+    fetch(`${API_BASE}/api/${tab}`, { credentials: 'include' })
       .then((r) => r.json())
       .then((rows: Record<string, unknown>[]) => {
         setData((prev) => ({ ...prev, [tab]: rows }));
@@ -91,7 +91,7 @@ export function useAdminDashboard() {
 
   const doDelete = async (ids?: number[]) => {
     setDeleting(true);
-    await fetch(`/api/${activeTab}`, {
+    await fetch(`${API_BASE}/api/${activeTab}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

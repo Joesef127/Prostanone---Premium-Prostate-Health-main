@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { API_BASE } from '../lib/constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useModal } from '../context/ModalContext';
 import {
@@ -42,7 +43,7 @@ const useCreateBlogForm = () => {
 
   useEffect(() => {
     if (!editSlug) return;
-    fetch(`/api/blog/${editSlug}`, { credentials: 'include' })
+    fetch(`${API_BASE}/api/blog/${editSlug}`, { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then((post: { title: string; excerpt: string; category: string; coverImage: string; content: string } | null) => {
         if (!post) return;
@@ -118,7 +119,7 @@ const useCreateBlogForm = () => {
     };
 
     try {
-      const url = isEditing ? `/api/blog/${editSlug}` : '/api/blog';
+      const url = isEditing ? `${API_BASE}/api/blog/${editSlug}` : `${API_BASE}/api/blog`;
       const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
@@ -149,7 +150,7 @@ const useCreateBlogForm = () => {
       destructive: true,
     });
     if (!confirmed) return;
-    await fetch(`/api/blog/${editSlug}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`${API_BASE}/api/blog/${editSlug}`, { method: 'DELETE', credentials: 'include' });
     navigate('/blog');
   };
 

@@ -36,8 +36,8 @@ auth.post('/login', async (c) => {
 
     setCookie(c, 'admin_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      secure: true,
+      sameSite: 'None',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     });
@@ -51,7 +51,7 @@ auth.post('/login', async (c) => {
 
 // POST /api/auth/logout
 auth.post('/logout', (c) => {
-  deleteCookie(c, 'admin_token', { path: '/' });
+  deleteCookie(c, 'admin_token', { path: '/', secure: true, sameSite: 'None' });
   return c.json({ success: true });
 });
 
