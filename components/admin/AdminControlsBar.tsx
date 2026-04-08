@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, X, LayoutList, LayoutGrid, RefreshCw, Trash2 } from 'lucide-react';
 import { TimeRange, ViewMode, TIME_OPTIONS } from './adminTypes';
+import CustomDropdown from '../ui/CustomDropdown';
 
 interface AdminControlsBarProps {
   search: string;
@@ -42,19 +43,12 @@ const AdminControlsBar: React.FC<AdminControlsBarProps> = ({
     </div>
 
     {/* Time Range */}
-    <div className="flex items-center gap-1 bg-surface border border-border rounded-lg p-1 flex-wrap">
-      {TIME_OPTIONS.map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => onTimeRangeChange(opt.value)}
-          className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors whitespace-nowrap ${
-            timeRange === opt.value ? 'bg-primary text-white' : 'text-text-muted hover:text-text'
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
+    <CustomDropdown
+      value={timeRange}
+      onChange={(val) => onTimeRangeChange(val as TimeRange)}
+      options={TIME_OPTIONS}
+      className="w-40"
+    />
 
     {/* Layout Toggle */}
     <div className="flex items-center gap-1 bg-surface border border-border rounded-lg p-1">
