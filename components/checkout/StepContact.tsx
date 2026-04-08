@@ -51,7 +51,7 @@ const StepContact: React.FC<Props> = ({ formData, onChange, onSubmit }) => (
         placeholder="Optional"
       />
       <div className="pt-4">
-        <Button type="submit" fullWidth size="lg">
+        <Button type="submit" fullWidth size="md">
           Continue to Shipping <ChevronRight className="ml-2 w-4 h-4" />
         </Button>
       </div>

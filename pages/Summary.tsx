@@ -132,7 +132,7 @@ const Summary: React.FC = () => {
                         <p className="text-3xl font-bold text-primary">₦{total.toLocaleString()}</p>
                      </div>
                      <Button
-                        size="lg"
+                        size="md"
                         onClick={() => navigate('/checkout')}
                         className="w-full md:w-auto px-12 shadow-xl shadow-primary/20"
                      >
