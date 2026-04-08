@@ -48,6 +48,18 @@ const validatePhone = (phone: string): boolean => {
   return /^(\+234|0)[789][01]\d{8}$/.test(clean);
 };
 
+function generateOrderId(): string {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const randomPart = Math.random()
+    .toString(36)
+    .substring(2, 6)
+    .toUpperCase()
+    .replace(/[OIL0]/g, 'X'); // Remove ambiguous chars
+  return `${day}${month}-${randomPart}`;
+}
+
 export function useCheckout() {
   const { cart, paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice } = useApp();
   const navigate = useNavigate();
@@ -57,6 +69,7 @@ export function useCheckout() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [reference] = useState(`PR-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
+  const [orderId] = useState(generateOrderId());
 
   const subtotal = useMemo(
     () =>
@@ -108,6 +121,7 @@ export function useCheckout() {
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         source: 'order',
+        order_id: orderId,
         name: formData.name.trim() || '',
         email: formData.email.trim().toLowerCase() || '',
         phone: formData.phone.trim() || '',
@@ -189,6 +203,7 @@ export function useCheckout() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          orderId,
           name: formData.name.trim(),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
@@ -255,7 +270,8 @@ export function useCheckout() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify({
-              _subject: 'New Prostanone Order Confirmed',
+              _subject: `New Prostanone Order Confirmed (ID: ${orderId})`,
+              order_id: orderId,
               customer_name: formData.name.trim(),
               customer_email: formData.email.trim().toLowerCase(),
               customer_phone: formData.phone.trim(),
@@ -277,6 +293,7 @@ export function useCheckout() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              orderId,
               name: formData.name.trim(),
               email: formData.email.trim().toLowerCase(),
               phone: formData.phone.trim(),
@@ -322,6 +339,7 @@ export function useCheckout() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          orderId,
           name: formData.name.trim(),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
@@ -345,6 +363,7 @@ export function useCheckout() {
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             source: 'order',
+            order_id: orderId,
             name: formData.name.trim(),
             email: formData.email.trim().toLowerCase(),
             phone: formData.phone.trim(),

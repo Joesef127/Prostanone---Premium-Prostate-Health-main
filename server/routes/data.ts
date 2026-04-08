@@ -12,6 +12,7 @@ data.get('/ping', (c) => c.json({ ok: true }));
 // POST /api/orders — captures a new order from the frontend
 data.post('/orders', async (c) => {
   const body = await c.req.json<{
+    orderId: string;
     name: string;
     email: string;
     phone: string;
@@ -27,7 +28,10 @@ data.post('/orders', async (c) => {
     checkoutStep?: string;
   }>();
 
+  if (!body.orderId) return c.json({ error: 'orderId is required' }, 400);
+
   const [created] = await db.insert(orders).values({
+    orderId: body.orderId,
     name: body.name,
     email: body.email,
     phone: body.phone,

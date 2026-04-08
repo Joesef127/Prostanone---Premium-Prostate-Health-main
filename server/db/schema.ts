@@ -45,6 +45,7 @@ export const newsletterSubscribers = pgTable('newsletter_subscribers', {
 
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
+  orderId: varchar('order_id', { length: 20 }).notNull().unique(),
   name: varchar('name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   phone: varchar('phone', { length: 50 }).notNull(),
