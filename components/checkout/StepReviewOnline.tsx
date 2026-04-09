@@ -32,7 +32,7 @@ const StepReviewOnline: React.FC<Props> = ({
       >
         <ChevronLeft />
       </button>
-      <h2 className="text-2xl font-bold">Review & Pay</h2>
+      <h2 className="text-xl sm:text-2xl font-bold">Review & Pay</h2>
     </div>
 
     <div className="bg-gray-50 p-4 rounded-xl mb-6">
@@ -75,7 +75,7 @@ const StepReviewOnline: React.FC<Props> = ({
       <Button
         type="submit"
         fullWidth
-        size="lg"
+        size="md"
         disabled={loading}
         className="shadow-xl shadow-primary/20"
       >

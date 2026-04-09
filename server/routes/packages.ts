@@ -12,6 +12,53 @@ packagesRoute.get('/', async (c) => {
   return c.json(rows);
 });
 
+// POST /api/packages — admin only
+packagesRoute.post('/', requireAdmin, async (c) => {
+  const body = await c.req.json<{
+    id: string;
+    name: string;
+    containers: number;
+    price: number;
+    originalPrice?: number;
+    description: string;
+    savingsText?: string | null;
+    deliveryText?: string;
+    usageNote?: string;
+    badge?: string | null;
+  }>();
+
+  if (!body.id?.trim()) return c.json({ error: 'id is required' }, 400);
+  if (!body.name?.trim()) return c.json({ error: 'name is required' }, 400);
+  if (!body.price) return c.json({ error: 'price is required' }, 400);
+
+  const inserted = await db
+    .insert(packages)
+    .values({
+      id: body.id.trim(),
+      name: body.name.trim(),
+      containers: body.containers ?? 1,
+      price: body.price,
+      originalPrice: body.originalPrice ?? null,
+      description: body.description?.trim() ?? '',
+      savingsText: body.savingsText?.trim() || null,
+      deliveryText: body.deliveryText?.trim() ?? '',
+      usageNote: body.usageNote?.trim() ?? '',
+      badge: body.badge?.trim() || null,
+    })
+    .returning();
+
+  return c.json(inserted[0], 201);
+});
+
+// DELETE /api/packages/:id — admin only
+packagesRoute.delete('/:id', requireAdmin, async (c) => {
+  const id = c.req.param('id');
+  if (!id) return c.json({ error: 'Missing id' }, 400);
+  const deleted = await db.delete(packages).where(eq(packages.id, id)).returning();
+  if (deleted.length === 0) return c.json({ error: 'Package not found' }, 404);
+  return c.json({ success: true });
+});
+
 // PUT /api/packages/:id — protected
 packagesRoute.put('/:id', requireAdmin, async (c) => {
   const id = c.req.param('id');

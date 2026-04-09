@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, MoreVertical, Pencil } from 'lucide-react';
+import { ArrowRight, MoreVertical, Pencil, Trash2, PlusCircle } from 'lucide-react';
 import { images } from '@/lib';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
+import { useModal } from '../../context/ModalContext';
 import { usePackages } from '../../hooks/usePackages';
+import { API_BASE } from '../../lib/constants';
 import Button from '../Button';
 import { FadeIn, SectionHeader, CheckItem } from './shared';
 import { PACKAGE_IMAGES } from '../../lib/data.ts';
@@ -14,9 +16,11 @@ import { ProductPackage } from '../../types';
 const PricingSection: React.FC = () => {
   const { addToCart } = useApp();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const { isAdmin, token } = useAuth();
+  const { showConfirm } = useModal();
   const { packages, refetch } = usePackages();
   const [editingPkg, setEditingPkg] = useState<ProductPackage | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const handleOrder = (packageId: string) => {
@@ -24,16 +28,55 @@ const PricingSection: React.FC = () => {
     navigate('/summary');
   };
 
+  const openEdit = (pkg: ProductPackage) => { setEditingPkg(pkg); setModalOpen(true); };
+  const openAdd  = () => { setEditingPkg(null); setModalOpen(true); };
+
+  const handleDelete = async (pkg: ProductPackage) => {
+    setOpenMenuId(null);
+    const confirmed = await showConfirm({
+      title: 'Delete Package',
+      message: `Delete "${pkg.name}"? This cannot be undone.`,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      destructive: true,
+    });
+    if (!confirmed) return;
+    await fetch(`${API_BASE}/api/packages/${pkg.id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    refetch();
+  };
+
   return (
     <section className="py-24 bg-background" id="pricing">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
-          <SectionHeader
-            eyebrow="Choose Your Package"
-            title="Start Your Healing Journey Today"
-            subtitle="Best results seen after 2 months of consistent use. Bigger packs mean bigger savings."
-          />
+          <div className="flex items-start justify-between gap-4">
+            <SectionHeader
+              eyebrow="Choose Your Package"
+              title="Start Your Healing Journey Today"
+              subtitle="Best results seen after 2 months of consistent use. Bigger packs mean bigger savings."
+            />
+          </div>
         </FadeIn>
+
+        <div className="flex justify-center items-center mb-10">
+
+            {isAdmin && (
+              <Button
+                variant="outline"
+                size="md"
+                type="button"
+                onClick={openAdd}
+                className="shrink-0 mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm"
+              >
+                <PlusCircle className="w-4 h-4" />
+                Add Package
+              </Button>
+            )}
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {packages.map((pkg, i) => {
@@ -58,10 +101,16 @@ const PricingSection: React.FC = () => {
                       {openMenuId === pkg.id && (
                         <div className="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-20">
                           <button
-                            onClick={() => { setEditingPkg(pkg); setOpenMenuId(null); }}
+                            onClick={() => { openEdit(pkg); setOpenMenuId(null); }}
                             className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                           >
                             <Pencil size={14} /> Edit Package
+                          </button>
+                          <button
+                            onClick={() => handleDelete(pkg)}
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-rose-600 hover:bg-rose-50"
+                          >
+                            <Trash2 size={14} /> Delete
                           </button>
                         </div>
                       )}
@@ -88,11 +137,16 @@ const PricingSection: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    {pkg.savingsText && (
-                      <span className="inline-block bg-success/10 text-success text-xs px-2.5 py-1 rounded-full mb-4 w-fit">
-                        {pkg.savingsText}
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                      {pkg.savingsText && (
+                        <span className="inline-block bg-success/10 text-success text-xs px-2.5 py-1 rounded-full w-fit">
+                          {pkg.savingsText}
+                        </span>
+                      )}
+                      <span className="inline-block bg-amber-50 text-amber-700 border border-amber-200 text-xs px-2.5 py-1 rounded-full w-fit font-medium">
+                        Pay on Delivery Available
                       </span>
-                    )}
+                    </div>
 
                     {/* Feature list */}
                     <ul className="space-y-2 mt-2 mb-6 grow">
@@ -122,11 +176,12 @@ const PricingSection: React.FC = () => {
           })}
         </div>
 
-        {editingPkg && (
+        {modalOpen && (
           <PackageEditModal
             pkg={editingPkg}
-            onClose={() => setEditingPkg(null)}
-            onSaved={() => { refetch(); setEditingPkg(null); }}
+            onClose={() => setModalOpen(false)}
+            onSaved={() => { refetch(); setModalOpen(false); }}
+            onDeleted={() => { refetch(); setModalOpen(false); }}
           />
         )}
 
@@ -135,6 +190,7 @@ const PricingSection: React.FC = () => {
           {[
             '✔ NAFDAC Certified',
             '✔ 100% Natural Herbal Formula',
+            '✔ Pay on Delivery Available',
             '✔ Pay via Bank Transfer or Card',
             '✔ Nationwide Delivery Available',
             '✔ Secure Checkout',
