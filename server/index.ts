@@ -5,6 +5,7 @@ import auth from './routes/auth';
 import packagesRoute from './routes/packages';
 import blog from './routes/blog';
 import data from './routes/data';
+import testimonialsRoute from './routes/testimonials';
 
 const app = new Hono().basePath('/api');
 
@@ -30,6 +31,7 @@ app.use(
 
 app.route('/auth', auth);
 app.route('/packages', packagesRoute);
+app.route('/testimonials', testimonialsRoute);
 app.route('/blog', blog);
 app.route('/', data);
 

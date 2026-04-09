@@ -82,3 +82,13 @@ export const contactMessages = pgTable('contact_messages', {
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const testimonials = pgTable('testimonials', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  age: integer('age'),
+  location: varchar('location', { length: 255 }),
+  text: text('text').notNull(),
+  rating: integer('rating').notNull().default(5),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
