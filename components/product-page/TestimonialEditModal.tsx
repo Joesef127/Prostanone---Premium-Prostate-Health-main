@@ -18,7 +18,7 @@ const StarPicker: React.FC<{ value: number; onChange: (v: number) => void }> = (
         key={n}
         type="button"
         onClick={() => onChange(n)}
-        className="focus:outline-none transition-transform hover:scale-130"
+        className="focus:outline-none transition-transform hover:scale-125"
       >
         <Star
           className={`w-5 h-5 transition-colors ${n <= value ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}`}
@@ -110,7 +110,7 @@ const TestimonialEditModal: React.FC<Props> = ({ testimonial, onClose, onSaved }
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-white w-full sm:max-w-lg rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-4/5 mx-3 mb-5">
+      <div className="bg-white w-full sm:max-w-lg rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] mx-3 mb-5">
 
         {/* Header */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-border shrink-0">

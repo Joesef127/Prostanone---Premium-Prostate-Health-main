@@ -1,8 +1,8 @@
-﻿import React, { useEffect } from 'react';
-import { X, Save, Package, Trash2 } from 'lucide-react';
-import { ProductPackage } from '../../types';
-import { usePackageForm } from '../../hooks/usePackageForm';
-import Button from '../Button';
+﻿import React, { useEffect } from "react";
+import { X, Save, Package, Trash2 } from "lucide-react";
+import { ProductPackage } from "../../types";
+import { usePackageForm } from "../../hooks/usePackageForm";
+import Button from "../Button";
 
 interface Props {
   pkg: ProductPackage | null; // null = create mode
@@ -14,19 +14,23 @@ interface Props {
 // ── Primitives ────────────────────────────────────────────────────────────────
 
 const inputClass =
-  'w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-text text-xs sm:text-sm ' +
-  'focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors ' +
-  'placeholder:text-text';
+  "w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-text text-xs sm:text-sm " +
+  "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors " +
+  "placeholder:text-text";
 
-const Field: React.FC<{ label: string; hint?: string; children: React.ReactNode }> = ({
-  label,
-  hint,
-  children,
-}) => (
+const Field: React.FC<{
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}> = ({ label, hint, children }) => (
   <div>
     <label className="block text-[11px] font-semibold text-text uppercase tracking-wider mb-1.5">
       {label}
-      {hint && <span className="normal-case font-normal ml-1 opacity-60">({hint})</span>}
+      {hint && (
+        <span className="normal-case font-normal ml-1 opacity-60">
+          ({hint})
+        </span>
+      )}
     </label>
     {children}
   </div>
@@ -43,27 +47,36 @@ const Section: React.FC<{ label: string }> = ({ label }) => (
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
 
-const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted }) => {
-  const { form, set, isEdit, saving, deleting, error, save, remove } = usePackageForm({
-    pkg,
-    onSaved,
-    onDeleted,
-    onClose,
-  });
+const PackageEditModal: React.FC<Props> = ({
+  pkg,
+  onClose,
+  onSaved,
+  onDeleted,
+}) => {
+  const { form, set, isEdit, saving, deleting, error, save, remove } =
+    usePackageForm({
+      pkg,
+      onSaved,
+      onDeleted,
+      onClose,
+    });
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      <div className="bg-white w-full max-w-xs sm:max-w-lg rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-4/5 mx-3 mb-5">
-
+      <div className="bg-white w-full max-w-xs sm:max-w-lg rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] mx-3 mb-5">
         {/* ── Header ── */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-border shrink-0">
           <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -71,10 +84,10 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
           </div>
           <div className="flex-1 min-w-0">
             <h2 className="font-bold text-text text-base leading-tight">
-              {isEdit ? 'Edit Package' : 'Add New Package'}
+              {isEdit ? "Edit Package" : "Add New Package"}
             </h2>
             <p className="text-xs text-text-muted mt-0.5 truncate">
-              {isEdit ? pkg!.name : 'Create a new pricing package'}
+              {isEdit ? pkg!.name : "Create a new pricing package"}
             </p>
           </div>
           <button
@@ -87,7 +100,6 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
 
         {/* ── Body ── */}
         <div className="overflow-y-auto flex-1 px-6 py-5 space-y-4">
-
           {error && (
             <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
               {error}
@@ -103,7 +115,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
                   <input
                     type="text"
                     value={form.id}
-                    onChange={set('id')}
+                    onChange={set("id")}
                     placeholder="option-f"
                     className={inputClass}
                   />
@@ -112,7 +124,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
                   <input
                     type="number"
                     value={form.containers}
-                    onChange={set('containers')}
+                    onChange={set("containers")}
                     min={1}
                     className={inputClass}
                   />
@@ -127,7 +139,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
             <input
               type="text"
               value={form.name}
-              onChange={set('name')}
+              onChange={set("name")}
               placeholder="e.g. Option F · 6 Boxes"
               className={inputClass}
             />
@@ -136,7 +148,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
             <input
               type="text"
               value={form.description}
-              onChange={set('description')}
+              onChange={set("description")}
               placeholder="Short description shown on card"
               className={inputClass}
             />
@@ -149,7 +161,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
               <input
                 type="number"
                 value={form.price}
-                onChange={set('price')}
+                onChange={set("price")}
                 placeholder="45000"
                 className={inputClass}
               />
@@ -158,7 +170,7 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
               <input
                 type="number"
                 value={form.originalPrice}
-                onChange={set('originalPrice')}
+                onChange={set("originalPrice")}
                 placeholder="51000"
                 className={inputClass}
               />
@@ -166,61 +178,64 @@ const PackageEditModal: React.FC<Props> = ({ pkg, onClose, onSaved, onDeleted })
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Savings Text" hint='e.g. "Save ₦6,000"'>
-              <input type="text" value={form.savingsText} onChange={set('savingsText')} className={inputClass} />
+              <input
+                type="text"
+                value={form.savingsText}
+                onChange={set("savingsText")}
+                className={inputClass}
+              />
             </Field>
             <Field label="Badge" hint='e.g. "BEST VALUE"'>
-              <input type="text" value={form.badge} onChange={set('badge')} className={inputClass} />
+              <input
+                type="text"
+                value={form.badge}
+                onChange={set("badge")}
+                className={inputClass}
+              />
             </Field>
           </div>
 
           {/* Details */}
           <Section label="Details" />
           <Field label="Delivery Text">
-            <input type="text" value={form.deliveryText} onChange={set('deliveryText')} className={inputClass} />
+            <input
+              type="text"
+              value={form.deliveryText}
+              onChange={set("deliveryText")}
+              className={inputClass}
+            />
           </Field>
           <Field label="Usage Note">
-            <input type="text" value={form.usageNote} onChange={set('usageNote')} className={inputClass} />
+            <input
+              type="text"
+              value={form.usageNote}
+              onChange={set("usageNote")}
+              className={inputClass}
+            />
           </Field>
-
         </div>
 
         {/* ── Footer ── */}
         <div className="grid sm:grid-cols-2 sm:flex-row gap-3 px-6 py-4 border-t border-border bg-background shrink-0">
-          {/* <div className="flex items-center justify-center gap-2">
-          {isEdit && (
-            <Button
-              variant="outline"
-              size='md'
-              onClick={remove}
-              disabled={deleting}
-              className="p-2.5 rounded-xl border border-rose-200 text-rose-500 hover:bg-rose-50 transition-colors disabled:opacity-60"
-              title="Delete package"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          )} */}
           <Button
             variant="outline"
-              size='sm'
+            size="sm"
             onClick={onClose}
             className="flex-1 py-2.5 rounded-xl border border-border text-text-muted text-sm font-medium hover:text-text hover:border-gray-400 transition-colors"
           >
             Cancel
           </Button>
-
-          {/* </div> */}
           <Button
             // variant="outline"
-              size='sm'
+            size="sm"
             onClick={save}
             disabled={saving}
             className="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             <Save className="w-4 h-4" />
-            {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Add Package'}
+            {saving ? "Saving…" : isEdit ? "Save Changes" : "Add Package"}
           </Button>
         </div>
-
       </div>
     </div>
   );

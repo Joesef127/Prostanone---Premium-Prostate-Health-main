@@ -1,14 +1,14 @@
 import { Hono } from 'hono';
 import { db } from '../db';
 import { testimonials } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import { requireAdmin } from '../middleware/auth';
 
 const testimonialsRoute = new Hono();
 
 // GET /api/testimonials — public
 testimonialsRoute.get('/', async (c) => {
-  const rows = await db.select().from(testimonials).orderBy(testimonials.createdAt);
+  const rows = await db.select().from(testimonials).orderBy(asc(testimonials.createdAt));
   return c.json(rows);
 });
 

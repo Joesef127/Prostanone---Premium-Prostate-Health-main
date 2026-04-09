@@ -117,7 +117,7 @@ const HomePricingSection: React.FC = () => {
                         <MoreVertical className="w-4 h-4" />
                       </button>
                       {openMenuId === pkg.id && (
-                        <div className="absolute right-0 top-8 bg-white border border-gray-100 rounded-xl shadow-xl py-1 min-w-35 z-30">
+                        <div className="absolute right-0 top-8 bg-white border border-gray-100 rounded-xl shadow-xl py-1 min-w-[140px] z-30">
                           <button
                             onClick={(e) => { e.stopPropagation(); openEdit(pkg); }}
                             className="flex items-center gap-2.5 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"

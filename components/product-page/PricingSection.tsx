@@ -129,11 +129,11 @@ const PricingSection: React.FC = () => {
                     {/* Price */}
                     <div className="flex items-baseline gap-2 mb-2">
                       <span className="text-3xl font-bold text-primary">
-                        N{pkg.price.toLocaleString()}
+                        ₦{pkg.price.toLocaleString()}
                       </span>
                       {pkg.originalPrice && pkg.originalPrice !== pkg.price && (
                         <span className="text-base text-text-light line-through">
-                          N{pkg.originalPrice.toLocaleString()}
+                          ₦{pkg.originalPrice.toLocaleString()}
                         </span>
                       )}
                     </div>
@@ -151,7 +151,7 @@ const PricingSection: React.FC = () => {
                     {/* Feature list */}
                     <ul className="space-y-2 mt-2 mb-6 grow">
                       {[
-                        `${pkg.containers} Box${pkg.containers > 1 ? 'es' : ''} - ${pkg.containers * 60} Tablets`,
+                        `${pkg.containers} Box${pkg.containers > 1 ? 'es' : ''} · ${pkg.containers * 60} Tablets`,
                         pkg.deliveryText,
                         pkg.usageNote,
                       ]
