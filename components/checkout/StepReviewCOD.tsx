@@ -34,7 +34,7 @@ const StepReviewCOD: React.FC<Props> = ({
       >
         <ChevronLeft />
       </button>
-      <h2 className="text-2xl font-bold">Confirm Your Order</h2>
+      <h2 className="text-xl sm:text-2xl font-bold">Confirm Your Order</h2>
     </div>
 
     <div className="bg-green-50 border border-green-200 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row gap-4 items-start">
@@ -87,8 +87,8 @@ const StepReviewCOD: React.FC<Props> = ({
         </span>
       </div>
       <div className="flex justify-between mt-2">
-        <span className="font-bold text-gray-800">Total</span>
-        <span className="font-extrabold text-primary text-lg">₦{total.toLocaleString()}</span>
+        <span className="font-bold text-gray-800 text-sm sm:text-base">Total</span>
+        <span className="font-extrabold text-primary text-base sm:text-lg">₦{total.toLocaleString()}</span>
       </div>
     </div>
 
@@ -96,7 +96,7 @@ const StepReviewCOD: React.FC<Props> = ({
       <Button
         type="submit"
         fullWidth
-        size="lg"
+        size="md"
         disabled={loading}
         className="shadow-xl shadow-primary/20"
       >

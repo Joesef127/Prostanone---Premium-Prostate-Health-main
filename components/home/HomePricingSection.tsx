@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, CheckCircle, Clock, ArrowRight, MoreVertical, Pencil } from 'lucide-react';
+import { ShieldCheck, CheckCircle, Clock, ArrowRight, MoreVertical, Pencil, Trash2, PlusCircle } from 'lucide-react';
 import Button from '../Button';
 import { SMALL_PRINT } from '../../lib/constants';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
+import { useModal } from '../../context/ModalContext';
 import { usePackages } from '../../hooks/usePackages';
+import { API_BASE } from '../../lib/constants';
 import { images } from '../../lib';
 import PackageEditModal from '../product-page/PackageEditModal';
 import { ProductPackage } from '../../types';
@@ -14,9 +16,11 @@ import { ProductPackage } from '../../types';
 const HomePricingSection: React.FC = () => {
   const navigate = useNavigate();
   const { addToCart } = useApp();
-  const { isAdmin } = useAuth();
+  const { isAdmin, token } = useAuth();
+  const { showConfirm } = useModal();
   const { packages, refetch } = usePackages();
   const [editingPkg, setEditingPkg] = useState<ProductPackage | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const handlePackageSelect = (pkgId: string) => {
@@ -24,11 +28,47 @@ const HomePricingSection: React.FC = () => {
     navigate('/summary');
   };
 
+  const openEdit = (pkg: ProductPackage) => { setEditingPkg(pkg); setModalOpen(true); };
+  const openAdd  = () => { setEditingPkg(null); setModalOpen(true); };
+
+  const handleDelete = async (pkg: ProductPackage) => {
+    setOpenMenuId(null);
+    const confirmed = await showConfirm({
+      title: 'Delete Package',
+      message: `Delete "${pkg.name}"? This cannot be undone.`,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      destructive: true,
+    });
+    if (!confirmed) return;
+    await fetch(`${API_BASE}/api/packages/${pkg.id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    refetch();
+  };
+
   return (
     <section id="pricing" className="py-24 bg-linear-to-b from-color-background to-color-surface overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-6 tracking-tight">Choose Your Package</h2>
         <p className="text-xl text-text-muted max-w-2xl mx-auto">Simple transparent pricing. Experience the power of nature with guaranteed results.</p>
+
+        <div className="flex justify-center mt-6">
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="md"
+              type="button"
+              onClick={openAdd}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm"
+            >
+              <PlusCircle className="w-4 h-4" />
+              Add Package
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col-reverse lg:flex-row gap-8 pb-12 px-4 md:px-8 max-w-350 mx-auto lg:items-stretch">
@@ -68,26 +108,32 @@ const HomePricingSection: React.FC = () => {
                     : 'border-gray-200 bg-white'
                 }`}
               >
-                {isAdmin && (
-                  <div className="absolute top-3 right-3 z-20">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === pkg.id ? null : pkg.id); }}
-                      className="p-1.5 rounded-full bg-white/80 hover:bg-white shadow text-gray-600 transition-colors"
-                    >
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                    {openMenuId === pkg.id && (
-                      <div className="absolute right-0 top-8 bg-white border border-border rounded-xl shadow-lg py-1 min-w-[140px]">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); setEditingPkg(pkg); setOpenMenuId(null); }}
-                          className="w-full px-4 py-2 text-sm text-left flex items-center gap-2 hover:bg-surface text-text"
-                        >
-                          <Pencil className="w-3.5 h-3.5" /> Edit Package
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                  {isAdmin && (
+                    <div className="absolute top-3 right-3 z-20">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === pkg.id ? null : pkg.id); }}
+                        className="w-7 h-7 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow text-gray-500 hover:text-gray-800 transition-colors"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                      {openMenuId === pkg.id && (
+                        <div className="absolute right-0 top-8 bg-white border border-gray-100 rounded-xl shadow-xl py-1 min-w-35 z-30">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); openEdit(pkg); }}
+                            className="flex items-center gap-2.5 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-primary" /> Edit
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleDelete(pkg); }}
+                            className="flex items-center gap-2.5 w-full px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 {pkg.id === 'option-b' && (
                   <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-accent/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
@@ -161,11 +207,11 @@ const HomePricingSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto bg-color-background backdrop-blur border border-gray-200 rounded-2xl p-8 shadow-sm">
+      <div className="max-w-4xl mx-2.5 sm:mx-auto bg-color-background backdrop-blur border border-gray-200 rounded-2xl p-8 shadow-sm">
         <h4 className="font-bold flex items-center gap-2 mb-6 text-gray-800 text-lg">
           <span className="text-2xl">📌</span> Everything You Need To Know
         </h4>
-        <div className="grid sm:grid-cols-2 gap-4 text-sm text-gray-600">
+        <div className="grid sm:grid-cols-2 gap-4 text-xs sm:text-sm text-gray-600">
           {SMALL_PRINT.map((text, idx) => (
             <div key={idx} className="flex items-start gap-3">
               <div className="mt-1 w-1.5 h-1.5 rounded-full bg-primary shrink-0"></div>
@@ -175,11 +221,12 @@ const HomePricingSection: React.FC = () => {
         </div>
       </div>
 
-      {editingPkg && (
+      {modalOpen && (
         <PackageEditModal
           pkg={editingPkg}
-          onClose={() => setEditingPkg(null)}
-          onSaved={() => { refetch(); setEditingPkg(null); }}
+          onClose={() => setModalOpen(false)}
+          onSaved={() => { refetch(); setModalOpen(false); }}
+          onDeleted={() => { refetch(); setModalOpen(false); }}
         />
       )}
     </section>

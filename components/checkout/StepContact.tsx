@@ -12,7 +12,7 @@ interface Props {
 
 const StepContact: React.FC<Props> = ({ formData, onChange, onSubmit }) => (
   <>
-    <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
+    <h2 className="text-xl sm:text-2xl font-bold mb-6">Contact Information</h2>
     <form onSubmit={onSubmit} className="space-y-4">
       <FormInput
         label="Full Name"

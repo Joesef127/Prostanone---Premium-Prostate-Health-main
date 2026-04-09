@@ -22,7 +22,7 @@ const StepShipping: React.FC<Props> = ({ formData, onChange, onSubmit, onBack })
       >
         <ChevronLeft />
       </button>
-      <h2 className="text-2xl font-bold">Shipping Address</h2>
+      <h2 className="text-xl sm:text-2xl font-bold">Shipping Address</h2>
     </div>
 
     <form onSubmit={onSubmit} className="space-y-4">
@@ -66,7 +66,7 @@ const StepShipping: React.FC<Props> = ({ formData, onChange, onSubmit, onBack })
       />
 
       <div className="pt-4">
-        <Button type="submit" fullWidth size="lg">
+        <Button type="submit" fullWidth size="md">
           Continue to Payment <ChevronRight className="ml-2 w-4 h-4" />
         </Button>
       </div>

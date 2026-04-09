@@ -28,7 +28,7 @@ const StepPaymentMethod: React.FC<Props> = ({
       >
         <ChevronLeft />
       </button>
-      <h2 className="text-2xl font-bold">Select Payment Method</h2>
+      <h2 className="text-xl sm:text-2xl font-bold">Select Payment Method</h2>
     </div>
 
     <p className="text-gray-500 text-sm mb-6">Choose how you'd like to pay for your order.</p>
@@ -44,7 +44,7 @@ const StepPaymentMethod: React.FC<Props> = ({
         }`}
       >
         <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xs shrink-0">
-          Kora
+          <CreditCard size={22} />
         </div>
         <div>
           <p className="font-bold text-sm">Pay Online</p>
@@ -108,7 +108,7 @@ const StepPaymentMethod: React.FC<Props> = ({
     <Button
       type="button"
       fullWidth
-      size="lg"
+      size="md"
       disabled={!paymentMethod || (paymentMethod === 'online' && !gatewayChoice)}
       onClick={onContinue}
     >
