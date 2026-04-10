@@ -5,9 +5,10 @@ import Button from '../Button';
 
 interface Props {
   paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
+  onRetryVerification?: () => void;
 }
 
-const OrderActionButtons: React.FC<Props> = ({ paymentStatus }) => {
+const OrderActionButtons: React.FC<Props> = ({ paymentStatus, onRetryVerification }) => {
   const navigate = useNavigate();
 
   if (paymentStatus === 'failed') {
@@ -26,7 +27,7 @@ const OrderActionButtons: React.FC<Props> = ({ paymentStatus }) => {
   if (paymentStatus === 'pending') {
     return (
       <div className="space-y-2">
-        <Button fullWidth onClick={() => window.location.reload()} className="bg-amber-600 hover:bg-amber-700">
+        <Button fullWidth onClick={() => onRetryVerification?.()} className="bg-amber-600 hover:bg-amber-700">
           Check Status Again <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
         <Button fullWidth variant="outline" onClick={() => navigate('/')}>

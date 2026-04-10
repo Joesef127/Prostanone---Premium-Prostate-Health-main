@@ -26,49 +26,42 @@ const ThankYou: React.FC = () => {
   // Track payment verification status for Payaza payments
   const [paymentStatus, setPaymentStatus] = useState<'pending-check' | 'success' | 'pending' | 'failed' | null>(null);
 
+  const verifyPayment = React.useCallback(async () => {
+    if (paymentMethod !== 'online' || !reference) return;
+    setPaymentStatus('pending-check');
+    try {
+      const res = await fetch(`${API_BASE}/api/verify-payaza-transaction?reference=${encodeURIComponent(reference)}`);
+
+      if (!res.ok) {
+        throw new Error(`Payment verification request failed with status ${res.status}: ${res.statusText}`);
+      }
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        setPaymentStatus('success');
+        showAlert({ title: 'Payment Successful!', message: 'Your payment has been received and confirmed. Your order will be processed shortly.' });
+      } else if (data.status === 'failed') {
+        setPaymentStatus('failed');
+        showAlert({ title: 'Payment Failed', message: 'Your payment could not be processed. Please try again or contact support.' });
+      } else if (data.status === 'pending') {
+        setPaymentStatus('pending');
+        showAlert({ title: 'Payment Pending', message: 'Your payment is still being processed. This may take a few minutes. Please check your email for updates.' });
+      }
+    } catch (err) {
+      console.error('Payment verification error:', err);
+      setPaymentStatus(null);
+      showAlert({ title: 'Verification Error', message: 'Could not verify payment status. Please contact support with your reference.' });
+    }
+  }, [paymentMethod, reference, showAlert]);
+
   useEffect(() => {
     clearCart();
 
     // If redirected from Payaza with a reference, verify transaction status
     if (paymentMethod === 'online' && reference && !stateMethod) {
-      setPaymentStatus('pending-check');
-      const verifyPayment = async () => {
-        try {
-          const res = await fetch(`${API_BASE}/api/verify-payaza-transaction?reference=${encodeURIComponent(reference)}`);
-          const data = await res.json();
-
-          if (data.status === 'success') {
-            setPaymentStatus('success');
-            showAlert({
-              title: 'Payment Successful!',
-              message: 'Your payment has been received and confirmed. Your order will be processed shortly.',
-            });
-          } else if (data.status === 'failed') {
-            setPaymentStatus('failed');
-            showAlert({
-              title: 'Payment Failed',
-              message: 'Your payment could not be processed. Please try again or contact support.',
-            });
-          } else if (data.status === 'pending') {
-            setPaymentStatus('pending');
-            showAlert({
-              title: 'Payment Pending',
-              message: 'Your payment is still being processed. This may take a few minutes. Please check your email for updates.',
-            });
-          }
-        } catch (err) {
-          console.error('Payment verification error:', err);
-          setPaymentStatus(null);
-          showAlert({
-            title: 'Verification Error',
-            message: 'Could not verify payment status. Please contact support with your reference.',
-          });
-        }
-      };
-
       verifyPayment();
     }
-  }, [clearCart, paymentMethod, reference, stateMethod, showAlert]);
+  }, [clearCart, paymentMethod, reference, stateMethod, verifyPayment]);
 
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center bg-background px-4">
@@ -77,7 +70,7 @@ const ThankYou: React.FC = () => {
         <OrderHeader paymentStatus={paymentStatus} isCOD={isCOD} />
         <PaymentStatusSection paymentStatus={paymentStatus} />
         <OrderInfoSection paymentStatus={paymentStatus} isCOD={isCOD} phone={phone} />
-        <OrderActionButtons paymentStatus={paymentStatus} />
+        <OrderActionButtons paymentStatus={paymentStatus} onRetryVerification={verifyPayment} />
       </div>
     </div>
   );

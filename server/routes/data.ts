@@ -242,14 +242,16 @@ data.get('/verify-payaza-transaction', async (c) => {
       let verifiedStatus = 'pending';
 
       // Map Payaza transaction_status to our status
-      // Payaza statuses: "Completed", "Pending", "Failed", "Cancelled", etc.
-      if (payazaVerifyResponse.data?.transaction_status === 'Completed') {
+      // Documented Payaza statuses: "Completed", "Pending", "Processing", "Failed", "Cancelled", "Reversed"
+      const txStatus = payazaVerifyResponse.data?.transaction_status;
+      if (txStatus === 'Completed') {
         verifiedStatus = 'success';
-      } else if (
-        payazaVerifyResponse.data?.transaction_status === 'Failed' ||
-        payazaVerifyResponse.data?.transaction_status === 'Cancelled'
-      ) {
+      } else if (txStatus === 'Failed' || txStatus === 'Cancelled' || txStatus === 'Reversed') {
         verifiedStatus = 'failed';
+      } else if (txStatus === 'Pending' || txStatus === 'Processing') {
+        verifiedStatus = 'pending';
+      } else {
+        console.warn(`[payaza] Unknown transaction_status "${txStatus}" for reference ${reference}`);
       }
 
       // Update the order with verified status

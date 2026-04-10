@@ -17,7 +17,7 @@ app.onError((err, c) => {
 const allowedOrigins = [
   "http://localhost:3000",
   "https://prostanone.vercel.app",
-  "https://prostanone-dev.vercel.app/",
+  "https://prostanone-dev.vercel.app",
   ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
 ];
 
