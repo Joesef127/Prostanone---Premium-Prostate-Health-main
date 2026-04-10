@@ -7,10 +7,13 @@ import AdminTabs from '../components/admin/AdminTabs';
 import AdminControlsBar from '../components/admin/AdminControlsBar';
 import AdminConfirmBanner from '../components/admin/AdminConfirmBanner';
 import AdminDataView from '../components/admin/AdminDataView';
+import AdminSkeleton from '../components/skeleton-loaders/admin/AdminSkeleton';
 
 const AdminProfile: React.FC = () => {
   useDynamicTitle('Admin Dashboard');
   const dash = useAdminDashboard();
+
+  if (!dash.stats && dash.loading) return <AdminSkeleton />;
 
   return (
     <div className="pt-20 bg-background min-h-screen">

@@ -7,6 +7,7 @@ import { useModal } from '../context/ModalContext';
 import { Testimonial } from '../types';
 import { API_BASE } from '../lib/constants';
 import TestimonialEditModal from '../components/product-page/TestimonialEditModal';
+import ReviewsSkeleton from '../components/skeleton-loaders/reviews/ReviewsSkeleton';
 
 /* ── Per-card admin menu ── */
 const TestimonialMenu: React.FC<{ onEdit: () => void; onDelete: () => void }> = ({ onEdit, onDelete }) => {
@@ -56,7 +57,7 @@ const TestimonialMenu: React.FC<{ onEdit: () => void; onDelete: () => void }> = 
 /* ── Reviews Page ── */
 const Reviews: React.FC = () => {
   useDynamicTitle('Customer Reviews');
-  const { testimonials, refetch } = useTestimonials();
+  const { testimonials, loading, refetch } = useTestimonials();
   const { isAdmin, token } = useAuth();
   const { showConfirm } = useModal();
   const [editing, setEditing] = useState<Testimonial | null>(null);
@@ -64,6 +65,8 @@ const Reviews: React.FC = () => {
 
   const openEdit = (t: Testimonial) => { setEditing(t); setModalOpen(true); };
   const openAdd  = () => { setEditing(null); setModalOpen(true); };
+
+  if (loading) return <ReviewsSkeleton />;
 
   const handleDelete = async (id: number) => {
     const confirmed = await showConfirm({

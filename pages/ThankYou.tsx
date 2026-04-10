@@ -9,6 +9,7 @@ import OrderHeader from '../components/thank-you/OrderHeader';
 import PaymentStatusSection from '../components/thank-you/PaymentStatusSection';
 import OrderInfoSection from '../components/thank-you/OrderInfoSection';
 import OrderActionButtons from '../components/thank-you/OrderActionButtons';
+import ThankYouSkeleton from '../components/skeleton-loaders/thank-you/ThankYouSkeleton';
 
 const ThankYou: React.FC = () => {
   useDynamicTitle('Order Confirmed');
@@ -64,6 +65,7 @@ const ThankYou: React.FC = () => {
   }, [clearCart, paymentMethod, reference, stateMethod, verifyPayment]);
 
   return (
+    paymentStatus === 'pending-check' ? <ThankYouSkeleton /> :
     <div className="min-h-screen pt-20 flex items-center justify-center bg-background px-4">
       <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl max-w-lg w-full text-center">
         <PaymentStatusBadge paymentStatus={paymentStatus} />

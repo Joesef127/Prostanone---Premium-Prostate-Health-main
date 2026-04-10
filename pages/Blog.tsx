@@ -4,19 +4,25 @@ import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogHeroSection from '../components/blog/BlogHeroSection';
 import BlogCategoryFilter from '../components/blog/BlogCategoryFilter';
 import BlogArticleGrid from '../components/blog/BlogArticleGrid';
+import BlogSkeleton from '../components/skeleton-loaders/blog/BlogSkeleton';
 import { useState, useEffect } from 'react';
 
 const Blog: React.FC = () => {
   useDynamicTitle('Blog');
   const [activeCategory, setActiveCategory] = useState('All');
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     fetch(`${API_BASE}/api/blog`)
       .then(r => r.json())
       .then((data: BlogPost[]) => setAllPosts(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <BlogSkeleton />;
 
   const categories = ['All', ...Array.from(new Set(allPosts.map(p => p.category)))];
   const filtered = activeCategory === 'All' ? allPosts : allPosts.filter(p => p.category === activeCategory);

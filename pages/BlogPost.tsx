@@ -5,6 +5,7 @@ import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import BlogPostHeader from '../components/blog/BlogPostHeader';
 import BlogPostBody from '../components/blog/BlogPostBody';
 import BlogRelatedPosts from '../components/blog/BlogRelatedPosts';
+import BlogPostSkeleton from '../components/skeleton-loaders/blog/BlogPostSkeleton';
 import { useState, useEffect } from 'react';
 
 const BlogPost: React.FC = () => {
@@ -28,7 +29,7 @@ const BlogPost: React.FC = () => {
 
   useDynamicTitle(post?.title, 'Prostanone Blog');
 
-  if (post === undefined) return null; // still loading
+  if (post === undefined) return <BlogPostSkeleton />; // still loading
   if (!post) return <Navigate to="/blog" replace />;
 
   return (
