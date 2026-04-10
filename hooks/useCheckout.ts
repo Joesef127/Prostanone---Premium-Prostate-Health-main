@@ -194,7 +194,7 @@ export function useCheckout() {
       const nameParts = formData.name.trim().split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || firstName;
-      const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online`;
+      const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online&reference=${encodeURIComponent(reference)}`;
 
       sendCheckoutProgress(4, 'payaza_payment_initiated');
 

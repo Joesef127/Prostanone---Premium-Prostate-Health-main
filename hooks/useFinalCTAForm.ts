@@ -139,7 +139,7 @@ export function useFinalCTAForm() {
         if (gatewayChoice === 'payaza') {
           const [firstName, ...rest] = fullName.split(' ');
           const lastName = rest.join(' ') || firstName;
-          const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online`;
+          const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online&reference=${encodeURIComponent(reference)}`;
 
           const payazaUrl =
             `https://business.payaza.africa/payment-page` +

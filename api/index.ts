@@ -19,9 +19,9 @@ app.use(
     origin:
       process.env.NODE_ENV === "production"
         ? [
-            "https://prostanone-premium-prostate-heal-git-b1d987-joesef127s-projects.vercel.app",
-            "https://prostanone-premium-prostate-health.vercel.app",
-            "https://prostanone.vercel.app"
+            "https://prostanone.vercel.app",
+            "https://prostanone-dev.vercel.app",
+            ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
           ]
         : ["http://localhost:3000"],
     credentials: true,

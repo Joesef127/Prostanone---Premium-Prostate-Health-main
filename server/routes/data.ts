@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { inArray } from 'drizzle-orm';
+import { inArray, eq } from 'drizzle-orm';
 import { db } from '../db';
 import { orders, distributors, newsletterSubscribers, contactMessages } from '../db/schema';
 import { requireAdmin } from '../middleware/auth';
@@ -195,6 +195,99 @@ data.get('/stats', requireAdmin, async (c) => {
     subscribers: s.length,
     contacts: cm.length,
   });
+});
+
+// GET /api/verify-payaza-transaction — verify Payaza payment using Secret Key
+// Query: ?reference=PR-xxx (transaction reference)
+// Returns: { status: 'success' | 'failed' | 'pending', message?: string, data?: {...} }
+data.get('/verify-payaza-transaction', async (c) => {
+  const reference = c.req.query('reference');
+
+  if (!reference) {
+    return c.json({ error: 'Missing transaction reference' }, 400);
+  }
+
+  const PAYAZA_SECRET_KEY = process.env.PAYAZA_SECRET_KEY;
+  if (!PAYAZA_SECRET_KEY) {
+    console.error('PAYAZA_SECRET_KEY not configured');
+    return c.json({ error: 'Payment gateway not configured' }, 500);
+  }
+
+  try {
+    // Encode the secret key in Base64 as required by Payaza
+    const encodedKey = Buffer.from(PAYAZA_SECRET_KEY).toString('base64');
+
+    // Call Payaza's transaction verification endpoint
+    // Docs: https://docs.payaza.africa/developers/apis/sdks/check-transaction-status
+    const payazaVerifyResponse = await fetch(
+      `https://api.payaza.africa/live/merchant-collection/transfer_notification_controller/merchant/transaction-query?merchant_reference=${encodeURIComponent(reference)}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Payaza ${encodedKey}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    ).then(res => res.json());
+
+    // Update the order's payment status in the database if found
+    const existingOrder = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.paymentReference, reference))
+      .limit(1)
+      .then(rows => rows[0]);
+
+    if (existingOrder) {
+      let verifiedStatus = 'pending';
+
+      // Map Payaza transaction_status to our status
+      // Documented Payaza statuses: "Completed", "Pending", "Processing", "Failed", "Cancelled", "Reversed"
+      const txStatus = payazaVerifyResponse.data?.transaction_status;
+      if (txStatus === 'Completed') {
+        verifiedStatus = 'success';
+      } else if (txStatus === 'Failed' || txStatus === 'Cancelled' || txStatus === 'Reversed') {
+        verifiedStatus = 'failed';
+      } else if (txStatus === 'Pending' || txStatus === 'Processing') {
+        verifiedStatus = 'pending';
+      } else {
+        console.warn(`[payaza] Unknown transaction_status "${txStatus}" for reference ${reference}`);
+      }
+
+      // Update the order with verified status
+      await db
+        .update(orders)
+        .set({ 
+          paymentStatus: verifiedStatus, 
+          checkoutStep: `payment_${verifiedStatus}` 
+        })
+        .where(eq(orders.id, existingOrder.id));
+
+      return c.json({
+        status: verifiedStatus,
+        message: `Payment ${verifiedStatus}`,
+        transactionStatus: payazaVerifyResponse.data?.transaction_status,
+        amountReceived: payazaVerifyResponse.data?.amount_received,
+      });
+    }
+
+    return c.json(
+      {
+        status: 'unknown',
+        message: 'Transaction reference not found in system',
+      },
+      404,
+    );
+  } catch (error) {
+    console.error('Payaza verification error:', error);
+    return c.json(
+      {
+        error: 'Failed to verify payment',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      500,
+    );
+  }
 });
 
 export default data;
