@@ -26,7 +26,7 @@ export function getTimeCutoff(range: TimeRange): Date | null {
   const now = new Date();
   if (range === '1h') { now.setHours(now.getHours() - 1); return now; }
   if (range === '12h') { now.setHours(now.getHours() - 12); return now; }
-  if (range === 'today') { now.setHours(0, 0, 0, 0); return now; }
+  if (range === 'today') { now.setHours(now.getHours() - 24); return now; }
   const days: Record<string, number> = { '3d': 3, '7d': 7, '30d': 30, '365d': 365 };
   now.setDate(now.getDate() - days[range]);
   return now;
