@@ -3,13 +3,28 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { QUIZ_QUESTIONS } from "../lib/constants.ts";
 import { useApp } from "../context/AppContext";
+import { useSeoMeta } from "../hooks/useSeoMeta";
+import { PAGE_URLS } from "../lib/seo";
 import { QuizSeverity } from "../types";
 import Button from "../components/Button";
 import { ArrowLeft, Check } from "lucide-react";
-import { useDynamicTitle } from "../hooks/useDynamicTitle";
 
 const Quiz: React.FC = () => {
-  useDynamicTitle("Prostate Health Check");
+  // SEO configuration for quiz page
+  useSeoMeta({
+    title: "Prostate Health Check Quiz - Prostanone",
+    description: "Take our free prostate health assessment quiz. Answer 8 quick questions to understand your prostate health status and get personalized recommendations.",
+    keywords: [
+      "prostate health quiz",
+      "health assessment",
+      "prostate check",
+      "wellness quiz",
+      "free health quiz",
+    ],
+    url: PAGE_URLS.quiz,
+    type: "website",
+  });
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const { setQuizResult } = useApp();

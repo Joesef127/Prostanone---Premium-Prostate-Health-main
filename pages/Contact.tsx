@@ -1,10 +1,35 @@
 import React from 'react';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
+import { useSeoMeta } from '../hooks/useSeoMeta';
+import { PAGE_URLS, generateSchema } from '../lib/seo';
 import ContactInfoSection from '../components/contact/ContactInfoSection';
 import ContactFormSection from '../components/contact/ContactFormSection';
 
 const Contact: React.FC = () => {
-  useDynamicTitle('Contact Us');
+  // SEO configuration for contact page
+  useSeoMeta(
+    {
+      title: "Contact Prostanone - Get in Touch",
+      description: "Have questions about Prostanone? Contact our customer support team. We're here to help with any inquiries about our premium prostate health supplements.",
+      keywords: [
+        "contact Prostanone",
+        "customer support",
+        "get in touch",
+        "contact form",
+        "Prostanone support",
+      ],
+      url: PAGE_URLS.contact,
+      type: "website",
+    },
+    {
+      schema: generateSchema('ContactPoint', {
+        '@type': 'ContactPoint',
+        contactType: 'Customer Service',
+        email: 'sales@holisbotanicals.com',
+        availableLanguage: 'English',
+        contactOption: 'TollFree',
+      }),
+    },
+  );
 
   return (
     <div className="pt-20 bg-background min-h-screen">

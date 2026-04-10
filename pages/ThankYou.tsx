@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { useModal } from '../context/ModalContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 import { API_BASE } from '../lib/constants';
 import PaymentStatusBadge from '../components/thank-you/PaymentStatusBadge';
 import OrderHeader from '../components/thank-you/OrderHeader';
@@ -12,7 +12,14 @@ import OrderActionButtons from '../components/thank-you/OrderActionButtons';
 import ThankYouSkeleton from '../components/skeleton-loaders/thank-you/ThankYouSkeleton';
 
 const ThankYou: React.FC = () => {
-  useDynamicTitle('Order Confirmed');
+  // SEO configuration for thank you page (noindex as it's order-specific)
+  useSeoMeta({
+    title: "Order Confirmed - Thank You | Prostanone",
+    description: "Thank you for your order! Your Prostanone supplement is being prepared. Track your order status.",
+    url: "/thank-you",
+    robots: "noindex",
+  });
+
   const { clearCart } = useApp();
   const { showAlert } = useModal();
   const navigate = useNavigate();

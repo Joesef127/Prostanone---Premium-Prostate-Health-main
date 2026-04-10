@@ -1,7 +1,8 @@
 import { API_BASE } from '../lib/constants';
 import { useParams, Navigate } from 'react-router-dom';
 import type { BlogPost as BlogPostType } from '../lib/blogData';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
+import { useSeoMeta } from '../hooks/useSeoMeta';
+import { getFullUrl, generateArticleSchema, SITE_CONFIG } from '../lib/seo';
 import BlogPostHeader from '../components/blog/BlogPostHeader';
 import BlogPostBody from '../components/blog/BlogPostBody';
 import BlogRelatedPosts from '../components/blog/BlogRelatedPosts';
@@ -27,7 +28,41 @@ const BlogPost: React.FC = () => {
       .catch(() => {});
   }, [slug]);
 
-  useDynamicTitle(post?.title, 'Prostanone Blog');
+  // SEO configuration for blog post
+  useSeoMeta(
+    post ? {
+      title: `${post.title} - Prostanone Blog`,
+      description: post.excerpt || post.title,
+      keywords: [
+        ...post.tags || [],
+        post.category,
+        'prostate health',
+        'wellness',
+      ],
+      url: `/blog/${slug}`,
+      image: post.coverImage || SITE_CONFIG.defaultImage,
+      imageAlt: post.title,
+      type: 'article',
+      author: post.author || 'Prostanone',
+      publishedDate: post.createdAt || new Date().toISOString().split('T')[0],
+      modifiedDate: post.updatedAt || post.createdAt || new Date().toISOString().split('T')[0],
+    } : {
+      title: 'Loading Article - Prostanone Blog',
+      description: 'Loading blog post...',
+      url: `/blog/${slug}`,
+    },
+    post ? {
+      schema: generateArticleSchema({
+        headline: post.title,
+        description: post.excerpt || post.title,
+        image: post.coverImage || SITE_CONFIG.defaultImage,
+        author: post.author || 'Prostanone',
+        datePublished: post.createdAt || new Date().toISOString().split('T')[0],
+        dateModified: post.updatedAt || post.createdAt || new Date().toISOString().split('T')[0],
+        url: getFullUrl(`/blog/${slug}`),
+      }),
+    } : undefined,
+  );
 
   if (post === undefined) return <BlogPostSkeleton />; // still loading
   if (!post) return <Navigate to="/blog" replace />;

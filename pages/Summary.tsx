@@ -1,15 +1,22 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { PACKAGES } from '../lib/constants.ts';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 import Button from '../components/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, ArrowRight, Truck, Minus, Plus, Clock } from 'lucide-react';
 import { images } from '@/lib';
 import { useModal } from '../context/ModalContext';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Summary: React.FC = () => {
-   useDynamicTitle('Cart Summary');
+   // SEO configuration for cart summary (noindex as it's user-specific)
+   useSeoMeta({
+      title: "Cart Summary - Prostanone",
+      description: "Review your Prostanone order before checkout.",
+      url: "/summary",
+      robots: "noindex",
+   });
+
    const { cart, removeFromCart, updateQuantity } = useApp();
    const navigate = useNavigate();
    const { showConfirm } = useModal();
