@@ -2,13 +2,13 @@ import React from 'react';
 import { AlertCircle, Clock } from 'lucide-react';
 
 interface Props {
-  status: 'pending-check' | 'success' | 'pending' | 'failed' | null;
+  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
 }
 
-const PaymentStatusSection: React.FC<Props> = ({ status }) => {
-  if (!status || status === 'success' || status === 'pending-check') return null;
+const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
+  if (!paymentStatus || paymentStatus === 'success' || paymentStatus === 'pending-check') return null;
 
-  if (status === 'failed') {
+  if (paymentStatus === 'failed') {
     return (
       <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-left">
         <div className="flex items-center gap-2 mb-3">
@@ -24,7 +24,7 @@ const PaymentStatusSection: React.FC<Props> = ({ status }) => {
     );
   }
 
-  if (status === 'pending') {
+  if (paymentStatus === 'pending') {
     return (
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left">
         <div className="flex items-center gap-2 mb-3">

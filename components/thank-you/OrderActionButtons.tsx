@@ -5,10 +5,9 @@ import Button from '../Button';
 
 interface Props {
   paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
-  isCOD: boolean;
 }
 
-const OrderActionButtons: React.FC<Props> = ({ paymentStatus, isCOD }) => {
+const OrderActionButtons: React.FC<Props> = ({ paymentStatus }) => {
   const navigate = useNavigate();
 
   if (paymentStatus === 'failed') {

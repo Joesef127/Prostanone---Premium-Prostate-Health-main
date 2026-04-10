@@ -68,16 +68,16 @@ const ThankYou: React.FC = () => {
 
       verifyPayment();
     }
-  }, [clearCart, paymentMethod, reference, stateMethod, showAlert, navigate]);
+  }, [clearCart, paymentMethod, reference, stateMethod, showAlert]);
 
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center bg-background px-4">
       <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl max-w-lg w-full text-center">
-        <PaymentStatusBadge paymentMethod={paymentMethod} reference={reference} paymentStatus={paymentStatus} />
+        <PaymentStatusBadge paymentStatus={paymentStatus} />
         <OrderHeader paymentStatus={paymentStatus} isCOD={isCOD} />
         <PaymentStatusSection paymentStatus={paymentStatus} />
         <OrderInfoSection paymentStatus={paymentStatus} isCOD={isCOD} phone={phone} />
-        <OrderActionButtons paymentStatus={paymentStatus} isCOD={isCOD} />
+        <OrderActionButtons paymentStatus={paymentStatus} />
       </div>
     </div>
   );

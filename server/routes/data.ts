@@ -269,10 +269,13 @@ data.get('/verify-payaza-transaction', async (c) => {
       });
     }
 
-    return c.json({
-      status: 'unknown',
-      message: 'Transaction reference not found in system',
-    });
+    return c.json(
+      {
+        status: 'unknown',
+        message: 'Transaction reference not found in system',
+      },
+      404,
+    );
   } catch (error) {
     console.error('Payaza verification error:', error);
     return c.json(
