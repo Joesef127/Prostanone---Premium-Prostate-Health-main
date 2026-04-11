@@ -34,8 +34,8 @@ Disallow: /checkout/*tracking*
 Disallow: /api/
 
 # Sitemap location - served dynamically based on FRONTEND_URL environment variable
-Sitemap: https://prostanone.vercel.app/api/sitemap.xml
-Sitemap: https://prostanone.vercel.app/api/sitemap-blog.xml
+Sitemap: https://holisbotanicals.com/api/sitemap.xml
+Sitemap: https://holisbotanicals.com/api/sitemap-blog.xml
 
 # Specific rules for Google
 User-agent: Googlebot

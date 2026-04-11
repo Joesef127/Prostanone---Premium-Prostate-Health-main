@@ -5,7 +5,7 @@
 
 // Get domain from environment variable or fallback to default
 const getFrontendUrl = (): string => {
-  return import.meta.env.VITE_FRONTEND_URL || 'https://prostanone.vercel.app';
+  return import.meta.env.VITE_FRONTEND_URL || 'https://holisbotanicals.com';
 };
 
 export const SITE_CONFIG = {

@@ -18,9 +18,9 @@ app.onError((err, c) => {
 const getCorsOrigins = (): string[] => {
   if (process.env.NODE_ENV === "production") {
     const origins: string[] = [
-      "https://prostanone-premium-prostate-heal-git-b1d987-joesef127s-projects.vercel.app",
-      "https://prostanone-premium-prostate-health.vercel.app",
       "https://prostanone.vercel.app",
+      "https://prostanone-dev.vercel.app",
+      "https://www.holisbotanicals.com",
     ];
     // Add FRONTEND_URL if provided in environment
     if (process.env.FRONTEND_URL && !origins.includes(process.env.FRONTEND_URL)) {

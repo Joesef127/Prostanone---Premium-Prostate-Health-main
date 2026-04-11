@@ -6,7 +6,7 @@ const seo = new Hono();
  * Get the frontend URL from environment or use default
  */
 function getFrontendUrl(): string {
-  return process.env.FRONTEND_URL || 'https://prostanone.vercel.app';
+  return process.env.FRONTEND_URL || 'https://holisbotanicals.com';
 }
 
 /**
@@ -64,7 +64,7 @@ seo.get('/sitemap-blog.xml', async (c) => {
     // For now, return empty sitemap structure
     const blogPages: Array<{ loc: string; lastmod?: string; changefreq: string; priority: string }> = [
       // Example:
-      // { loc: 'https://prostanone.vercel.app/blog/post-slug', lastmod: '2024-03-15', changefreq: 'monthly', priority: '0.7' },
+      // { loc: 'https://holisbotanicals.com/blog/post-slug', lastmod: '2024-03-15', changefreq: 'monthly', priority: '0.7' },
     ];
 
     const xml = generateSitemap(blogPages);
