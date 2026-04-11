@@ -34,7 +34,7 @@ import DistributorSkeleton from "./components/skeleton-loaders/distributor/Distr
 import AdminSkeleton from "./components/skeleton-loaders/admin/AdminSkeleton";
 import Skeleton from "./components/skeleton-loaders/Skeleton";
 
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 // Lazy page imports
 const Home = lazy(() => import("./pages/Home"));
