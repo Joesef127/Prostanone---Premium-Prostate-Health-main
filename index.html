@@ -6,11 +6,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:;" />
+  
+  <!-- 
+    NOTE: These default meta tags below are fallbacks for the root domain only.
+    Individual pages override these via the useSeoMeta hook which uses VITE_FRONTEND_URL from .env
+    If changing FRONTEND_URL in .env, update the URLs below to match for consistency.
+  -->
+  
+  <!-- SEO Meta Tags -->
   <title>Prostanone | Premium Prostate Health</title>
+  <meta name="description" content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula. Improve urinary function and prostate wellness." />
+  <meta name="keywords" content="prostate health, prostate supplement, urinary health, NAFDAC certified, natural herbal supplement" />
+  <meta name="author" content="Prostanone" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+  
+  <!-- Open Graph Tags -->
+  <meta property="og:site_name" content="Prostanone" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Prostanone | Premium Prostate Health" />
+  <meta property="og:description" content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula." />
+  <meta property="og:url" content="https://www.holisbotanicals.com/" />
+  <meta property="og:image" content="https://www.holisbotanicals.com/prostanone.png" />
+  <meta property="og:image:alt" content="Prostanone Premium Prostate Health Supplement" />
+  <meta property="og:locale" content="en_NG" />
+  
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Prostanone" />
+  <meta name="twitter:creator" content="@Prostanone" />
+  <meta name="twitter:title" content="Prostanone | Premium Prostate Health" />
+  <meta name="twitter:description" content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula." />
+  <meta name="twitter:image" content="https://www.holisbotanicals.com/prostanone.png" />
+  <meta name="twitter:image:alt" content="Prostanone Premium Prostate Health Supplement" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.holisbotanicals.com/" />
+  
+  <!-- Favicon & Icons -->
   <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  
+  <!-- Preconnect to external resources -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Prostanone",
+    "url": "https://www.holisbotanicals.com",
+    "logo": "https://www.holisbotanicals.com/logo.png",
+    "description": "Premium natural herbal supplement for prostate health",
+    "sameAs": [
+      "https://www.facebook.com/Prostanone",
+      "https://www.instagram.com/prostanone"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Support",
+      "email": "sales@holisbotanicals.com",
+      "availableLanguage": ["en"]
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "NG",
+      "addressLocality": "Lagos"
+    }
+  }
+  </script>
+  
   <script type="importmap">
 {
   "imports": {

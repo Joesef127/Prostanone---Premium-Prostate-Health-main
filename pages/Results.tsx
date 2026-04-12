@@ -3,13 +3,26 @@ import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { PACKAGES } from '../lib/constants.ts';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 import Button from '../components/Button';
 import { CheckCircle, AlertTriangle, Shield, Clock, ArrowRight, Activity } from 'lucide-react';
 import { QuizSeverity } from '../types';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const Results: React.FC = () => {
-  useDynamicTitle('Your Results');
+  // SEO configuration for results page
+  useSeoMeta({
+    title: "Your Prostate Health Results - Personalized Recommendations",
+    description: "View your personalized prostate health assessment results and get tailored recommendations for improving your wellness with Prostanone.",
+    keywords: [
+      "health results",
+      "assessment results",
+      "personalized recommendations",
+      "prostate health tips",
+    ],
+    url: "/results",
+    robots: "noindex", // Don't index results pages as they're user-specific
+  });
+
   const { quizResult, addToCart } = useApp();
   const navigate = useNavigate();
 

@@ -21,7 +21,8 @@ app.use(
         ? [
             "https://prostanone.vercel.app",
             "https://prostanone-dev.vercel.app",
-            ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+            "https://www.holisbotanicals.com",
+            ...(process.env.VITE_FRONTEND_URL ? [process.env.VITE_FRONTEND_URL] : []),
           ]
         : ["http://localhost:3000"],
     credentials: true,

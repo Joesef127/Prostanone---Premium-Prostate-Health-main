@@ -3,6 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import { AppProvider } from '../../context/AppContext';
+import { ModalProvider } from '../../context/ModalContext';
 import { useFinalCTAForm } from '../../hooks/useFinalCTAForm';
 import { PACKAGES } from '../../lib/constants.ts';
 
@@ -25,7 +26,9 @@ beforeEach(() => {
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <MemoryRouter>
-    <AppProvider>{children}</AppProvider>
+    <AppProvider>
+      <ModalProvider>{children}</ModalProvider>
+    </AppProvider>
   </MemoryRouter>
 );
 

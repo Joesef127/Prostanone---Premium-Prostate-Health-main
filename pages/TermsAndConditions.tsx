@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useLocation } from 'react-router-dom';
+import { useSeoMeta } from '../hooks/useSeoMeta';
+import { PAGE_URLS } from '../lib/seo';
 import termsContent from '../policies/terms.md?raw';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -17,7 +18,14 @@ const components = {
 
 const TermsAndConditions: React.FC = () => {
   const { hash } = useLocation();
-    useDynamicTitle('Terms and Conditions | Prostanone');
+  
+  // SEO configuration for terms page
+  useSeoMeta({
+    title: "Terms and Conditions - Prostanone",
+    description: "Read the terms and conditions for using Prostanone website and purchasing our products.",
+    url: PAGE_URLS.terms,
+    type: "website",
+  });
 
   useEffect(() => {
     if (hash) {

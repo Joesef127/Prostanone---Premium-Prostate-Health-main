@@ -14,18 +14,24 @@ app.onError((err, c) => {
   return c.json({ error: "Internal server error" }, 500);
 });
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://prostanone.vercel.app",
-  "https://prostanone-dev.vercel.app",
-  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
-];
+const configuredAllowedOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(
+  new Set([
+    ...configuredAllowedOrigins,
+    ...(process.env.VITE_FRONTEND_URL ? [process.env.VITE_FRONTEND_URL] : []),
+  ]),
+);
+const fallbackOrigin = allowedOrigins[1] ?? allowedOrigins[0];
 
 app.use(
   "*",
   cors({
     origin: (origin) =>
-      allowedOrigins.includes(origin) ? origin : allowedOrigins[1],
+      allowedOrigins.includes(origin) ? origin : fallbackOrigin,
     credentials: true,
   }),
 );

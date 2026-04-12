@@ -1,0 +1,58 @@
+# Robots.txt for Prostanone Website
+# Generated for optimal SEO
+
+# Default rules for all bots
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /product
+Allow: /science
+Allow: /reviews
+Allow: /blog
+Allow: /contact
+Allow: /distributor
+
+# Disallow private/internal pages
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /admin-profile
+Disallow: /quiz/results
+Disallow: /*.json
+Disallow: /*?page=
+Disallow: /*?sort=
+Disallow: /*?filter=
+
+# Checkout and thank you pages - allowed but not required to crawl
+Allow: /checkout
+Allow: /thank-you
+
+# Cart and similar - disallow crawling
+Disallow: /cart
+Disallow: /checkout/*tracking*
+
+# API routes - disallow
+Disallow: /api/
+
+# This static fallback robots.txt intentionally omits Sitemap directives.
+# Environment-specific sitemap URLs should be provided by the dynamic
+# /api/robots.txt endpoint, which can use VITE_FRONTEND_URL consistently.
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

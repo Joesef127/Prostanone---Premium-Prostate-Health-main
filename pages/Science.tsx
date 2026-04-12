@@ -2,10 +2,29 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ProstateDiagram } from '../components/ProstateDiagram';
 import { images } from '@/lib';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
+import { useSeoMeta } from '../hooks/useSeoMeta';
+import { PAGE_URLS, SITE_CONFIG } from '../lib/seo';
 
 const Science: React.FC = () => {
-  useDynamicTitle('The Science');
+  // SEO configuration for science page
+  useSeoMeta({
+    title: "The Science Behind Prostanone - Prostate Health Research",
+    description: "Discover the clinical research and science behind Prostanone. Learn about our 4 clinically-studied ingredients and how they target the root causes of prostate health issues.",
+    keywords: [
+      "prostate science",
+      "clinical research",
+      "saw palmetto",
+      "BPH treatment",
+      "prostate health formula",
+      "ingredient research",
+      "natural prostate supplement",
+    ],
+    url: PAGE_URLS.science,
+    image: `${SITE_CONFIG.domain}${images.prostanone_science1}`,
+    imageAlt: "Prostanone Scientific Research",
+    type: "article",
+  });
+
   return (
     <div className="pt-20 bg-white">
       {/* Hero */}

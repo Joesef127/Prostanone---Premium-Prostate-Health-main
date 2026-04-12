@@ -61,10 +61,16 @@ describe('PaymentSelector component', () => {
     expect(setGatewayChoice).toHaveBeenCalledWith('korapay');
   });
 
-  it('Payaza button is disabled', () => {
+  it('shows both Korapay and Payaza options when online payment selected', () => {
     renderSelector('online');
-    // Find the button that contains "Payaza"
-    const payazaBtn = screen.getByText('Payaza').closest('button');
-    expect(payazaBtn).toBeDisabled();
+    expect(screen.getByText('Korapay')).toBeInTheDocument();
+    expect(screen.getByText('Payaza')).toBeInTheDocument();
+  });
+
+  it('clicking Payaza calls setGatewayChoice("payaza")', async () => {
+    const user = userEvent.setup();
+    const { setGatewayChoice } = renderSelector('online');
+    await user.click(screen.getByText('Payaza'));
+    expect(setGatewayChoice).toHaveBeenCalledWith('payaza');
   });
 });

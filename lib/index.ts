@@ -20,6 +20,25 @@ import prostanone_man from "../public/images/prostanone_man.png";
 import prostanone_showcase from "../public/images/prostanone_showcase.png";
 import prostanone_tablets from "../public/images/prostanone_tablets.png";
 
+// SEO Utilities
+export {
+  SITE_CONFIG,
+  ORGANIZATION_SCHEMA,
+  PAGE_URLS,
+  getFullUrl,
+  generatePageMeta,
+  generateOpenGraphTags,
+  generateTwitterCardTags,
+  generateSchema,
+  generateProductSchema,
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+  generateFAQSchema,
+  generateLocalBusinessSchema,
+  injectSchema,
+  type PageMeta,
+} from "./seo";
+
 export const images = {
     logo,
 

@@ -2,14 +2,22 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCheckout } from '../hooks/useCheckout';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 import Button from '../components/Button';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
 import CheckoutProgressBar from '../components/checkout/CheckoutProgressBar';
 import StepContact from '../components/checkout/StepContact';
 import StepShipping from '../components/checkout/StepShipping';
 import StepPaymentMethod from '../components/checkout/StepPaymentMethod';
 import StepReviewOnline from '../components/checkout/StepReviewOnline';
 import StepReviewCOD from '../components/checkout/StepReviewCOD';
+
+// SEO for checkout (noindex this page as it's transactional)
+const checkoutMeta = {
+  title: "Checkout - Prostanone",
+  description: "Complete your Prostanone order securely. Multiple payment options available.",
+  url: "/checkout",
+  robots: "noindex",
+};
 
 const slideVariants = {
   initial: { opacity: 0, x: 20 },
@@ -18,7 +26,7 @@ const slideVariants = {
 };
 
 const Checkout: React.FC = () => {
-  useDynamicTitle('Checkout');
+  useSeoMeta(checkoutMeta);
   const navigate = useNavigate();
   const {
     cart,

@@ -5,6 +5,7 @@ import auth from "./routes/auth";
 import packagesRoute from "./routes/packages";
 import blog from "./routes/blog";
 import data from "./routes/data";
+import seo from "./routes/seo";
 
 const app = new Hono().basePath("/api");
 
@@ -13,17 +14,27 @@ app.onError((err, c) => {
   return c.json({ error: "Internal server error" }, 500);
 });
 
+// Build allowed CORS origins from environment configuration
+const configuredAllowedOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(
+  new Set([
+    ...configuredAllowedOrigins,
+    ...(process.env.VITE_FRONTEND_URL ? [process.env.VITE_FRONTEND_URL] : []),
+    // Development fallback
+    ...(process.env.NODE_ENV !== "production" ? ["http://localhost:3000"] : []),
+  ]),
+);
+const defaultAllowedOrigin = allowedOrigins.length > 0 ? allowedOrigins[0] : "";
+
 app.use(
   "*",
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? [
-            "https://prostanone-premium-prostate-heal-git-b1d987-joesef127s-projects.vercel.app",
-            "https://prostanone-premium-prostate-health.vercel.app",
-            "https://prostanone.vercel.app",
-          ]
-        : ["http://localhost:3000"],
+    origin: (origin) =>
+      allowedOrigins.includes(origin) ? origin : defaultAllowedOrigin,
     credentials: true,
   }),
 );
@@ -31,6 +42,7 @@ app.use(
 app.route("/auth", auth);
 app.route("/packages", packagesRoute);
 app.route("/blog", blog);
+app.route("/seo", seo);
 app.route("/", data);
 
 export default handle(app);

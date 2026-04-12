@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ShieldCheck, Star, MoreVertical, Pencil, Trash2, PlusCircle } from 'lucide-react';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
+import { useSeoMeta } from '../hooks/useSeoMeta';
+import { PAGE_URLS, SITE_CONFIG } from '../lib/seo';
 import { useTestimonials } from '../hooks/useTestimonials';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
@@ -56,7 +57,23 @@ const TestimonialMenu: React.FC<{ onEdit: () => void; onDelete: () => void }> = 
 
 /* ── Reviews Page ── */
 const Reviews: React.FC = () => {
-  useDynamicTitle('Customer Reviews');
+  // SEO configuration for reviews page
+  useSeoMeta({
+    title: "Customer Reviews - Prostanone Prostate Supplement",
+    description: "Read real customer reviews and testimonials about Prostanone. See how our natural prostate health supplement has helped thousands improve their wellness.",
+    keywords: [
+      "Prostanone reviews",
+      "customer testimonials",
+      "prostate supplement reviews",
+      "user feedback",
+      "Prostanone results",
+    ],
+    url: PAGE_URLS.reviews,
+    image: SITE_CONFIG.defaultImage,
+    imageAlt: "Prostanone Customer Reviews",
+    type: "website",
+  });
+
   const { testimonials, loading, refetch } = useTestimonials();
   const { isAdmin, token } = useAuth();
   const { showConfirm } = useModal();

@@ -1,6 +1,7 @@
 import { API_BASE } from '../lib/constants';
 import type { BlogPost } from '../lib/blogData';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
+import { useSeoMeta } from '../hooks/useSeoMeta';
+import { PAGE_URLS, generateSchema, SITE_CONFIG } from '../lib/seo';
 import BlogHeroSection from '../components/blog/BlogHeroSection';
 import BlogCategoryFilter from '../components/blog/BlogCategoryFilter';
 import BlogArticleGrid from '../components/blog/BlogArticleGrid';
@@ -8,7 +9,33 @@ import BlogSkeleton from '../components/skeleton-loaders/blog/BlogSkeleton';
 import { useState, useEffect } from 'react';
 
 const Blog: React.FC = () => {
-  useDynamicTitle('Blog');
+  // SEO configuration for blog page
+  useSeoMeta(
+    {
+      title: 'Prostate Health Blog - Tips, Research & Wellness Insights',
+      description: 'Read the latest articles on prostate health, wellness tips, and research insights. Learn about natural treatments, lifestyle changes, and expert advice for better health.',
+      keywords: [
+        'prostate health blog',
+        'prostate tips',
+        'prostate research',
+        'urinary health articles',
+        'wellness insights',
+        'prostate information',
+      ],
+      url: PAGE_URLS.blog,
+      image: SITE_CONFIG.defaultImage,
+      imageAlt: 'Prostanone Blog - Prostate Health Articles',
+      type: 'website',
+    },
+    {
+      schema: generateSchema('CollectionPage', {
+        name: 'Prostate Health Blog',
+        description: 'Collection of articles on prostate health, wellness, and lifestyle tips',
+        url: PAGE_URLS.blog,
+      }),
+    },
+  );
+
   const [activeCategory, setActiveCategory] = useState('All');
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
