@@ -35,13 +35,13 @@ seo.get('/sitemap-static.xml', (c) => {
     { loc: `${baseUrl}/`, changefreq: 'weekly', priority: '1.0' },
     { loc: `${baseUrl}/about`, changefreq: 'monthly', priority: '0.9' },
     { loc: `${baseUrl}/product`, changefreq: 'weekly', priority: '1.0' },
-    { loc: `${baseUrl}/science`, changefreq: 'quarterly', priority: '0.8' },
+    { loc: `${baseUrl}/science`, changefreq: 'yearly', priority: '0.8' },
     { loc: `${baseUrl}/reviews`, changefreq: 'weekly', priority: '0.8' },
+    { loc: `${baseUrl}/quiz`, changefreq: 'weekly', priority: '0.7' },
     { loc: `${baseUrl}/blog`, changefreq: 'daily', priority: '0.9' },
     { loc: `${baseUrl}/contact`, changefreq: 'monthly', priority: '0.7' },
     { loc: `${baseUrl}/distributor`, changefreq: 'monthly', priority: '0.6' },
     { loc: `${baseUrl}/terms`, changefreq: 'yearly', priority: '0.3' },
-    { loc: `${baseUrl}/quiz`, changefreq: 'weekly', priority: '0.7' },
   ];
 
   const xml = generateSitemap(staticPages);
@@ -52,14 +52,27 @@ seo.get('/sitemap-static.xml', (c) => {
 
 /**
  * Blog posts sitemap
- * This should be fetched dynamically from your blog database
- * For now, we'll return a template that can be updated
+ * Fetches all published blog posts from the database and generates a sitemap.
+ * 
+ * TODO: Connect to database
+ * - Fetch all published blog posts with: loc, lastmod, changefreq, priority
+ * - Include pagination if there are > 50,000 URLs (create multiple sitemaps)
+ * - Cache appropriately based on publish frequency
+ * 
+ * @example expected structure:
+ * { loc: 'https://holisbotanicals.com/blog/post-slug', lastmod: '2024-03-15', changefreq: 'monthly', priority: '0.7' }
  */
 seo.get('/sitemap-blog.xml', async (c) => {
   try {
-    // In production, fetch from your database
+    // TODO: Implement database connection
     // const db = getDatabase();
-    // const posts = await db.select().from(blogPosts);
+    // const blogPosts = await db.query('SELECT slug, updated_at FROM blog_posts WHERE published = true');
+    // const blogPages = blogPosts.map(post => ({
+    //   loc: `${getFrontendUrl()}/blog/${post.slug}`,
+    //   lastmod: post.updated_at.toISOString().split('T')[0],
+    //   changefreq: 'monthly',
+    //   priority: '0.7',
+    // }));
 
     // For now, return empty sitemap structure
     const blogPages: Array<{ loc: string; lastmod?: string; changefreq: string; priority: string }> = [

@@ -28,12 +28,13 @@ const allowedOrigins = Array.from(
     ...(process.env.NODE_ENV !== "production" ? ["http://localhost:3000"] : []),
   ]),
 );
+const defaultAllowedOrigin = allowedOrigins.length > 0 ? allowedOrigins[0] : "";
 
 app.use(
   "*",
   cors({
     origin: (origin) =>
-      allowedOrigins.includes(origin) ? origin : allowedOrigins[0],
+      allowedOrigins.includes(origin) ? origin : defaultAllowedOrigin,
     credentials: true,
   }),
 );

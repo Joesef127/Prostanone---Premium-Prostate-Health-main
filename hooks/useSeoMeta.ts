@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { PageMeta } from '../lib/seo';
 import {
   generatePageMeta,
@@ -6,6 +6,27 @@ import {
   generateTwitterCardTags,
   injectSchema,
 } from '../lib/seo';
+
+/**
+ * Helper: Deep equality check for objects
+ */
+function deepEqual(obj1: unknown, obj2: unknown): boolean {
+  if (obj1 === obj2) return true;
+  if (obj1 === null || obj2 === null) return obj1 === obj2;
+  if (typeof obj1 !== 'object' || typeof obj2 !== 'object') return false;
+
+  const keys1 = Object.keys(obj1 as Record<string, unknown>);
+  const keys2 = Object.keys(obj2 as Record<string, unknown>);
+
+  if (keys1.length !== keys2.length) return false;
+
+  for (const key of keys1) {
+    if (!keys2.includes(key)) return false;
+    if (!deepEqual((obj1 as Record<string, unknown>)[key], (obj2 as Record<string, unknown>)[key])) return false;
+  }
+
+  return true;
+}
 
 /**
  * Comprehensive SEO/Meta management hook
@@ -51,7 +72,29 @@ export function useSeoMeta(
     includeTwitter = true,
   } = options || {};
 
+  const prevInputRef = useRef<Partial<PageMeta> | null>(null);
+  const prevSchemaRef = useRef<Record<string, unknown> | null>(null);
+  const prevOptionsRef = useRef<{
+    includeOG: boolean;
+    includeTwitter: boolean;
+  } | null>(null);
+
   useEffect(() => {
+    // Check if any dependency has actually changed using deep comparison
+    const inputChanged = !deepEqual(pageMetaInput, prevInputRef.current);
+    const schemaChanged = !deepEqual(schema, prevSchemaRef.current);
+    const optionsChanged = !deepEqual({ includeOG, includeTwitter }, prevOptionsRef.current);
+
+    // Only run if something actually changed
+    if (!inputChanged && !schemaChanged && !optionsChanged) {
+      return;
+    }
+
+    // Update refs for next comparison
+    prevInputRef.current = pageMetaInput;
+    prevSchemaRef.current = schema ?? null;
+    prevOptionsRef.current = { includeOG, includeTwitter };
+
     // Generate standardized meta
     const pageMeta = generatePageMeta(pageMetaInput);
 
@@ -100,12 +143,7 @@ export function useSeoMeta(
       // Meta tags will be updated by next page
       // Schema scripts persist but next page will add its own
     };
-  }, [
-    JSON.stringify(pageMetaInput),
-    JSON.stringify(schema),
-    includeOG,
-    includeTwitter,
-  ]);
+  }, [pageMetaInput, schema, includeOG, includeTwitter]);
 }
 
 /**

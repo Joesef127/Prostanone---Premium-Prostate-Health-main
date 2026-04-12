@@ -1,33 +1,28 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
-import { AppProvider, useApp } from '../../context/AppContext';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { QuizSeverity } from '../../types';
+import { render, act } from '@testing-library/react';
+import { AppProvider, useApp } from '../../context/AppContext';
 import React from 'react';
 
-// ── helper: render a component that calls useApp and exposes the context ──
+// Helper: render a component that calls useApp and exposes the context
 function TestHarness({ fn }: { fn: (ctx: ReturnType<typeof useApp>) => void }) {
   const ctx = useApp();
   fn(ctx);
   return null;
 }
 
-function renderWithProvider(fn: (ctx: ReturnType<typeof useApp>) => void) {
-  let captured: ReturnType<typeof useApp>;
-  render(
-    <AppProvider>
-      <TestHarness
-        fn={(ctx) => {
-          captured = ctx;
-          fn(ctx);
-        }}
-      />
-    </AppProvider>,
-  );
-  return () => captured!;
-}
-
 describe('AppContext', () => {
-  it('initialises with empty cart, null quizResult and null payment state', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('initializes with empty cart', () => {
     let ctx!: ReturnType<typeof useApp>;
     render(
       <AppProvider>
@@ -35,7 +30,25 @@ describe('AppContext', () => {
       </AppProvider>,
     );
     expect(ctx.cart).toEqual([]);
+  });
+
+  it('initializes with null quizResult', () => {
+    let ctx!: ReturnType<typeof useApp>;
+    render(
+      <AppProvider>
+        <TestHarness fn={(c) => { ctx = c; }} />
+      </AppProvider>,
+    );
     expect(ctx.quizResult).toBeNull();
+  });
+
+  it('initializes with null payment state', () => {
+    let ctx!: ReturnType<typeof useApp>;
+    render(
+      <AppProvider>
+        <TestHarness fn={(c) => { ctx = c; }} />
+      </AppProvider>,
+    );
     expect(ctx.paymentMethod).toBeNull();
     expect(ctx.gatewayChoice).toBeNull();
   });
@@ -62,7 +75,7 @@ describe('AppContext', () => {
     expect(ctx.cart).toEqual([{ packageId: 'performance', quantity: 3 }]);
   });
 
-  it('addToCart increments quantity for an existing item', () => {
+  it('addToCart increments quantity for existing item', () => {
     let ctx!: ReturnType<typeof useApp>;
     render(
       <AppProvider>
@@ -97,6 +110,42 @@ describe('AppContext', () => {
     act(() => ctx.addToCart('loyalty'));
     act(() => ctx.removeFromCart('starter'));
     expect(ctx.cart).toEqual([{ packageId: 'loyalty', quantity: 1 }]);
+  });
+
+  it('should provide clearCart function', () => {
+    let ctx!: ReturnType<typeof useApp>;
+    render(
+      <AppProvider>
+        <TestHarness fn={(c) => { ctx = c; }} />
+      </AppProvider>,
+    );
+    act(() => ctx.addToCart('starter'));
+    expect(ctx.cart.length).toBeGreaterThan(0);
+    
+    act(() => ctx.clearCart());
+    expect(ctx.cart).toEqual([]);
+  });
+
+  it('should handle setPaymentMethod', () => {
+    let ctx!: ReturnType<typeof useApp>;
+    render(
+      <AppProvider>
+        <TestHarness fn={(c) => { ctx = c; }} />
+      </AppProvider>,
+    );
+    act(() => ctx.setPaymentMethod('cod'));
+    expect(ctx.paymentMethod).toBe('cod');
+  });
+
+  it('should handle setGatewayChoice', () => {
+    let ctx!: ReturnType<typeof useApp>;
+    render(
+      <AppProvider>
+        <TestHarness fn={(c) => { ctx = c; }} />
+      </AppProvider>,
+    );
+    act(() => ctx.setGatewayChoice('korapay'));
+    expect(ctx.gatewayChoice).toBe('korapay');
   });
 
   it('updateQuantity changes item quantity', () => {

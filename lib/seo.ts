@@ -4,7 +4,8 @@
  */
 
 // Compute frontend URLs once at module initialization
-const FRONTEND_URL: string = import.meta.env.VITE_FRONTEND_URL || 'https://holisbotanicals.com';
+const DEFAULT_FRONTEND_URL = 'https://holisbotanicals.com';
+const FRONTEND_URL: string = import.meta.env.VITE_FRONTEND_URL || DEFAULT_FRONTEND_URL;
 const SITE_LOGO_URL: string = `${FRONTEND_URL}/logo.png`;
 const SITE_DEFAULT_IMAGE_URL: string = `${FRONTEND_URL}/prostanone-home.jpg`;
 
@@ -168,6 +169,9 @@ export function generateProductSchema(product: {
   sku?: string;
   availability?: string;
 }): Record<string, unknown> {
+  // Validate rating is within schema.org range (1-5)
+  const isValidRating = product.rating !== undefined && product.rating >= 1 && product.rating <= 5;
+
   return generateSchema('Product', {
     name: product.name,
     description: product.description,
@@ -180,10 +184,10 @@ export function generateProductSchema(product: {
       '@type': 'Organization',
       name: product.manufacturer || 'Holis Botanical Gardens',
     },
-    ...(product.rating && {
+    ...(isValidRating && {
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: product.rating.toString(),
+        ratingValue: product.rating!.toString(),
         reviewCount: product.reviewCount || 1,
       },
     }),

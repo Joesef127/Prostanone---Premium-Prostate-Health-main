@@ -25,11 +25,13 @@ const allowedOrigins = Array.from(
     ...(process.env.VITE_FRONTEND_URL ? [process.env.VITE_FRONTEND_URL] : []),
   ]),
 );
+const fallbackOrigin = allowedOrigins[1] ?? allowedOrigins[0];
+
 app.use(
   "*",
   cors({
     origin: (origin) =>
-      allowedOrigins.includes(origin) ? origin : allowedOrigins[1],
+      allowedOrigins.includes(origin) ? origin : fallbackOrigin,
     credentials: true,
   }),
 );

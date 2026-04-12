@@ -3,19 +3,22 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import React from 'react';
 import { AppProvider } from '../../context/AppContext';
+import { ModalProvider } from '../../context/ModalContext';
 import ThankYou from '../../pages/ThankYou';
 
 function renderThankYou(state?: Record<string, unknown>) {
   render(
     <AppProvider>
-      <MemoryRouter
-        initialEntries={[{ pathname: '/thank-you', state: state ?? null }]}
-      >
-        <Routes>
-          <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/" element={<div>Home</div>} />
-        </Routes>
-      </MemoryRouter>
+      <ModalProvider>
+        <MemoryRouter
+          initialEntries={[{ pathname: '/thank-you', state: state ?? null }]}
+        >
+          <Routes>
+            <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/" element={<div>Home</div>} />
+          </Routes>
+        </MemoryRouter>
+      </ModalProvider>
     </AppProvider>,
   );
 }
@@ -44,7 +47,7 @@ describe('ThankYou page — COD flow', () => {
   it('shows "Watch out for our call" prompt', () => {
     renderThankYou({ paymentMethod: 'cod', phone: '08012345678' });
     expect(
-      screen.getByText(/Watch out for our call or WhatsApp message/i),
+      screen.getByText(/Our team will call or WhatsApp you/i),
     ).toBeInTheDocument();
   });
 });

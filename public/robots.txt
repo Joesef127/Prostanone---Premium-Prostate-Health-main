@@ -33,11 +33,9 @@ Disallow: /checkout/*tracking*
 # API routes - disallow
 Disallow: /api/
 
-# Sitemap locations for this static fallback robots.txt file.
-# These URLs are intentionally hardcoded for the production domain.
-# Prefer the dynamic /api/robots.txt endpoint when VITE_FRONTEND_URL-specific values are required.
-Sitemap: https://holisbotanicals.com/api/sitemap.xml
-Sitemap: https://holisbotanicals.com/api/sitemap-blog.xml
+# This static fallback robots.txt intentionally omits Sitemap directives.
+# Environment-specific sitemap URLs should be provided by the dynamic
+# /api/robots.txt endpoint, which can use VITE_FRONTEND_URL consistently.
 
 # Specific rules for Google
 User-agent: Googlebot
