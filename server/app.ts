@@ -14,27 +14,26 @@ app.onError((err, c) => {
   return c.json({ error: "Internal server error" }, 500);
 });
 
-// Build allowed CORS origins
-const getCorsOrigins = (): string[] => {
-  if (process.env.NODE_ENV === "production") {
-    const origins: string[] = [
-      "https://prostanone.vercel.app",
-      "https://prostanone-dev.vercel.app",
-      "https://www.holisbotanicals.com",
-    ];
-    // Add FRONTEND_URL if provided in environment
-    if (process.env.FRONTEND_URL && !origins.includes(process.env.FRONTEND_URL)) {
-      origins.push(process.env.FRONTEND_URL);
-    }
-    return origins;
-  }
-  return ["http://localhost:3000"];
-};
+// Build allowed CORS origins from environment configuration
+const configuredAllowedOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(
+  new Set([
+    ...configuredAllowedOrigins,
+    ...(process.env.VITE_FRONTEND_URL ? [process.env.VITE_FRONTEND_URL] : []),
+    // Development fallback
+    ...(process.env.NODE_ENV !== "production" ? ["http://localhost:3000"] : []),
+  ]),
+);
 
 app.use(
   "*",
   cors({
-    origin: getCorsOrigins(),
+    origin: (origin) =>
+      allowedOrigins.includes(origin) ? origin : allowedOrigins[0],
     credentials: true,
   }),
 );

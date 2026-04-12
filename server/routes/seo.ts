@@ -6,7 +6,7 @@ const seo = new Hono();
  * Get the frontend URL from environment or use default
  */
 function getFrontendUrl(): string {
-  return process.env.FRONTEND_URL || 'https://holisbotanicals.com';
+  return process.env.VITE_FRONTEND_URL || 'https://holisbotanicals.com';
 }
 
 /**
@@ -16,8 +16,8 @@ function getFrontendUrl(): string {
 seo.get('/sitemap.xml', (c) => {
   const baseUrl = getFrontendUrl();
   const sitemaps = [
-    { url: `${baseUrl}/api/sitemap-static.xml`, priority: '1.0' },
-    { url: `${baseUrl}/api/sitemap-blog.xml`, priority: '0.8' },
+    { url: `${baseUrl}/api/sitemap-static.xml` },
+    { url: `${baseUrl}/api/sitemap-blog.xml` },
   ];
 
   const xml = generateSitemapIndex(sitemaps);
@@ -111,13 +111,12 @@ ${urls}
  * Generate sitemap index for multiple sitemaps
  */
 function generateSitemapIndex(
-  sitemaps: Array<{ url: string; priority?: string }>,
+  sitemaps: Array<{ url: string }>,
 ): string {
   const sitemapEntries = sitemaps
     .map(
       sitemap => `  <sitemap>
     <loc>${escapeXml(sitemap.url)}</loc>
-    ${sitemap.priority ? `<priority>${sitemap.priority}</priority>` : ''}
   </sitemap>`,
     )
     .join('\n');
@@ -133,8 +132,7 @@ ${sitemapEntries}
  */
 seo.get('/robots.txt', (c) => {
   const baseUrl = getFrontendUrl();
-  const robots = `# Prostanone Robots.txt
-# Generated dynamically based on FRONTEND_URL environment variable
+  const robots = `# Holis Botanical Gardens Robots.txt
 
 User-agent: *
 Allow: /

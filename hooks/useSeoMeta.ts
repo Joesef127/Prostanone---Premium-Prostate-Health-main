@@ -101,8 +101,8 @@ export function useSeoMeta(
       // Schema scripts persist but next page will add its own
     };
   }, [
-    pageMetaInput,
-    schema,
+    JSON.stringify(pageMetaInput),
+    JSON.stringify(schema),
     includeOG,
     includeTwitter,
   ]);

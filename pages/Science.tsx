@@ -20,7 +20,7 @@ const Science: React.FC = () => {
       "natural prostate supplement",
     ],
     url: PAGE_URLS.science,
-      image: `${SITE_CONFIG.domain}/prostanone-science1.jpg`,
+    image: `${SITE_CONFIG.domain}${images.prostanone_science1}`,
     imageAlt: "Prostanone Scientific Research",
     type: "article",
   });

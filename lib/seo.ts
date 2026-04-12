@@ -3,28 +3,22 @@
  * Central hub for all SEO-related settings and helpers
  */
 
-// Get domain from environment variable or fallback to default
-const getFrontendUrl = (): string => {
-  return import.meta.env.VITE_FRONTEND_URL || 'https://holisbotanicals.com';
-};
+// Compute frontend URLs once at module initialization
+const FRONTEND_URL: string = import.meta.env.VITE_FRONTEND_URL || 'https://holisbotanicals.com';
+const SITE_LOGO_URL: string = `${FRONTEND_URL}/logo.png`;
+const SITE_DEFAULT_IMAGE_URL: string = `${FRONTEND_URL}/prostanone-home.jpg`;
 
 export const SITE_CONFIG = {
   name: 'Prostanone',
   fullName: 'Prostanone | Premium Prostate Health',
-  get domain() {
-    return getFrontendUrl();
-  },
+  domain: FRONTEND_URL,
   description: 'Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula. Improve urinary function and prostate wellness.',
   keywords: ['prostate health', 'prostate supplement', 'urinary health', 'NAFDAC certified', 'natural herbal supplement'],
-  get logo() {
-    return `${getFrontendUrl()}/logo.png`;
-  },
-  get defaultImage() {
-    return `${getFrontendUrl()}/prostanone-home.jpg`;
-  },
+  logo: SITE_LOGO_URL,
+  defaultImage: SITE_DEFAULT_IMAGE_URL,
+  instagramHandle: 'prostanone',
   twitterHandle: '@Prostanone',
-  instagramHandle: 'prostanone_health',
-  supportEmail: 'support@prostanone.com',
+  supportEmail: 'prostanone@gmail.com',
   locale: 'en_NG',
 };
 
@@ -37,8 +31,7 @@ export const ORGANIZATION_SCHEMA = {
   description: SITE_CONFIG.description,
   sameAs: [
     'https://www.facebook.com/Prostanone',
-    'https://www.instagram.com/prostanone_health',
-    'https://twitter.com/@Prostanone',
+    'https://www.instagram.com/prostanone',
   ],
   contactPoint: {
     '@type': 'ContactPoint',
@@ -287,7 +280,7 @@ export function generateLocalBusinessSchema(): Record<string, unknown> {
     },
     sameAs: [
       'https://www.facebook.com/Prostanone',
-      'https://www.instagram.com/prostanone_health',
+      'https://www.instagram.com/prostanone',
     ],
   });
 }

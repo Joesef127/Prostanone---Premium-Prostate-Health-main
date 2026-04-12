@@ -3,6 +3,7 @@ import { useSeoMeta } from "../hooks/useSeoMeta";
 import { PAGE_URLS, generateLocalBusinessSchema, SITE_CONFIG } from "../lib/seo";
 import AboutStorySection from "../components/about/AboutStorySection";
 import AboutCertificationsSection from "../components/about/AboutCertificationsSection";
+import { images } from "@/lib";
 
 const About: React.FC = () => {
   // SEO configuration for about page
@@ -19,7 +20,7 @@ const About: React.FC = () => {
         "Holis Botanical Gardens",
       ],
       url: PAGE_URLS.about,
-      image: `${SITE_CONFIG.domain}/prostanone-about.jpg`,
+      image: `${SITE_CONFIG.domain}${images.prostanone_about}`,
       imageAlt: "Prostanone About Us",
       type: "website",
     },
