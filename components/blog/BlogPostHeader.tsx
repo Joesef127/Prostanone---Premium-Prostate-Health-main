@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Clock, Calendar, Tag, Pencil } from 'lucide-react';
 import { getCategoryColor } from '../../lib/categoryColors';
 import type { BlogPost } from '../../lib/blogData';
+import { useAuth } from '../../context/AuthContext';
 
 interface BlogPostHeaderProps {
   post: BlogPost;
@@ -11,6 +12,7 @@ interface BlogPostHeaderProps {
 
 const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
 
   return (
     <motion.header
@@ -27,6 +29,7 @@ const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
           {post.category}
         </span>
 
+        {isAdmin && (
           <button
             onClick={() => navigate(`/blog/edit/${post.slug}`)}
             className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-primary border border-gray-200 hover:border-primary rounded-lg px-3 py-1.5 transition-colors"
@@ -34,6 +37,7 @@ const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
             <Pencil className="w-3.5 h-3.5" />
             Edit
           </button>
+        )}
         
       </div>
 
