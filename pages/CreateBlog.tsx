@@ -58,6 +58,7 @@ const CreateBlog: React.FC = () => {
           onSelectTemplate={loadTemplate}
           onSave={handleSave}
         />
+
       )}
     </div>
   );

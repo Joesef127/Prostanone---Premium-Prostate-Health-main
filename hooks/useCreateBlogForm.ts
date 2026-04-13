@@ -15,6 +15,7 @@ const EMPTY_FORM = {
   category: '',
   coverImage: '',
   content: '',
+  author: 'Holis Botanicals',
 };
 
 export type CreateBlogFormErrors = Partial<Record<keyof typeof EMPTY_FORM, string>>;
@@ -50,7 +51,7 @@ const useCreateBlogForm = () => {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then(r => r.ok ? r.json() : null)
-      .then((post: { title: string; excerpt: string; category: string; coverImage: string; content: string } | null) => {
+      .then((post: { title: string; excerpt: string; category: string; coverImage: string; content: string; author?: string } | null) => {
         if (!post) return;
         setForm({
           title: post.title,
@@ -58,6 +59,7 @@ const useCreateBlogForm = () => {
           category: post.category,
           coverImage: post.coverImage,
           content: post.content,
+          author: post.author ?? 'Holis Botanicals',
         });
         setEditorKey(k => k + 1);
       })
@@ -99,6 +101,7 @@ const useCreateBlogForm = () => {
       category: tpl.category,
       coverImage: tpl.coverImage,
       content: tpl.content,
+      author: tpl.author || 'Holis Botanicals',
     });
     setIsDirty(true);
     setEditorKey(k => k + 1);
@@ -121,6 +124,7 @@ const useCreateBlogForm = () => {
       coverImage: form.coverImage.trim(),
       content: form.content,
       contentType: 'html',
+      author: form.author.trim() || 'Holis Botanicals',
     };
 
     try {

@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { db } from '../db';
 import { blogPosts } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { requireAdmin } from '../middleware/auth';
 
 const blog = new Hono();
@@ -15,12 +15,18 @@ blog.get('/', async (c) => {
   return c.json(posts);
 });
 
-// GET /api/blog/:slug — public
+// GET /api/blog/:slug — public (also increments view count)
 blog.get('/:slug', async (c) => {
   const slug = c.req.param('slug');
   if (!slug) return c.json({ error: 'Missing slug' }, 400);
   const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
   if (!post) return c.json({ error: 'Not found' }, 404);
+  // Increment views in the background — don't await to keep response fast
+  db.update(blogPosts)
+    .set({ views: sql`${blogPosts.views} + 1` })
+    .where(eq(blogPosts.slug, slug))
+    .execute()
+    .catch(() => {});
   return c.json(post);
 });
 
@@ -36,6 +42,7 @@ blog.post('/', requireAdmin, async (c) => {
     coverImage: string;
     content: string;
     contentType?: string;
+    author?: string;
   }>();
 
   const [created] = await db.insert(blogPosts).values({
@@ -48,6 +55,7 @@ blog.post('/', requireAdmin, async (c) => {
     coverImage: body.coverImage,
     content: body.content,
     contentType: body.contentType ?? 'markdown',
+    author: body.author ?? 'Holis Botanicals',
   }).returning();
 
   return c.json(created, 201);
@@ -66,6 +74,7 @@ blog.put('/:slug', requireAdmin, async (c) => {
     coverImage: string;
     content: string;
     contentType: string;
+    author: string;
   }>>();
 
   const updated = await db

@@ -14,6 +14,7 @@ interface CreateBlogEditFormProps {
     category: string;
     coverImage: string;
     content: string;
+    author: string;
   };
   errors: CreateBlogFormErrors;
   saving: boolean;
@@ -25,7 +26,7 @@ interface CreateBlogEditFormProps {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   showTemplates: boolean;
   editorKey: number;
-  onSet: (field: 'title' | 'excerpt' | 'category' | 'coverImage' | 'content', value: string) => void;
+  onSet: (field: 'title' | 'excerpt' | 'category' | 'coverImage' | 'content' | 'author', value: string) => void;
   onImageModeChange: (mode: 'url' | 'file') => void;
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveCover: () => void;
@@ -137,6 +138,20 @@ const CreateBlogEditForm: React.FC<CreateBlogEditFormProps> = ({
         value={form.category}
         onChange={e => onSet('category', e.target.value)}
         placeholder="Or type a custom tag…"
+        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+      />
+    </div>
+
+    {/* Author */}
+    <div>
+      <label className="block text-sm font-semibold text-secondary mb-1.5">
+        Author <span className="text-gray-400 font-normal">(optional)</span>
+      </label>
+      <input
+        type="text"
+        value={form.author}
+        onChange={e => onSet('author', e.target.value)}
+        placeholder="Holis Botanicals"
         className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
       />
     </div>

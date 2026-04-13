@@ -14,6 +14,11 @@ export interface BlogPost {
   contentType?: 'markdown' | 'html';
   /** true for posts created via the UI and stored in localStorage */
   isLocal?: boolean;
+  author?: string;
+  tags?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  views?: number;
 }
 
 export const BLOG_POSTS: BlogPost[] = [];

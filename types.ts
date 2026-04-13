@@ -69,4 +69,9 @@ export type ModalConfig =
       defaultValue?: string;
       confirmLabel?: string;
       cancelLabel?: string;
+    }
+  | {
+      kind: 'share';
+      title: string;
+      url: string;
     };

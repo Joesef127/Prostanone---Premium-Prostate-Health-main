@@ -32,6 +32,8 @@ export const blogPosts = pgTable('blog_posts', {
   coverImage: varchar('cover_image', { length: 500 }).notNull(),
   content: text('content').notNull(),
   contentType: varchar('content_type', { length: 20 }).default('markdown').notNull(),
+  author: varchar('author', { length: 255 }).default('Holis Botanicals').notNull(),
+  views: integer('views').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

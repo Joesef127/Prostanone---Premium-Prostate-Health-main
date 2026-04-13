@@ -1,10 +1,11 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Clock, Calendar, Tag, Pencil } from 'lucide-react';
-import { getCategoryColor } from '../../lib/categoryColors';
-import type { BlogPost } from '../../lib/blogData';
-import { useAuth } from '../../context/AuthContext';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Clock, Calendar, Tag, Pencil, Share2, User } from "lucide-react";
+import { getCategoryColor } from "../../lib/categoryColors";
+import type { BlogPost } from "../../lib/blogData";
+import { useAuth } from "../../context/AuthContext";
+import { useModal } from "../../context/ModalContext";
 
 interface BlogPostHeaderProps {
   post: BlogPost;
@@ -13,6 +14,7 @@ interface BlogPostHeaderProps {
 const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const { showShare } = useModal();
 
   return (
     <motion.header
@@ -29,16 +31,26 @@ const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
           {post.category}
         </span>
 
-        {isAdmin && (
+        <div className="flex items-center gap-2.5">
+          {isAdmin && (
+            <button
+              onClick={() => navigate(`/blog/edit/${post.slug}`)}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-primary border border-gray-200 hover:border-primary rounded-lg px-3 py-1.5 transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit
+            </button>
+          )}
           <button
-            onClick={() => navigate(`/blog/edit/${post.slug}`)}
+            onClick={() =>
+              showShare({ title: post.title, url: window.location.href })
+            }
             className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-primary border border-gray-200 hover:border-primary rounded-lg px-3 py-1.5 transition-colors"
           >
-            <Pencil className="w-3.5 h-3.5" />
-            Edit
+            <Share2 className="w-3.5 h-3.5" />
+            Share
           </button>
-        )}
-        
+        </div>
       </div>
 
       <h1 className="text-3xl sm:text-4xl font-extrabold text-secondary leading-tight mb-5">
@@ -46,21 +58,27 @@ const BlogPostHeader: React.FC<BlogPostHeaderProps> = ({ post }) => {
       </h1>
 
       {post.excerpt && (
-        <p className="text-sm sm:text-base lg:text-lg text-text-muted mb-6">{post.excerpt}</p>
+        <p className="text-sm sm:text-base lg:text-lg text-text-muted mb-6">
+          {post.excerpt}
+        </p>
       )}
 
       <div className="flex items-center gap-4 text-xs sm:text-sm text-text-muted border-t border-b border-gray-100 py-4">
         <span className="flex items-center gap-1.5">
           <Calendar className="w-4 h-4" />
-          {new Date(post.date).toLocaleDateString('en-NG', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
+          {new Date(post.date).toLocaleDateString("en-NG", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
           })}
         </span>
         <span className="flex items-center gap-1.5">
           <Clock className="w-4 h-4" />
           {post.readTime}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <User className="w-4 h-4" />
+          {post.author ?? "Holis Botanicals"}
         </span>
       </div>
     </motion.header>

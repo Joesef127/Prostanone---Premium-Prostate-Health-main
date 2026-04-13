@@ -5,6 +5,7 @@ interface ModalContextValue {
   showAlert: (opts: Omit<Extract<ModalConfig, { kind: 'alert' }>, 'kind'>) => Promise<void>;
   showConfirm: (opts: Omit<Extract<ModalConfig, { kind: 'confirm' }>, 'kind'>) => Promise<boolean>;
   showPrompt: (opts: Omit<Extract<ModalConfig, { kind: 'prompt' }>, 'kind'>) => Promise<string | null>;
+  showShare: (opts: Omit<Extract<ModalConfig, { kind: 'share' }>, 'kind'>) => Promise<void>;
   // Internal — consumed only by <Modal />
   _config: ModalConfig | null;
   _respond: (value: any) => void;
@@ -51,9 +52,15 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [open],
   );
 
+  const showShare = useCallback(
+    (opts: Omit<Extract<ModalConfig, { kind: 'share' }>, 'kind'>) =>
+      open<void>({ kind: 'share', ...opts }),
+    [open],
+  );
+
   return (
     <ModalContext.Provider
-      value={{ showAlert, showConfirm, showPrompt, _config: config, _respond: respond }}
+      value={{ showAlert, showConfirm, showPrompt, showShare, _config: config, _respond: respond }}
     >
       {children}
     </ModalContext.Provider>
@@ -68,6 +75,7 @@ export const useModal = () => {
     showAlert: ctx.showAlert,
     showConfirm: ctx.showConfirm,
     showPrompt: ctx.showPrompt,
+    showShare: ctx.showShare,
   };
 };
 
