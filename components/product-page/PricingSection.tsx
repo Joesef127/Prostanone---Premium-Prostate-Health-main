@@ -9,7 +9,6 @@ import { usePackages } from '../../hooks/usePackages';
 import { API_BASE } from '../../lib/constants';
 import Button from '../Button';
 import { FadeIn, SectionHeader, CheckItem } from './shared';
-import { PACKAGE_IMAGES } from '../../lib/data.ts';
 import PackageEditModal from './PackageEditModal';
 import { ProductPackage } from '../../types';
 
@@ -81,7 +80,7 @@ const PricingSection: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {packages.map((pkg, i) => {
             const isBest = !!pkg.badge;
-            const pkgImg = PACKAGE_IMAGES[pkg.containers] ?? images.prostanone;
+            const pkgImg =  images.prostanone;
 
             return (
               <FadeIn key={pkg.id} delay={i * 0.1}>
