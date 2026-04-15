@@ -13,12 +13,12 @@ const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
       <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-left">
         <div className="flex items-center gap-2 mb-3">
           <AlertCircle size={16} className="text-red-600" />
-          <p className="font-semibold text-red-800 text-sm">Could Not Verify Payment</p>
+          <p className="font-semibold text-red-800 text-base sm:text-lg">Could Not Verify Payment</p>
         </div>
-        <p className="text-xs text-red-700 mb-2">
+        <p className="text-sm sm:text-base text-red-700 mb-2">
           We were unable to confirm your payment status. Please do not attempt to pay again yet.
         </p>
-        <ul className="text-xs text-red-700 space-y-1.5 list-disc list-inside">
+        <ul className="text-sm sm:text-base text-red-700 space-y-1.5 list-disc list-inside">
           <li>Try clicking "Retry Verification" in a moment</li>
           <li>Contact our support team at <strong>sales@holisbotanicals.com</strong></li>
           <li>Have your payment reference and any relevant details ready when reaching out</li>
@@ -50,7 +50,7 @@ const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
           <Clock size={16} className="text-amber-600" />
           <p className="font-semibold text-amber-800 text-sm">Payment is Processing</p>
         </div>
-        <p className="text-xs text-amber-700">
+        <p className="text-sm sm:text-base text-amber-700">
           Your payment is still being verified. Please check your email for confirmation. If you have any concerns, feel free to contact our support team.
         </p>
       </div>
