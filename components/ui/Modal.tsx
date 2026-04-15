@@ -164,7 +164,7 @@ const Modal: React.FC = () => {
                   className="absolute top-5 right-5 shrink-0 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
                   aria-label="Close"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5 z-20" />
                 </button>
               </div>
 
