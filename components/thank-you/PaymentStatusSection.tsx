@@ -34,7 +34,7 @@ const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
           <AlertCircle size={16} className="text-red-600" />
           <p className="font-semibold text-red-800 text-sm">What Now?</p>
         </div>
-        <ul className="text-xs text-red-700 space-y-1.5 list-disc list-inside">
+        <ul className="text-sm sm:text-base text-red-700 space-y-1.5 list-disc list-inside">
           <li>Verify your payment details and try again</li>
           <li>Try a different payment method</li>
           <li>Contact our support team if the issue persists</li>
