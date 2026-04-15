@@ -2,16 +2,15 @@
 const WEIGHT_PER_PACK = 0.35;
 
 export const NIGERIAN_STATES: string[] = [
-  'Lagos',
   'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno',
   'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT (Abuja)', 'Gombe',
-  'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara',
+  'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara', 'Lagos',
   'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers',
   'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
 ];
 
 /** South West states (excluding Lagos) attract lower delivery rates */
-const SOUTH_WEST = new Set(['ogun', 'ondo', 'osun', 'oyo', 'ekiti']);
+const SOUTH_WEST = new Set(['lagos, ogun', 'ondo', 'osun', 'oyo', 'ekiti']);
 
 /** Dropdown option shape used by CustomDropdown */
 export type DropdownOption = { value: string; label: string };
@@ -19,19 +18,13 @@ export type DropdownOption = { value: string; label: string };
 /** Zone group shape for the state picker */
 export type DeliveryZoneGroup = { label: string; options: DropdownOption[] };
 
-const SW_STATES = ['Ekiti', 'Ogun', 'Ondo', 'Osun', 'Oyo'];
+const SW_STATES = ['Lagos', 'Ekiti', 'Ogun', 'Ondo', 'Osun', 'Oyo'];
 
 /**
  * States grouped by delivery zone with fee labels.
  * Used to build the custom-dropdown for state selection across the site.
  */
 export const STATE_DELIVERY_ZONES: DeliveryZoneGroup[] = [
-  {
-    label: 'Lagos',
-    options: [
-      { value: 'Lagos', label: 'Lagos — Free (except Epe & Badagry ₦4,000)' },
-    ],
-  },
   {
     label: 'South West',
     options: SW_STATES.map(s => ({ value: s, label: s })),
