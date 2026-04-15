@@ -27,9 +27,11 @@ const PaymentStatus: React.FC = () => {
   const reference = params.get('reference') ?? undefined;
 
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatusValue>(initialStatus);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const verifyPayment = useCallback(async () => {
     if (!reference) return;
+    setIsRetrying(true);
     setPaymentStatus('pending-check');
     try {
       const res = await fetch(
@@ -56,6 +58,8 @@ const PaymentStatus: React.FC = () => {
       console.error('Payment verification error:', err);
       setPaymentStatus('error');
       showAlert({ title: 'Verification Error', message: 'Could not verify payment status. Please contact support with your reference.' });
+    } finally {
+      setIsRetrying(false);
     }
   }, [reference, navigate, showAlert]);
 
@@ -66,7 +70,7 @@ const PaymentStatus: React.FC = () => {
         <PaymentStatusBadge paymentStatus={paymentStatus} />
         <OrderHeader paymentStatus={paymentStatus} isCOD={false} />
         <PaymentStatusSection paymentStatus={paymentStatus} />
-        <OrderActionButtons paymentStatus={paymentStatus} onRetryVerification={verifyPayment} />
+        <OrderActionButtons paymentStatus={paymentStatus} onRetryVerification={verifyPayment} isRetrying={isRetrying} />
       </div>
     </div>
   );

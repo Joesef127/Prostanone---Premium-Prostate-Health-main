@@ -11,7 +11,7 @@ const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
   if (paymentStatus === 'error') {
     return (
       <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-left">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-3 w-fit">
           <AlertCircle size={16} className="text-red-600" />
           <p className="font-semibold text-red-800 text-base sm:text-lg">Could Not Verify Payment</p>
         </div>
