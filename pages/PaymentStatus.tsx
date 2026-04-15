@@ -50,7 +50,7 @@ const PaymentStatus: React.FC = () => {
         showAlert({ title: 'Payment Failed', message: 'Your payment could not be processed. Please try again.' });
       } else if (data.status === 'pending') {
         setPaymentStatus('pending');
-        showAlert({ title: 'Payment Pending', message: 'Your payment is still being processed. Please check your email for updates.' });
+        showAlert({ title: 'Payment Pending', message: 'Your payment is currently pending and is under review.' });
       } else {
         setPaymentStatus('pending');
       }

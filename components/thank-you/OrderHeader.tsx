@@ -20,7 +20,7 @@ const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
   const getTitle = () => {
     if (paymentStatus === 'failed') return 'Payment Failed';
     if (paymentStatus === 'error') return 'Order Unconfirmed';
-    if (paymentStatus === 'pending') return 'Payment Processing';
+    if (paymentStatus === 'pending') return 'Payment Pending';
     if (paymentStatus === 'pending-check') return 'Verifying Payment...';
     return isCOD ? 'Order Received!' : 'Order Confirmed!';
   };
@@ -33,7 +33,7 @@ const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
       return 'We could not verify your payment status. Please do not place a new order, contact our support team with your payment reference and we will confirm your order manually.';
     }
     if (paymentStatus === 'pending') {
-      return 'Your payment is being processed. This usually takes a few minutes. We\'ll send you a confirmation email once it\'s complete.';
+      return 'Your payment is pending and is under review.';
     }
     if (paymentStatus === 'pending-check') {
       return 'Please wait while we verify your payment...';

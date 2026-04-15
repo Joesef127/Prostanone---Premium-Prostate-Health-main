@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:; connect-src 'self' https://www.facebook.com https://connect.facebook.net;" />
+    content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:;" />
 
   <!-- 
     NOTE: These default meta tags below are fallbacks for the root domain only.
@@ -115,6 +115,7 @@
     }(window, document, 'script',
       'https://connect.facebook.net/en_US/fbevents.js');
     fbq('set', 'autoConfig', false, '2892551674283976');
+    fbq('set', 'advancedMatching', '2892551674283976', {});
     fbq('init', '2892551674283976');
     fbq('track', 'PageView');
   </script>

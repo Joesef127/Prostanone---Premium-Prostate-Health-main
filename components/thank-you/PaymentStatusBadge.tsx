@@ -10,7 +10,7 @@ const PaymentStatusBadge: React.FC<Props> = ({ paymentStatus }) => {
 
   return (
     <div
-      className={`mb-6 p-3 rounded-lg flex items-center gap-2 text-sm ${
+      className={`mb-6 p-3 rounded-lg flex items-center gap-2 text-sm w-fit ${
         paymentStatus === 'failed' || paymentStatus === 'error'
           ? 'bg-red-50 border border-red-200 text-red-800'
           : 'bg-blue-50 border border-blue-200 text-blue-800'

@@ -48,10 +48,10 @@ const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left">
         <div className="flex items-center gap-2 mb-3">
           <Clock size={16} className="text-amber-600" />
-          <p className="font-semibold text-amber-800 text-sm">Payment is Processing</p>
+          <p className="font-semibold text-amber-800 text-sm">Payment is Pending</p>
         </div>
         <p className="text-sm sm:text-base text-amber-700">
-          Your payment is still being verified. Please check your email for confirmation. If you have any concerns, feel free to contact our support team.
+          Your payment is currently pending and is under review. Please wait a few moments and click "Check Status Again". If it remains pending for an extended period, feel free to reach out to our support team for assistance.
         </p>
       </div>
     );
