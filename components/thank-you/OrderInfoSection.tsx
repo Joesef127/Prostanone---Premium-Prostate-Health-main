@@ -2,14 +2,14 @@ import React from 'react';
 import { Truck, ShieldCheck } from 'lucide-react';
 
 interface Props {
-  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
+  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | 'error' | null;
   isCOD: boolean;
   phone?: string;
 }
 
 const OrderInfoSection: React.FC<Props> = ({ paymentStatus, isCOD, phone }) => {
   // Only show order info if payment succeeded or is not yet verified
-  if (paymentStatus === 'failed' || paymentStatus === 'pending') return null;
+  if (paymentStatus === 'failed' || paymentStatus === 'pending' || paymentStatus === 'error') return null;
 
   if (isCOD) {
     return (

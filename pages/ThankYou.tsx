@@ -32,7 +32,7 @@ const ThankYou: React.FC = () => {
   const isCOD = paymentMethod === 'cod';
 
   // Track payment verification status for Payaza payments
-  const [paymentStatus, setPaymentStatus] = useState<'pending-check' | 'success' | 'pending' | 'failed' | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'pending-check' | 'success' | 'pending' | 'failed' | 'error' | null>(null);
 
   const verifyPayment = React.useCallback(async () => {
     if (paymentMethod !== 'online' || !reference) return;
@@ -47,23 +47,31 @@ const ThankYou: React.FC = () => {
 
       if (data.status === 'success') {
         setPaymentStatus('success');
+        clearCart();
         showAlert({ title: 'Payment Successful!', message: 'Your payment has been received and confirmed. Your order will be processed shortly.' });
       } else if (data.status === 'failed') {
         setPaymentStatus('failed');
         showAlert({ title: 'Payment Failed', message: 'Your payment could not be processed. Please try again or contact support.' });
+        navigate('/checkout');
       } else if (data.status === 'pending') {
         setPaymentStatus('pending');
         showAlert({ title: 'Payment Pending', message: 'Your payment is still being processed. This may take a few minutes. Please check your email for updates.' });
+      } else {
+        setPaymentStatus('pending');
       }
     } catch (err) {
       console.error('Payment verification error:', err);
-      setPaymentStatus(null);
+      setPaymentStatus('error');
       showAlert({ title: 'Verification Error', message: 'Could not verify payment status. Please contact support with your reference.' });
     }
-  }, [paymentMethod, reference, showAlert]);
+  }, [paymentMethod, reference, clearCart, navigate, showAlert]);
 
   useEffect(() => {
-    clearCart();
+    // Clear cart immediately for KoraPay (state-based nav, no reference) and COD.
+    // For Payaza, clearCart() is called inside verifyPayment() only on success.
+    if ((stateMethod === 'online' && !reference) || paymentMethod === 'cod') {
+      clearCart();
+    }
 
     // If redirected from Payaza with a reference, verify transaction status
     if (paymentMethod === 'online' && reference && !stateMethod) {

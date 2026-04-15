@@ -2,13 +2,13 @@ import React from 'react';
 import { CheckCircle, AlertCircle, Clock } from 'lucide-react';
 
 interface Props {
-  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
+  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | 'error' | null;
   isCOD: boolean;
 }
 
 const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
   const getIcon = () => {
-    if (paymentStatus === 'failed') {
+    if (paymentStatus === 'failed' || paymentStatus === 'error') {
       return <AlertCircle className="w-10 h-10" />;
     }
     if (paymentStatus === 'pending' || paymentStatus === 'pending-check') {
@@ -19,6 +19,7 @@ const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
 
   const getTitle = () => {
     if (paymentStatus === 'failed') return 'Payment Failed';
+    if (paymentStatus === 'error') return 'Order Unconfirmed';
     if (paymentStatus === 'pending') return 'Payment Processing';
     if (paymentStatus === 'pending-check') return 'Verifying Payment...';
     return isCOD ? 'Order Received!' : 'Order Confirmed!';
@@ -27,6 +28,9 @@ const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
   const getDescription = () => {
     if (paymentStatus === 'failed') {
       return 'Unfortunately, your payment could not be processed. Please try again with a different payment method or contact our support team.';
+    }
+    if (paymentStatus === 'error') {
+      return 'We could not verify your payment status. Please do not place a new order — contact our support team with your payment reference and we will confirm your order manually.';
     }
     if (paymentStatus === 'pending') {
       return 'Your payment is being processed. This usually takes a few minutes. We\'ll send you a confirmation email once it\'s complete.';
@@ -41,7 +45,7 @@ const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
   };
 
   const getBgColor = () => {
-    if (paymentStatus === 'failed') return 'bg-red-100 text-red-600';
+    if (paymentStatus === 'failed' || paymentStatus === 'error') return 'bg-red-100 text-red-600';
     if (paymentStatus === 'pending' || paymentStatus === 'pending-check') return 'bg-amber-100 text-amber-600';
     return 'bg-green-100 text-green-600';
   };

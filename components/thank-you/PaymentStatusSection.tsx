@@ -2,11 +2,30 @@ import React from 'react';
 import { AlertCircle, Clock } from 'lucide-react';
 
 interface Props {
-  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
+  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | 'error' | null;
 }
 
 const PaymentStatusSection: React.FC<Props> = ({ paymentStatus }) => {
   if (!paymentStatus || paymentStatus === 'success' || paymentStatus === 'pending-check') return null;
+
+  if (paymentStatus === 'error') {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-left">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertCircle size={16} className="text-red-600" />
+          <p className="font-semibold text-red-800 text-sm">Could Not Verify Payment</p>
+        </div>
+        <p className="text-xs text-red-700 mb-2">
+          We were unable to confirm your payment status. Please do not attempt to pay again yet.
+        </p>
+        <ul className="text-xs text-red-700 space-y-1.5 list-disc list-inside">
+          <li>Try clicking "Retry Verification" in a moment</li>
+          <li>Contact our support team at <strong>sales@holisbotanicals.com</strong></li>
+          <li>Have your payment reference and any relevant details ready when reaching out</li>
+        </ul>
+      </div>
+    );
+  }
 
   if (paymentStatus === 'failed') {
     return (
