@@ -30,7 +30,7 @@ const OrderHeader: React.FC<Props> = ({ paymentStatus, isCOD }) => {
       return 'Unfortunately, your payment could not be processed. Please try again with a different payment method or contact our support team.';
     }
     if (paymentStatus === 'error') {
-      return 'We could not verify your payment status. Please do not place a new order — contact our support team with your payment reference and we will confirm your order manually.';
+      return 'We could not verify your payment status. Please do not place a new order, contact our support team with your payment reference and we will confirm your order manually.';
     }
     if (paymentStatus === 'pending') {
       return 'Your payment is being processed. This usually takes a few minutes. We\'ll send you a confirmation email once it\'s complete.';
