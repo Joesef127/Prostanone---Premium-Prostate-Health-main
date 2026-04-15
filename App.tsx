@@ -46,7 +46,8 @@ const Results = lazy(() => import("./pages/Results"));
 const Summary = lazy(() => import("./pages/Summary"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Checkout = lazy(() => import("./pages/Checkout"));
-const ThankYou = lazy(() => import("./pages/ThankYou"));
+const ThankYou = lazy(() => import('./pages/ThankYou'));
+const PaymentStatus = lazy(() => import('./pages/PaymentStatus'));
 const Product = lazy(() => import("./pages/Product"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const Distributor = lazy(() => import("./pages/Distributor"));
@@ -165,6 +166,14 @@ const App: React.FC = () => {
                         element={
                           <Suspense fallback={<ThankYouSkeleton />}>
                             <ThankYou />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/payment-status"
+                        element={
+                          <Suspense fallback={<ThankYouSkeleton />}>
+                            <PaymentStatus />
                           </Suspense>
                         }
                       />

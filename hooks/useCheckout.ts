@@ -303,7 +303,7 @@ export function useCheckout() {
               itemsOrdered: orderSummary,
               deliveryFee: finalDeliveryFee,
               totalAmount: total,
-              paymentMethod: 'Online',
+              paymentMethod: 'Online (KoraPay)',
               paymentReference: data?.reference || reference,
               paymentStatus: data?.status || 'success',
               checkoutStep: 'payment_completed',

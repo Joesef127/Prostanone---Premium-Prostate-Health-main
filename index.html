@@ -2,104 +2,140 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-  <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:;" />
-  
-  <!-- 
-    NOTE: These default meta tags below are fallbacks for the root domain only.
-    Individual pages override these via the useSeoMeta hook which uses VITE_FRONTEND_URL from .env
-    If changing FRONTEND_URL in .env, update the URLs below to match for consistency.
-  -->
-  
-  <!-- SEO Meta Tags -->
-  <title>Prostanone | Premium Prostate Health</title>
-  <meta name="description" content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula. Improve urinary function and prostate wellness." />
-  <meta name="keywords" content="prostate health, prostate supplement, urinary health, NAFDAC certified, natural herbal supplement" />
-  <meta name="author" content="Prostanone" />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-  
-  <!-- Open Graph Tags -->
-  <meta property="og:site_name" content="Prostanone" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Prostanone | Premium Prostate Health" />
-  <meta property="og:description" content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula." />
-  <meta property="og:url" content="https://www.holisbotanicals.com/" />
-  <meta property="og:image" content="https://www.holisbotanicals.com/prostanone.png" />
-  <meta property="og:image:alt" content="Prostanone Premium Prostate Health Supplement" />
-  <meta property="og:locale" content="en_NG" />
-  
-  <!-- Twitter Card Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@Prostanone" />
-  <meta name="twitter:creator" content="@Prostanone" />
-  <meta name="twitter:title" content="Prostanone | Premium Prostate Health" />
-  <meta name="twitter:description" content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula." />
-  <meta name="twitter:image" content="https://www.holisbotanicals.com/prostanone.png" />
-  <meta name="twitter:image:alt" content="Prostanone Premium Prostate Health Supplement" />
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://www.holisbotanicals.com/" />
-  
-  <!-- Favicon & Icons -->
-  <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="apple-touch-icon" href="/logo.png">
-  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-  
-  <!-- Preconnect to external resources -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Prostanone",
-    "url": "https://www.holisbotanicals.com",
-    "logo": "https://www.holisbotanicals.com/logo.png",
-    "description": "Premium natural herbal supplement for prostate health",
-    "sameAs": [
-      "https://www.facebook.com/Prostanone",
-      "https://www.instagram.com/prostanone"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "Customer Support",
-      "email": "sales@holisbotanicals.com",
-      "availableLanguage": ["en"]
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "NG",
-      "addressLocality": "Lagos"
-    }
-  }
-  </script>
-  
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "framer-motion": "https://esm.sh/framer-motion@^12.29.2",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
-  }
-}
-</script>
-  <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta name="referrer" content="strict-origin-when-cross-origin"/>
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:;"/>
+
+    <!--
+      NOTE: These default meta tags below are fallbacks for the root domain only.
+      Individual pages override these via the useSeoMeta hook which uses VITE_FRONTEND_URL from .env
+      If changing FRONTEND_URL in .env, update the URLs below to match for consistency.
+    -->
+
+    <!-- SEO Meta Tags -->
+    <title>Prostanone | Premium Prostate Health</title>
+    <meta name="description"
+          content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula. Improve urinary function and prostate wellness."/>
+    <meta name="keywords"
+          content="prostate health, prostate supplement, urinary health, NAFDAC certified, natural herbal supplement"/>
+    <meta name="author" content="Prostanone"/>
+    <meta name="theme-color" content="#ffffff"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="white"/>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prostanone"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Prostanone | Premium Prostate Health"/>
+    <meta property="og:description"
+          content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula."/>
+    <meta property="og:url" content="https://www.holisbotanicals.com/"/>
+    <meta property="og:image" content="https://www.holisbotanicals.com/prostanone.png"/>
+    <meta property="og:image:alt" content="Prostanone Premium Prostate Health Supplement"/>
+    <meta property="og:locale" content="en_NG"/>
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@Prostanone"/>
+    <meta name="twitter:creator" content="@Prostanone"/>
+    <meta name="twitter:title" content="Prostanone | Premium Prostate Health"/>
+    <meta name="twitter:description"
+          content="Premium natural herbal supplement for prostate health. NAFDAC certified, proven ingredients, 100% natural formula."/>
+    <meta name="twitter:image" content="https://www.holisbotanicals.com/prostanone.png"/>
+    <meta name="twitter:image:alt" content="Prostanone Premium Prostate Health Supplement"/>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.holisbotanicals.com/"/>
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Prostanone",
+            "url": "https://www.holisbotanicals.com",
+            "logo": "https://www.holisbotanicals.com/logo.png",
+            "description": "Premium natural herbal supplement for prostate health",
+            "sameAs": [
+                "https://www.facebook.com/Prostanone",
+                "https://www.instagram.com/prostanone"
+            ],
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Support",
+                "email": "sales@holisbotanicals.com",
+                "availableLanguage": [
+                    "en"
+                ]
+            },
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "NG",
+                "addressLocality": "Lagos"
+            }
+        }
+    </script>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "react": "https://esm.sh/react@^19.2.4",
+            "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+            "react/": "https://esm.sh/react@^19.2.4/",
+            "framer-motion": "https://esm.sh/framer-motion@^12.29.2",
+            "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
+            "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+          }
+        }
+    </script>
+    <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('set', 'autoConfig', false, '2892551674283976');
+        fbq('set', 'advancedMatching', '2892551674283976', {});
+        fbq('init', '2892551674283976');
+        fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
 </head>
 
 <body>
-  <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+<!-- Meta Pixel noscript fallback -->
+<noscript><img height="1" width="1" style="display:none"
+               src="https://www.facebook.com/tr?id=2892551674283976&ev=PageView&noscript=1"/></noscript>
+<div id="root"></div>
+<script type="module" src="/index.tsx"></script>
 </body>
-
 </html>

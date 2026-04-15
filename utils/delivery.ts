@@ -29,7 +29,7 @@ export const STATE_DELIVERY_ZONES: DeliveryZoneGroup[] = [
   {
     label: 'Lagos',
     options: [
-      { value: 'Lagos', label: 'Lagos — Free (except Epe & Badagry ₦4,000)' },
+      { value: 'Lagos', label: 'Lagos' },
     ],
   },
   {

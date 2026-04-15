@@ -82,12 +82,3 @@ export const TRUST_BADGES: Array<{ icon: LucideIcon; label: string }> = [
   { icon: Truck, label: 'Nationwide Delivery' },
   { icon: CheckCircle2, label: 'No Side Effects Reported' },
 ];
-
-export const PACKAGE_IMAGES: Record<number, string> = {
-  1: images.single_box,
-  2: images.box_and_satchet,
-  3: images.box_and_nylon,
-  4: images.nylon_wrapped,
-  5: images.nylon_wrapped,
-  9: images.boxed_up,
-};

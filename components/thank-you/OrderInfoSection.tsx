@@ -2,14 +2,14 @@ import React from 'react';
 import { Truck, ShieldCheck } from 'lucide-react';
 
 interface Props {
-  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | null;
+  paymentStatus: 'pending-check' | 'success' | 'pending' | 'failed' | 'error' | null;
   isCOD: boolean;
   phone?: string;
 }
 
 const OrderInfoSection: React.FC<Props> = ({ paymentStatus, isCOD, phone }) => {
   // Only show order info if payment succeeded or is not yet verified
-  if (paymentStatus === 'failed' || paymentStatus === 'pending') return null;
+  if (paymentStatus === 'failed' || paymentStatus === 'pending' || paymentStatus === 'error') return null;
 
   if (isCOD) {
     return (
@@ -31,7 +31,7 @@ const OrderInfoSection: React.FC<Props> = ({ paymentStatus, isCOD, phone }) => {
             <ShieldCheck size={15} className="text-amber-600" />
             <p className="font-semibold text-amber-800 text-sm">Important Reminders</p>
           </div>
-          <ul className="text-xs text-amber-700 space-y-1.5 list-disc list-inside leading-relaxed">
+          <ul className="text-sm sm:text-base text-amber-700 space-y-1.5 list-disc list-inside leading-relaxed">
             <li>Our team will call you within 24 hours to confirm your order.</li>
             <li>Please ensure you are available to receive delivery and make full payment.</li>
             <li>Only proceed if you are ready and able to pay on delivery.</li>
