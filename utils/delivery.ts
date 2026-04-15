@@ -10,7 +10,7 @@ export const NIGERIAN_STATES: string[] = [
 ];
 
 /** South West states (excluding Lagos) attract lower delivery rates */
-const SOUTH_WEST = new Set(['lagos, ogun', 'ondo', 'osun', 'oyo', 'ekiti']);
+const SOUTH_WEST = new Set(['lagos', 'ogun', 'ondo', 'osun', 'oyo', 'ekiti']);
 
 /** Dropdown option shape used by CustomDropdown */
 export type DropdownOption = { value: string; label: string };

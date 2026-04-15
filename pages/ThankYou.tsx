@@ -49,15 +49,15 @@ const ThankYou: React.FC = () => {
             navigate(`/payment-status?status=${status}&reference=${encodeURIComponent(reference)}`, { replace: true });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error('Payment verification failed:', err);
           navigate(`/payment-status?status=error&reference=${encodeURIComponent(reference)}`, { replace: true });
         });
     } else {
       // KoraPay (stateMethod) or COD — already confirmed on client side
       clearCart();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [paymentMethod, reference, stateMethod, clearCart, navigate]);
 
   if (verifying) return <ThankYouSkeleton />;
 

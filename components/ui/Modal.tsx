@@ -110,9 +110,10 @@ const Modal: React.FC = () => {
               className="pointer-events-auto w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
             >
               {/* Header */}
-              <div className="flex items-start gap-3 p-6 pb-0">
+              <div className="relative flex items-start gap-3 p-6 pb-0">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5">
                 <div
-                  className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                  className={`shrink-0 w-7 h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                     isDestructive
                       ? "bg-red-100 text-red-600"
                       : config.kind === "alert"
@@ -123,13 +124,13 @@ const Modal: React.FC = () => {
                   }`}
                 >
                   {isDestructive ? (
-                    <AlertTriangle className="w-5 h-5" />
+                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : config.kind === "alert" ? (
-                    <AlertCircle className="w-5 h-5" />
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : config.kind === "share" ? (
-                    <Share2 className="w-5 h-5" />
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : (
-                    <HelpCircle className="w-5 h-5" />
+                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -152,6 +153,7 @@ const Modal: React.FC = () => {
                     </p>
                   )}
                 </div>
+                </div>
                 <button
                   onClick={() => {
                     if (config.kind === "alert") respond(undefined);
@@ -159,10 +161,10 @@ const Modal: React.FC = () => {
                     else if (config.kind === "share") respond(undefined);
                     else respond(null);
                   }}
-                  className="shrink-0 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="absolute top-5 right-5 shrink-0 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
                   aria-label="Close"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
