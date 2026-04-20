@@ -104,7 +104,7 @@ export function useFinalCTAForm() {
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
     const _now = new Date();
     const _ddmm = `${String(_now.getDate()).padStart(2, '0')}${String(_now.getMonth() + 1).padStart(2, '0')}`;
-    const orderId = `CTA-${_ddmm}-${Math.floor(Math.random() * 1000)}`;
+    const orderId = `CTA-${_ddmm}-${crypto.randomUUID()}`;
     const shippingAddress = `${form.address.trim()}, ${form.state}`;
     const itemsOrdered = `1x ${selectedPkg.name} (₦${selectedPkg.price.toLocaleString()})`;
 
@@ -130,7 +130,7 @@ export function useFinalCTAForm() {
           paymentStatus: 'initiated',
           checkoutStep,
         }),
-      }).catch(() => {});
+      }).catch(err => console.error('[useFinalCTAForm] Failed to log initiated order:', err));
 
       if (gatewayChoice === 'payaza') {
         const [firstName, ...rest] = fullName.split(' ');
@@ -143,7 +143,7 @@ export function useFinalCTAForm() {
           `&connection_mode=Live` +
           `&checkout_amount=${encodeURIComponent(total)}` +
           `&currency_code=NGN` +
-          `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'sales@holisbotanicals.com')}` +
+          `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com')}` +
           `&first_name=${encodeURIComponent(firstName)}` +
           `&last_name=${encodeURIComponent(lastName)}` +
           `&phone_number=${encodeURIComponent(form.phone.trim())}` +
@@ -159,14 +159,20 @@ export function useFinalCTAForm() {
         setLoading(false);
         return;
       }
+      const korapayPublicKey = import.meta.env.VITE_KORAPAY_PUBLIC_KEY;
+      if (!korapayPublicKey) {
+        showAlert({ title: 'Payment unavailable', message: 'Online payment is temporarily unavailable. Please try again later.' });
+        setLoading(false);
+        return;
+      }
       window.Korapay.initialize({
-        key: import.meta.env.VITE_KORAPAY_PUBLIC_KEY,
+          email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
         amount: total,
         currency: 'NGN',
         reference,
         customer: {
           name: fullName,
-          email: form.email.trim().toLowerCase() || 'sales@holisbotanicals.com',
+          email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
         },
         onClose: () => setLoading(false),
         onSuccess: (data: any) => {
@@ -177,7 +183,7 @@ export function useFinalCTAForm() {
               body: JSON.stringify({
                 orderId,
                 name: fullName,
-                email: form.email.trim().toLowerCase(),
+                email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
                 phone: form.phone.trim(),
                 altPhone: form.altPhone.trim(),
                 shippingAddress,
@@ -214,7 +220,7 @@ export function useFinalCTAForm() {
               }),
             );
           }
-          Promise.allSettled(successRequests).catch(() => {});
+          Promise.allSettled(successRequests).catch(err => console.error('[useFinalCTAForm] Failed to log completed order:', err));
           navigate('/thank-you', { state: { paymentMethod: 'online' } });
         },
         onFailed: (_data: unknown) => {
