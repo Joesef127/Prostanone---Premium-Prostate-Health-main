@@ -52,12 +52,8 @@ function generateOrderId(): string {
   const now = new Date();
   const day = String(now.getDate()).padStart(2, '0');
   const month = String(now.getMonth() + 1).padStart(2, '0');
-  const randomPart = Math.random()
-    .toString(36)
-    .substring(2, 6)
-    .toUpperCase()
-    .replace(/[OIL0]/g, 'X'); // Remove ambiguous chars
-  return `${day}${month}-${randomPart}`;
+  const uniquePart = crypto.randomUUID().replace(/-/g, '').substring(0, 4).toUpperCase();
+  return `${day}${month}-${uniquePart}`;
 }
 
 export function useCheckout() {

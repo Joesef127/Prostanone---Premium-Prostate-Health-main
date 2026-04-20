@@ -162,11 +162,15 @@ const HomePricingSection: React.FC = () => {
                       {pkg.savingsText}
                     </span>
                   )}
+                  <span className="mt-2 inline-block bg-amber-50 text-amber-700 border border-amber-200 text-xs px-2.5 py-1 rounded-full w-fit font-medium">
+                        Pay on Delivery Available
+                      </span>
                 </div>
 
                 <p className={`text-sm mb-4 pb-4 border-b grow ${pkg.id === 'option-b' ? 'text-white/80 border-white/10' : 'text-text-muted border-gray-100'}`}>
                   {pkg.description}
                   {pkg.recommendedFor && <><br /><br /><strong className={pkg.id === 'option-b' ? 'text-white' : 'text-gray-800'}>{pkg.recommendedFor}</strong></>}
+                  
                 </p>
 
                 {pkg.usageNote && (

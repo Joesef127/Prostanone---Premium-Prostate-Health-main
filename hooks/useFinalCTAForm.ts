@@ -25,6 +25,14 @@ export interface FormState {
 
 const defaultPackageId = PACKAGES.find(p => p.badge === 'RECOMMENDED')?.id ?? PACKAGES[0].id;
 
+function generateOrderId(): string {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const uniquePart = crypto.randomUUID().replace(/-/g, '').substring(0, 4).toUpperCase();
+  return `CTA-${day}${month}-${uniquePart}`;
+}
+
 export const INITIAL_FORM: FormState = {
   firstName: '',
   lastName: '',
@@ -44,6 +52,7 @@ export function useFinalCTAForm() {
   const { paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice } = useApp();
   const { showAlert } = useModal();
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [orderId] = useState(generateOrderId);
   const [reference] = useState(() => `PR-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof FormState, string>>>({});
@@ -102,9 +111,6 @@ export function useFinalCTAForm() {
 
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
-    const _now = new Date();
-    const _ddmm = `${String(_now.getDate()).padStart(2, '0')}${String(_now.getMonth() + 1).padStart(2, '0')}`;
-    const orderId = `CTA-${_ddmm}-${crypto.randomUUID()}`;
     const shippingAddress = `${form.address.trim()}, ${form.state}`;
     const itemsOrdered = `1x ${selectedPkg.name} (₦${selectedPkg.price.toLocaleString()})`;
 
@@ -167,7 +173,6 @@ export function useFinalCTAForm() {
       }
       window.Korapay.initialize({
         key: korapayPublicKey,
-        email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
         amount: total,
         currency: 'NGN',
         reference,
