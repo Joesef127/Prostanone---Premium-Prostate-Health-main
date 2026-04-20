@@ -1305,12 +1305,6 @@ npx tsc --noEmit pages/Home.tsx
 
 ## Additional Resources
 
-### Documentation
-
-- [DOCUMENTATION.md](DOCUMENTATION.md) — Detailed technical reference
-- [SEO_QUICK_REFERENCE.md](SEO_QUICK_REFERENCE.md) — SEO implementation guide
-- [TODO.md](TODO.md) — Known issues and planned features
-
 ### External Docs
 
 - [React Docs](https://react.dev/)

@@ -166,7 +166,8 @@ export function useFinalCTAForm() {
         return;
       }
       window.Korapay.initialize({
-          email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
+        key: korapayPublicKey,
+        email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
         amount: total,
         currency: 'NGN',
         reference,
