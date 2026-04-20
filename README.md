@@ -77,7 +77,7 @@ The website guides users through a complete customer journey:
 
 - **Shopping Cart** — Add/remove products, adjust quantities
 - **Multiple Package Options** — Standard, Plus, and Premium tiers
-- **Secure Checkout** — Korapay integration for safe payment processing
+- **Secure Checkout** — Korapay/Payaza integration for safe payment processing
 - **Order Management** — Cart persistence and session handling
 - **Payment Status Tracking** — Post-purchase confirmation page
 
@@ -106,7 +106,7 @@ The website guides users through a complete customer journey:
 | **React** | ^19.2.4 | UI framework |
 | **TypeScript** | ~5.8.2 | Type-safe development |
 | **React Router** | ^7.13.0 | Client-side routing |
-| **Tailwind CSS** | Latest | Utility-first styling (via CDN) |
+| **Tailwind CSS** | ^4.2.2 | Utility-first styling |
 | **Framer Motion** | ^12.29.2 | Animations & transitions |
 | **Lucide React** | ^0.563.0 | Icon library |
 
@@ -124,8 +124,7 @@ The website guides users through a complete customer journey:
 | Service | Purpose |
 | --- | --- |
 | **Korapay** | Payment processing |
-| **formsubmit.co** | Form submission & email notifications |
-| **n8n** | Webhook automation (order notifications, analytics) |
+| **Payaza** | Payment processing |
 | **Vercel** | Hosting & deployment |
 | **Vercel Analytics** | Usage tracking |
 
@@ -160,7 +159,7 @@ Before you start, ensure you have:
 
 ```bash
 git clone https://github.com/Joesef127/Prostanone---Premium-Prostate-Health.git
-cd Prostatnone
+cd Prostanone---Premium-Prostate-Health
 ```
 
 ### 2. Install Dependencies
