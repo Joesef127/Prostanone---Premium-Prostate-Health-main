@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PACKAGES } from '../lib/constants.ts';
+import { PACKAGES, API_BASE } from '../lib/constants.ts';
 import { calcDeliveryFee } from '../utils/delivery';
 import { useApp } from '../context/AppContext';
 import { useModal } from '../context/ModalContext';
@@ -100,121 +100,179 @@ export function useFinalCTAForm() {
     if (!validate() || loading) return;
     setLoading(true);
 
-    const WEBHOOK_URL =
-      import.meta.env.ORDERS_WEBHOOK_URL ||
-      'https://n8n.metrohyp.com/webhook/prostanone-orders';
+    const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
-    const paymentLabel = paymentMethod === 'online' ? 'Online Payment' : 'Cash on Delivery (COD)';
-    const checkoutStep =
-      paymentMethod === 'online'
-        ? gatewayChoice === 'payaza'
-          ? 'payaza_payment_initiated'
-          : 'korapay_payment_initiated'
-        : 'cod_order_placed';
+    const _now = new Date();
+    const _ddmm = `${String(_now.getDate()).padStart(2, '0')}${String(_now.getMonth() + 1).padStart(2, '0')}`;
+    const orderId = `CTA-${_ddmm}-${Math.floor(Math.random() * 1000)}`;
+    const shippingAddress = `${form.address.trim()}, ${form.state}`;
+    const itemsOrdered = `1x ${selectedPkg.name} (₦${selectedPkg.price.toLocaleString()})`;
 
-    try {
-      const webhookPromise = fetch(WEBHOOK_URL, {
+    if (paymentMethod === 'online') {
+      const checkoutStep = gatewayChoice === 'payaza' ? 'payaza_payment_initiated' : 'korapay_payment_initiated';
+
+      // Fire-and-forget order log before payment redirect/modal
+      fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          orderId,
           name: fullName,
           email: form.email.trim().toLowerCase(),
           phone: form.phone.trim(),
-          alt_phone: form.altPhone.trim(),
-          shipping_address: `${form.address.trim()}, ${form.state}`,
-          items_ordered: `1x ${selectedPkg.name} (₦${selectedPkg.price.toLocaleString()})`,
-          delivery_fee: deliveryFee,
-          total_amount: total,
-          payment_method: paymentLabel,
-          checkout_step: checkoutStep,
-          date: new Date(new Date().getTime() + 60 * 60 * 1000)
-            .toISOString()
-            .replace('Z', '+01:00'),
+          altPhone: form.altPhone.trim(),
+          shippingAddress,
+          itemsOrdered,
+          deliveryFee,
+          totalAmount: total,
+          paymentMethod: `Online (${gatewayChoice === 'payaza' ? 'Payaza' : 'KoraPay'})`,
+          paymentReference: reference,
+          paymentStatus: 'initiated',
+          checkoutStep,
         }),
-      });
+      }).catch(() => {});
 
-      if (paymentMethod === 'online') {
-        webhookPromise.catch(() => {});
+      if (gatewayChoice === 'payaza') {
+        const [firstName, ...rest] = fullName.split(' ');
+        const lastName = rest.join(' ') || firstName;
+        const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online&reference=${encodeURIComponent(reference)}`;
 
-        if (gatewayChoice === 'payaza') {
-          const [firstName, ...rest] = fullName.split(' ');
-          const lastName = rest.join(' ') || firstName;
-          const redirectUrl = `${window.location.origin}/thank-you?paymentMethod=online&reference=${encodeURIComponent(reference)}`;
+        const payazaUrl =
+          `https://business.payaza.africa/payment-page` +
+          `?merchant_key=${encodeURIComponent(import.meta.env.VITE_PAYAZA_PUBLIC_KEY)}` +
+          `&connection_mode=Live` +
+          `&checkout_amount=${encodeURIComponent(total)}` +
+          `&currency_code=NGN` +
+          `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'sales@holisbotanicals.com')}` +
+          `&first_name=${encodeURIComponent(firstName)}` +
+          `&last_name=${encodeURIComponent(lastName)}` +
+          `&phone_number=${encodeURIComponent(form.phone.trim())}` +
+          `&transaction_reference=${encodeURIComponent(reference)}` +
+          `&redirect_url=${encodeURIComponent(redirectUrl)}`;
 
-          const payazaUrl =
-            `https://business.payaza.africa/payment-page` +
-            `?merchant_key=${encodeURIComponent(import.meta.env.VITE_PAYAZA_PUBLIC_KEY)}` +
-            `&connection_mode=Live` +
-            `&checkout_amount=${encodeURIComponent(total)}` +
-            `&currency_code=NGN` +
-            `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com')}` +
-            `&first_name=${encodeURIComponent(firstName)}` +
-            `&last_name=${encodeURIComponent(lastName)}` +
-            `&phone_number=${encodeURIComponent(form.phone.trim())}` +
-            `&transaction_reference=${encodeURIComponent(reference)}` +
-            `&redirect_url=${encodeURIComponent(redirectUrl)}`;
-
-          window.location.href = payazaUrl;
-          return;
-        }
-
-        if (!window.Korapay) {
-          showAlert({ title: 'Payment loading', message: 'Payment gateway is loading. Please try again in a moment.' });
-          setLoading(false);
-          return;
-        }
-        window.Korapay.initialize({
-          key:
-            import.meta.env.VITE_KORAPAY_PUBLIC_KEY ||
-            'pk_test_qPwbCqQCurnRJCuhoQZTZxstUvpjsGqBbBq44bKZ',
-          amount: total,
-          currency: 'NGN',
-          reference,
-          customer: {
-            name: fullName,
-            email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
-          },
-          onClose: () => setLoading(false),
-          onSuccess: (_data: unknown) => {
-            navigate('/thank-you', { state: { paymentMethod: 'online' } });
-          },
-          onFailed: (_data: unknown) => {
-            showAlert({ title: 'Payment failed', message: 'Payment failed. Please try again.' });
-            setLoading(false);
-          },
-        });
+        window.location.href = payazaUrl;
         return;
       }
 
-      await webhookPromise;
-
-      if (form.email.trim()) {
-        fetch('https://formsubmit.co/ajax/sales@holisbotanicals.com', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            _subject: `New Prostanone COD Order - ${fullName}`,
-            customer_name: fullName,
-            customer_email: form.email.trim().toLowerCase(),
-            customer_phone: form.phone.trim(),
-            alt_phone: form.altPhone.trim(),
-            shipping_address: `${form.address.trim()}, ${form.state}`,
-            order_summary: `1x ${selectedPkg.name}`,
-            delivery_fee: `₦${deliveryFee.toLocaleString()}`,
-            total_amount: `₦${total.toLocaleString()}`,
-            payment_method: 'Cash on Delivery',
-            _cc: form.email.trim().toLowerCase(),
-            _template: 'table',
-          }),
-        }).catch(() => {});
+      if (!window.Korapay) {
+        showAlert({ title: 'Payment loading', message: 'Payment gateway is loading. Please try again in a moment.' });
+        setLoading(false);
+        return;
       }
-
-      navigate('/thank-you', { state: { paymentMethod: 'cod', phone: form.phone.trim() } });
-    } catch {
-      showAlert({ title: 'Submission error', message: 'Order submission failed. Please try again or call us directly.' });
-    } finally {
-      setLoading(false);
+      window.Korapay.initialize({
+        key: import.meta.env.VITE_KORAPAY_PUBLIC_KEY,
+        amount: total,
+        currency: 'NGN',
+        reference,
+        customer: {
+          name: fullName,
+          email: form.email.trim().toLowerCase() || 'sales@holisbotanicals.com',
+        },
+        onClose: () => setLoading(false),
+        onSuccess: (data: any) => {
+          const successRequests: Promise<unknown>[] = [
+            fetch(`${API_BASE}/api/orders`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderId,
+                name: fullName,
+                email: form.email.trim().toLowerCase(),
+                phone: form.phone.trim(),
+                altPhone: form.altPhone.trim(),
+                shippingAddress,
+                itemsOrdered,
+                deliveryFee,
+                totalAmount: total,
+                paymentMethod: 'Online (KoraPay)',
+                paymentReference: data?.reference || reference,
+                paymentStatus: data?.status || 'success',
+                checkoutStep: 'payment_completed',
+              }),
+            }),
+          ];
+          if (SHEETS_URL) {
+            successRequests.push(
+              fetch(SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                  source: 'order',
+                  order_id: orderId,
+                  name: fullName,
+                  email: form.email.trim().toLowerCase(),
+                  phone: form.phone.trim(),
+                  alt_phone: form.altPhone.trim(),
+                  shipping_address: shippingAddress,
+                  items_ordered: itemsOrdered,
+                  delivery_fee: deliveryFee,
+                  total_amount: total,
+                  payment_method: 'Online (KoraPay)',
+                  checkout_step: 'payment_completed',
+                }),
+              }),
+            );
+          }
+          Promise.allSettled(successRequests).catch(() => {});
+          navigate('/thank-you', { state: { paymentMethod: 'online' } });
+        },
+        onFailed: (_data: unknown) => {
+          showAlert({ title: 'Payment failed', message: 'Payment failed. Please try again.' });
+          setLoading(false);
+        },
+      });
+      return;
     }
+
+    // COD — fire-and-forget both backend and Sheet, navigate immediately
+    const requests: Promise<unknown>[] = [
+      fetch(`${API_BASE}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          name: fullName,
+          email: form.email.trim().toLowerCase(),
+          phone: form.phone.trim(),
+          altPhone: form.altPhone.trim(),
+          shippingAddress,
+          itemsOrdered,
+          deliveryFee,
+          totalAmount: total,
+          paymentMethod: 'Cash on Delivery (COD)',
+          checkoutStep: 'cod_order_placed',
+        }),
+      }),
+    ];
+
+    if (SHEETS_URL) {
+      requests.push(
+        fetch(SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            source: 'order',
+            order_id: orderId,
+            name: fullName,
+            email: form.email.trim().toLowerCase(),
+            phone: form.phone.trim(),
+            alt_phone: form.altPhone.trim(),
+            shipping_address: shippingAddress,
+            items_ordered: itemsOrdered,
+            delivery_fee: deliveryFee,
+            total_amount: total,
+            payment_method: 'Cash on Delivery (COD)',
+            checkout_step: 'cod_order_placed',
+          }),
+        }),
+      );
+    }
+
+    Promise.allSettled(requests).catch(err => console.error('COD order error:', err));
+
+    navigate('/thank-you', { state: { paymentMethod: 'cod', phone: form.phone.trim() } });
   };
 
   return {
