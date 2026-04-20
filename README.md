@@ -57,7 +57,7 @@ The website guides users through a complete customer journey:
 3. **Assessment** → Interactive 7-question prostate health quiz
 4. **Recommendation** → Personalized package suggestion based on quiz results
 5. **Social Proof** → Testimonials and reviews from existing customers
-6. **Checkout** → Secure payment via Korapay
+6. **Checkout** → Secure payment via Korapay or Payaza
 7. **Confirmation** → Order receipt and thank you page
 
 ---
@@ -117,7 +117,9 @@ The website guides users through a complete customer journey:
 | **Vite** | ^6.2.0 | Fast build tool & dev server |
 | **TypeScript** | ~5.8.2 | Type checking |
 | **Vitest** | ^3.1.1 | Unit testing framework |
-| **Testing Library** | Latest | Component testing utilities |
+| **@testing-library/react** | ^16.3.0 | Component testing utilities |
+| **@testing-library/user-event** | ^14.5.2 | User interaction simulation |
+| **@testing-library/jest-dom** | ^6.6.3 | Custom DOM matchers |
 
 ### External Services
 
@@ -128,11 +130,24 @@ The website guides users through a complete customer journey:
 | **Vercel** | Hosting & deployment |
 | **Vercel Analytics** | Usage tracking |
 
+### Backend
+
+| Technology | Version | Purpose |
+| --- | --- | --- |
+| **Hono** | ^4.12.11 | Lightweight web framework |
+| **@hono/node-server** | ^1.19.12 | Node.js adapter for Hono |
+| **Drizzle ORM** | ^0.45.2 | Type-safe database ORM |
+| **Neon (Serverless PG)** | ^1.0.2 | PostgreSQL database |
+| **bcryptjs** | ^3.0.3 | Password hashing |
+| **jsonwebtoken** | ^9.0.3 | JWT admin authentication |
+
 ### Data & Content
 
-- **In-memory State** — All data stored in React context (no backend database)
-- **Markdown** — Blog content stored as markdown files
-- **localStorage/sessionStorage** — Client-side persistence for cart and quiz results
+- **React Context** — Runtime state (cart, quiz results, payment selection, UI)
+- **localStorage** — Persistent client data (cart, admin token, theme preference)
+- **sessionStorage** — Session-only data (quiz results)
+- **Markdown** — Blog content authored and stored via localStorage
+- **Neon PostgreSQL** — Server-side order and admin data via Drizzle ORM
 
 ---
 
@@ -148,8 +163,8 @@ Before you start, ensure you have:
 
 ### Optional but Recommended
 
-- **Korapay Account** — For testing payment functionality
 - **Vercel Account** — For deployment ([Sign up](https://vercel.com))
+- **Render Account** — For backend Deployment ([Sign up](https://render.com))
 
 ---
 
@@ -268,10 +283,13 @@ The dev server automatically reloads when you edit files. Just save your changes
 │   Tailwind CSS | Framer Motion          │
 │   Lucide Icons | Browser APIs           │
 ├─────────────────────────────────────────┤
+│         Hono API Backend                │
+│    (Node.js + Neon PostgreSQL)          │
+├─────────────────────────────────────────┤
 │       External Services                 │
 │  ├─ Korapay (Payments)                  │
-│  ├─ formsubmit.co (Forms)               │
-│  ├─ n8n (Webhooks/Automation)           │
+│  ├─ Payaza (Payments)                   │
+│  ├─ Google Sheets (Order logging)       │
 │  └─ Vercel Analytics                    │
 └─────────────────────────────────────────┘
 ```
@@ -386,7 +404,7 @@ External APIs (Payment, Forms, Analytics)
 ├── scripts/               # Utility scripts
 │   └── sheets-webhook.gs  # Google Sheets integration
 │
-├── server/                # Backend API code (if applicable)
+├── server/                # Backend API code
 │   ├── app.ts
 │   ├── dev.ts
 │   ├── index.ts
@@ -399,17 +417,25 @@ External APIs (Payment, Forms, Analytics)
 │   └── delivery.ts        # Delivery calculation logic
 │
 ├── __tests__/             # Test files (mirror project structure)
+│   ├── setup.ts           # Vitest global setup
 │   ├── components/
+│   │   ├── FormField.test.tsx
+│   │   ├── OrderSummaryBox.test.tsx
+│   │   └── PaymentSelector.test.tsx
 │   ├── context/
+│   │   └── AppContext.test.tsx
 │   ├── hooks/
-│   ├── lib/
+│   │   └── useFinalCTAForm.test.tsx
 │   ├── pages/
-│   ├── routes/
+│   │   ├── Quiz.test.tsx
+│   │   ├── Results.test.tsx
+│   │   └── ThankYou.test.tsx
 │   └── utils/
+│       └── delivery.test.ts
 │
 ├── App.tsx               # Main app component (router definition)
 ├── index.tsx             # React root mount
-├── index.html            # HTML shell (Tailwind CDN, fonts, etc.)
+├── index.html            # HTML shell & fonts
 ├── types.ts              # TypeScript interfaces & enums
 ├── vite.config.ts        # Vite build configuration
 ├── tsconfig.json         # TypeScript compiler options
@@ -449,10 +475,10 @@ The app uses **React Context** for global state instead of Redux or Zustand:
 **Usage:**
 
 ```typescript
-import { useAppContext } from './context/AppContext';
+import { useApp } from './context/AppContext';
 
 export const MyComponent = () => {
-  const { cart, addToCart } = useAppContext();
+  const { cart, addToCart } = useApp();
   // ...
 };
 ```
@@ -481,7 +507,7 @@ React Router manages all page navigation:
   <Route path="/quiz" element={<Quiz />} />
   <Route path="/results" element={<Results />} />
   <Route path="/checkout" element={<Checkout />} />
-  <Route path="/admin" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
+  <Route path="/admin/profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
   {/* ... more routes ... */}
 </Routes>
 ```
@@ -496,13 +522,20 @@ React Router manages all page navigation:
 | `/reviews` | Reviews | Customer testimonials |
 | `/quiz` | Quiz | Health assessment |
 | `/results` | Results | Quiz results & recommendation |
-| `/checkout` | Checkout | Shopping cart |
+| `/summary` | Summary | Order summary before checkout |
+| `/checkout` | Checkout | Shopping cart & payment |
 | `/thank-you` | ThankYou | Order confirmation |
+| `/payment-status` | PaymentStatus | Payment processing status |
+| `/product` | Product | Product details page |
 | `/contact` | Contact | Contact form & info |
+| `/terms` | TermsAndConditions | Terms & conditions |
+| `/distributor` | Distributor | B2B wholesale inquiries |
 | `/blog` | Blog | Blog listing |
 | `/blog/:slug` | BlogPost | Individual blog post |
-| `/admin/login` | AdminLogin | Admin authentication |
-| `/admin` | AdminProfile | Admin dashboard (protected) |
+| `/blog/create` | CreateBlog | Create blog post (protected) |
+| `/blog/edit/:slug` | CreateBlog | Edit blog post (protected) |
+| `/admin-login` | AdminLogin | Admin authentication |
+| `/admin/profile` | AdminProfile | Admin dashboard (protected) |
 
 ### 4. Data Persistence
 
@@ -595,14 +628,14 @@ B2B distributor information and wholesale inquiry form.
 
 ### Admin Pages (Protected)
 
-#### Admin Login (`/admin/login`)
-Admin authentication via password.
+#### Admin Login (`/admin-login`)
+Admin authentication via email and password. Authenticates against the backend API and stores a JWT token in localStorage.
 
-#### Admin Profile (`/admin`)
+#### Admin Profile (`/admin/profile`)
 Admin dashboard for blog management and settings.
 
-#### Create Blog (`/admin/create-blog`)
-Blog post creation interface with rich text editor.
+#### Create Blog (`/blog/create`)
+Blog post creation interface with rich text editor (TipTap). Also handles editing at `/blog/edit/:slug`.
 
 ---
 
@@ -618,8 +651,8 @@ Blog post creation interface with rich text editor.
 {
   cart: CartItem[];
   quizResult: QuizResult | null;
-  selectedPackage: Package | null;
-  totalPrice: number;
+  paymentMethod: 'cod' | 'online' | null;
+  gatewayChoice: 'korapay' | 'payaza' | null;
   // ... methods ...
 }
 ```
@@ -630,25 +663,34 @@ Blog post creation interface with rich text editor.
 const {
   addToCart,
   removeFromCart,
-  updateCartItem,
+  updateQuantity,
   clearCart,
   setQuizResult,
-  setSelectedPackage,
-} = useAppContext();
+  setPaymentMethod,
+  setGatewayChoice,
+} = useApp();
 ```
 
 ### AuthContext
 
-**Purpose:** Admin authentication state.
+**Purpose:** Admin authentication state via JWT tokens.
 
 **State Shape:**
 
 ```typescript
 {
-  isAuthenticated: boolean;
-  user: AdminUser | null;
+  isAdmin: boolean;
+  adminEmail: string | null;
+  isLoading: boolean;
+  token: string | null;
   // ... methods ...
 }
+```
+
+**Actions:**
+
+```typescript
+const { isAdmin, login, logout } = useAuth();
 ```
 
 ### ThemeContext
@@ -666,16 +708,21 @@ const {
 
 ### ModalContext
 
-**Purpose:** Global modal visibility state.
+**Purpose:** Promise-based modal system for alerts, confirms, prompts, and share dialogs.
 
-**State Shape:**
+**API:**
 
 ```typescript
-{
-  modals: Record<string, boolean>;
-  openModal: (id: string) => void;
-  closeModal: (id: string) => void;
-}
+const { showAlert, showConfirm, showPrompt, showShare } = useModal();
+
+// Alert
+await showAlert({ title: 'Error', message: 'Something went wrong.' });
+
+// Confirm (returns boolean)
+const confirmed = await showConfirm({ title: 'Delete?', message: 'This cannot be undone.' });
+
+// Prompt (returns string | null)
+const input = await showPrompt({ title: 'Enter name', placeholder: 'Your name' });
 ```
 
 ---
@@ -684,34 +731,25 @@ const {
 
 ### Tailwind CSS
 
-The project uses **Tailwind CSS** for utility-first styling. Importantly, Tailwind is loaded via **CDN** in [index.html](index.html), not as a build dependency:
+The project uses **Tailwind CSS v4** installed as an npm package and integrated through the Vite plugin (`@tailwindcss/vite`).
 
-```html
-<script src="https://cdn.tailwindcss.com"></script>
+**Configuration files:**
+
+| File | Purpose |
+| --- | --- |
+| [tailwind.config.js](tailwind.config.js) | Theme tokens, custom colors, and extensions |
+| [postcss.config.js](postcss.config.js) | PostCSS pipeline required by Tailwind v4 |
+| [global.css](global.css) | Base styles, CSS custom properties, global rules |
+
+**Vite integration** (`vite.config.ts`):
+
+```typescript
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});
 ```
-
-**Theme Configuration:**
-
-Custom colors, fonts, and theme settings are defined inline in `index.html` using the Tailwind config script:
-
-```html
-<script>
-  tailwind.config = {
-    theme: {
-      colors: {
-        // Custom colors defined here
-      }
-    }
-  }
-</script>
-```
-
-### Key Custom Classes
-
-- `.btn` — Button styling
-- `.card` — Card container
-- `.section-title` — Page section headings
-- `.text-gradient` — Gradient text effect
 
 ### Dark Mode
 
@@ -731,80 +769,127 @@ Dark mode preference is saved to localStorage via ThemeContext.
 
 ## Payment Integration
 
-### Korapay Setup
+The project integrates two Nigerian payment gateways: **Korapay** and **Payaza**. Users select their preferred gateway at checkout.
 
-Payment processing is handled by **Korapay**, a Nigerian payment processor.
+### Korapay
+
+Korapay is a Nigerian payment processor that opens an in-page modal for card payment.
 
 **Integration Points:**
 
 1. **Script Loading** — Korapay SDK loaded in [index.html](index.html)
-2. **Checkout Logic** — [pages/Checkout.tsx](pages/Checkout.tsx) initializes payment
-3. **Payment Handler** — Custom hook in [hooks/useCheckout.ts](hooks/useCheckout.ts)
+2. **Checkout Logic** — [pages/Checkout.tsx](pages/Checkout.tsx) and [hooks/useCheckout.ts](hooks/useCheckout.ts)
+3. **CTA Form** — [hooks/useFinalCTAForm.ts](hooks/useFinalCTAForm.ts)
 
-**Payment Flow:**
+**Payment Flow (Korapay):**
 
 ```
-User fills checkout form
-    ↓
-Clicks "Pay Now"
+User selects Korapay → clicks Pay
     ↓
 Korapay modal opens
     ↓
-User enters payment details
+User enters card details
     ↓
-Payment processed
-    ↓
-Success → ThankYou page
-Failure → Checkout (error shown)
+onSuccess → order logged → /thank-you
+onFailed  → error alert shown
+onClose   → loading state reset
 ```
 
-**Environment Variables:**
+**Environment Variable:**
 
 ```
 VITE_KORAPAY_PUBLIC_KEY=your_public_key
 ```
 
+### Payaza
+
+Payaza is a redirect-based payment gateway. Users are sent to the Payaza hosted page and redirected back after payment.
+
+**Integration Points:**
+
+1. **Checkout Logic** — [hooks/useCheckout.ts](hooks/useCheckout.ts)
+2. **CTA Form** — [hooks/useFinalCTAForm.ts](hooks/useFinalCTAForm.ts)
+
+**Payment Flow (Payaza):**
+
+```
+User selects Payaza → clicks Pay
+    ↓
+Order pre-logged to backend (fire-and-forget)
+    ↓
+window.location.href = Payaza payment URL
+    ↓
+User completes payment on Payaza
+    ↓
+Redirect to /thank-you?paymentMethod=online&reference=...
+```
+
+**Environment Variable:**
+
+```
+VITE_PAYAZA_PUBLIC_KEY=your_public_key
+```
+
+### Cash on Delivery (COD)
+
+COD requires no payment gateway. The order is placed immediately and the customer pays on delivery.
+
+**Flow:**
+
+```
+User selects COD → clicks Place Order
+    ↓
+Order logged to backend + Google Sheets (fire-and-forget)
+    ↓
+Navigate to /thank-you with { paymentMethod: 'cod', phone }
+```
+
 ### Test Cards
 
-For development, Korapay provides test card numbers. Check Korapay documentation.
+For Korapay development, use the test card numbers from the [Korapay documentation](https://docs.korapay.com/).
 
 ---
 
 ## External Integrations
 
-### 1. formsubmit.co
+### 1. Backend API (Hono + Neon)
 
-**Purpose:** Form submission and email notifications.
+**Purpose:** Order persistence, admin authentication, and data management.
+
+**Base URL:** Configured via `VITE_API_URL` environment variable (Render-hosted).
+
+**Key Endpoints:**
+- `POST /api/orders` — Save order records
+- `GET /api/ping` — Health check / cold-start wake-up
+- Admin auth routes under `/api/admin/`
+
+**Files Using This:**
+- [hooks/useCheckout.ts](hooks/useCheckout.ts) — COD and online order submission
+- [hooks/useFinalCTAForm.ts](hooks/useFinalCTAForm.ts) — CTA form order logging
+- [context/AuthContext.tsx](context/AuthContext.tsx) — Admin login/logout
+
+### 2. Google Sheets Webhook
+
+**Purpose:** Spreadsheet-based order log for sales tracking (fire-and-forget, non-blocking).
 
 **Usage:**
 
 ```typescript
-const handleSubmit = async (data: FormData) => {
-  await fetch('https://formsubmit.co/FORM_ID', {
+const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
+
+if (SHEETS_URL) {
+  fetch(SHEETS_URL, {
     method: 'POST',
-    body: new FormData(form),
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ source: 'order', ...orderData }),
   });
-};
+}
 ```
 
 **Files Using This:**
-- [pages/Contact.tsx](pages/Contact.tsx) — Contact form
-- [pages/Distributor.tsx](pages/Distributor.tsx) — Distributor inquiry
-- [hooks/useContactForm.ts](hooks/useContactForm.ts)
-
-### 2. n8n Webhooks
-
-**Purpose:** Order notifications, analytics, CRM integration.
-
-**Webhook Endpoints:**
-
-- `/webhook/order-created` — Triggered when order is completed
-- `/webhook/newsletter-signup` — When user subscribes
-- `/webhook/contact-inquiry` — Contact form submission
-
-**Files Using This:**
-- [pages/ThankYou.tsx](pages/ThankYou.tsx) — Order confirmation
-- [components/NewsletterPopup.tsx](components/NewsletterPopup.tsx) — Newsletter signup
+- [hooks/useCheckout.ts](hooks/useCheckout.ts) — COD order logging
+- [hooks/useFinalCTAForm.ts](hooks/useFinalCTAForm.ts) — CTA form order logging
 
 ### 3. Vercel Analytics
 
@@ -858,22 +943,21 @@ Test files mirror the project structure under `__tests__/`:
 
 ```
 __tests__/
+├── setup.ts                          # Vitest global setup
 ├── components/
 │   ├── FormField.test.tsx
 │   ├── OrderSummaryBox.test.tsx
-│   └── ...
+│   └── PaymentSelector.test.tsx
+├── context/
+│   └── AppContext.test.tsx
 ├── hooks/
-│   ├── useCheckout.test.tsx
-│   ├── useContactForm.test.ts
-│   └── ...
-├── lib/
-│   ├── seo.test.ts
-│   ├── constants.test.ts
-│   └── ...
-└── pages/
-    ├── Quiz.test.tsx
-    ├── Results.test.tsx
-    └── ...
+│   └── useFinalCTAForm.test.tsx
+├── pages/
+│   ├── Quiz.test.tsx
+│   ├── Results.test.tsx
+│   └── ThankYou.test.tsx
+└── utils/
+    └── delivery.test.ts
 ```
 
 ### Writing Tests
@@ -1008,18 +1092,17 @@ cp .env.example .env
 # Frontend URL (used for redirects, meta tags)
 VITE_FRONTEND_URL=http://localhost:3000
 
-# API Base URL (backend API)
-VITE_API_BASE=http://localhost:8080
+# Backend API base URL
+VITE_API_URL=http://localhost:8080
 
-# Korapay Payment Gateway
-VITE_KORAPAY_PUBLIC_KEY=your_public_key_here
+# Korapay payment gateway
+VITE_KORAPAY_PUBLIC_KEY=your_korapay_public_key
 
-# Form submission
-VITE_FORMSUBMIT_ENDPOINT=your_form_id
+# Payaza payment gateway
+VITE_PAYAZA_PUBLIC_KEY=your_payaza_public_key
 
-# n8n Webhooks
-VITE_N8N_WEBHOOK_ORDER=https://your-n8n-instance.com/webhook/order
-VITE_N8N_WEBHOOK_NEWSLETTER=https://your-n8n-instance.com/webhook/newsletter
+# Google Sheets order logging webhook
+VITE_SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/your_script_id/exec
 ```
 
 ### Development vs Production
@@ -1028,14 +1111,14 @@ VITE_N8N_WEBHOOK_NEWSLETTER=https://your-n8n-instance.com/webhook/newsletter
 
 ```env
 VITE_FRONTEND_URL=http://localhost:3000
-VITE_API_BASE=http://localhost:8080
+VITE_API_URL=http://localhost:8080
 ```
 
 **Production (.env.production):**
 
 ```env
 VITE_FRONTEND_URL=https://www.holisbotanicals.com
-VITE_API_BASE=https://api.holisbotanicals.com
+VITE_API_URL=https://your-render-api-url.onrender.com
 ```
 
 ---
@@ -1084,9 +1167,9 @@ export const PACKAGES = [
 
 ### Add Blog Post
 
-1. Go to `/admin/login`
-2. Enter password
-3. Click "Create Blog Post"
+1. Go to `/admin-login`
+2. Enter credentials
+3. Click "Create Blog Post" or navigate to `/blog/create`
 4. Fill in details and click "Publish"
 
 Or programmatically:
@@ -1121,7 +1204,7 @@ export const TESTIMONIALS = [
 ### Customize Styling
 
 1. **Global styles** — [global.css](global.css)
-2. **Tailwind config** — Inline in [index.html](index.html)
+2. **Tailwind config** — [tailwind.config.js](tailwind.config.js) (theme tokens, custom colors)
 3. **Component styles** — Use Tailwind classes directly in components
 
 ### Add Quiz Question
@@ -1165,10 +1248,10 @@ npm run dev -- --port 3001
 
 ### Tailwind Styles Not Loading
 
-1. Verify Tailwind CDN is in [index.html](index.html)
-2. Check browser console for CSP errors
-3. Clear browser cache (`Ctrl+Shift+Delete`)
-4. Hard reload page (`Ctrl+Shift+R` or `Cmd+Shift+R`)
+1. Ensure `@tailwindcss/vite` plugin is in [vite.config.ts](vite.config.ts)
+2. Check that [tailwind.config.js](tailwind.config.js) has the correct `content` paths
+3. Verify `@import 'tailwindcss'` (or equivalent) is in [global.css](global.css)
+4. Clear browser cache (`Ctrl+Shift+Delete`) and hard reload (`Ctrl+Shift+R`)
 
 ### Payment Not Working
 
@@ -1274,7 +1357,8 @@ This project is proprietary and confidential. All rights reserved.
 
 - ✅ Full e-commerce funnel
 - ✅ Interactive quiz system
-- ✅ Korapay payment integration
+- ✅ Korapay + Payaza payment integration
+- ✅ Cash on delivery (COD) support
 - ✅ Blog system with admin interface
 - ✅ Newsletter popup
 - ✅ Dark mode support
