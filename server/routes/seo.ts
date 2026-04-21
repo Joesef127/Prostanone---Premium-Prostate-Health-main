@@ -55,33 +55,22 @@ seo.get('/sitemap-static.xml', (c) => {
 
 /**
  * Blog posts sitemap
- * Fetches all published blog posts from the database and generates a sitemap.
- * 
- * TODO: Connect to database
- * - Fetch all published blog posts with: loc, lastmod, changefreq, priority
- * - Include pagination if there are > 50,000 URLs (create multiple sitemaps)
- * - Cache appropriately based on publish frequency
- * 
- * @example expected structure:
- * { loc: 'https://holisbotanicals.com/blog/post-slug', lastmod: '2024-03-15', changefreq: 'monthly', priority: '0.7' }
+ * Fetches all published blog posts from the database.
  */
 seo.get('/sitemap-blog.xml', async (c) => {
   try {
-    // TODO: Implement database connection
-    // const db = getDatabase();
-    // const blogPosts = await db.query('SELECT slug, updated_at FROM blog_posts WHERE published = true');
-    // const blogPages = blogPosts.map(post => ({
-    //   loc: `${getFrontendUrl()}/blog/${post.slug}`,
-    //   lastmod: post.updated_at.toISOString().split('T')[0],
-    //   changefreq: 'monthly',
-    //   priority: '0.7',
-    // }));
-
-    // For now, return empty sitemap structure
-    const blogPages: Array<{ loc: string; lastmod?: string; changefreq: string; priority: string }> = [
-      // Example:
-      // { loc: 'https://holisbotanicals.com/blog/post-slug', lastmod: '2024-03-15', changefreq: 'monthly', priority: '0.7' },
-    ];
+    const posts = await db.select().from(blogPosts).orderBy(blogPosts.createdAt);
+    const baseUrl = getFrontendUrl();
+    const blogPages = posts.map(post => ({
+      loc: `${baseUrl}/blog/${post.slug}`,
+      lastmod: post.updatedAt
+        ? new Date(post.updatedAt).toISOString().split('T')[0]
+        : post.createdAt
+          ? new Date(post.createdAt).toISOString().split('T')[0]
+          : undefined,
+      changefreq: 'monthly',
+      priority: '0.7',
+    }));
 
     const xml = generateSitemap(blogPages);
     c.header('Content-Type', 'application/xml; charset=utf-8');
@@ -233,7 +222,7 @@ seo.get('/og/blog/:slug', async (c) => {
 
   <!-- Redirect human visitors to the SPA -->
   <meta http-equiv="refresh" content="0;url=${escUrl}"/>
-  <script>window.location.replace("${pageUrl}");</script>
+  <script>window.location.replace("${escUrl}");</script>
 </head>
 <body>
   <p>Redirecting… <a href="${pageUrl}">Click here if not redirected.</a></p>

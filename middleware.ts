@@ -52,10 +52,10 @@ export default async function middleware(request: Request): Promise<Response | u
     if (blogMatch) {
       const slug = blogMatch[1];
       const ogUrl = new URL(`/api/og/blog/${slug}`, url.origin);
-      // Proxy the OG HTML response without changing the URL in the browser
-      return fetch(ogUrl.toString(), {
-        headers: { 'x-forwarded-for': request.headers.get('x-forwarded-for') || '' },
-      });
+      // Proxy the OG HTML response without changing the URL in the browser,
+      // while preserving the original request headers and method so crawler
+      // detection and locale-sensitive behavior remain consistent.
+      return fetch(new Request(ogUrl.toString(), request));
     }
   }
 
