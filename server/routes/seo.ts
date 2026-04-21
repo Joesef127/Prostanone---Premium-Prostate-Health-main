@@ -1,4 +1,7 @@
 import { Hono } from 'hono';
+import { db } from '../db';
+import { blogPosts } from '../db/schema';
+import { eq } from 'drizzle-orm';
 
 const seo = new Hono();
 
@@ -164,6 +167,82 @@ Sitemap: ${baseUrl}/api/sitemap.xml
   c.header('Content-Type', 'text/plain; charset=utf-8');
   c.header('Cache-Control', 'max-age=86400');
   return c.text(robots);
+});
+
+/**
+ * OG meta HTML for blog posts — used by the Edge Middleware to serve crawlers.
+ * Returns a minimal HTML page with proper Open Graph / Twitter Card tags so that
+ * social media link previews (WhatsApp, Telegram, Twitter, Facebook, …) show
+ * the correct title, description, and cover image for each blog post.
+ */
+seo.get('/og/blog/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  if (!slug) return c.text('Not found', 404);
+
+  const frontendUrl = getFrontendUrl();
+
+  let title = 'Prostanone Blog';
+  let description = 'Premium natural herbal supplement for prostate health.';
+  let image = `${frontendUrl}/Prostanone.png`;
+  let pageUrl = `${frontendUrl}/blog/${slug}`;
+
+  try {
+    const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
+    if (post) {
+      title = `${post.title} - Prostanone Blog`;
+      description = post.excerpt || post.title;
+      image = post.coverImage || image;
+    }
+  } catch {
+    // Fall through to defaults if DB is unavailable
+  }
+
+  const escTitle = escapeXml(title);
+  const escDesc = escapeXml(description);
+  const escImage = escapeXml(image);
+  const escUrl = escapeXml(pageUrl);
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>${escTitle}</title>
+  <meta name="description" content="${escDesc}"/>
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Prostanone"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="${escTitle}"/>
+  <meta property="og:description" content="${escDesc}"/>
+  <meta property="og:url" content="${escUrl}"/>
+  <meta property="og:image" content="${escImage}"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:alt" content="${escTitle}"/>
+  <meta property="og:locale" content="en_NG"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Prostanone"/>
+  <meta name="twitter:title" content="${escTitle}"/>
+  <meta name="twitter:description" content="${escDesc}"/>
+  <meta name="twitter:image" content="${escImage}"/>
+  <meta name="twitter:image:alt" content="${escTitle}"/>
+
+  <link rel="canonical" href="${escUrl}"/>
+
+  <!-- Redirect human visitors to the SPA -->
+  <meta http-equiv="refresh" content="0;url=${escUrl}"/>
+  <script>window.location.replace("${pageUrl}");</script>
+</head>
+<body>
+  <p>Redirecting… <a href="${pageUrl}">Click here if not redirected.</a></p>
+</body>
+</html>`;
+
+  c.header('Content-Type', 'text/html; charset=utf-8');
+  c.header('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
+  return c.html(html);
 });
 
 /**
