@@ -5,6 +5,7 @@ import { PACKAGES, API_BASE } from '../lib/constants.ts';
 import { calcDeliveryFee } from '../utils/delivery';
 import { useApp } from '../context/AppContext';
 import { useModal } from '../context/ModalContext';
+import { useSendOrderNotification } from './useSendOrderNotification';
 
 declare global {
   interface Window {
@@ -51,6 +52,7 @@ export function useFinalCTAForm() {
   const navigate = useNavigate();
   const { paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice } = useApp();
   const { showAlert } = useModal();
+  const { sendNotification } = useSendOrderNotification();
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [orderId] = useState(generateOrderId);
   const [reference] = useState(() => `PR-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
@@ -149,7 +151,7 @@ export function useFinalCTAForm() {
           `&connection_mode=Live` +
           `&checkout_amount=${encodeURIComponent(total)}` +
           `&currency_code=NGN` +
-          `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com')}` +
+          `&email_address=${encodeURIComponent(form.email.trim().toLowerCase() || 'sales@holisbotanicals.com')}` +
           `&first_name=${encodeURIComponent(firstName)}` +
           `&last_name=${encodeURIComponent(lastName)}` +
           `&phone_number=${encodeURIComponent(form.phone.trim())}` +
@@ -178,18 +180,29 @@ export function useFinalCTAForm() {
         reference,
         customer: {
           name: fullName,
-          email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
+          email: form.email.trim().toLowerCase() || 'sales@holisbotanicals.com',
         },
         onClose: () => setLoading(false),
         onSuccess: (data: any) => {
           const successRequests: Promise<unknown>[] = [
+            sendNotification({
+              orderId,
+              name: fullName,
+              email: form.email.trim().toLowerCase() || 'sales@holisbotanicals.com',
+              phone: form.phone.trim(),
+              shippingAddress,
+              itemsOrdered,
+              subtotal: selectedPkg.price,
+              deliveryFee,
+              total,
+            }),
             fetch(`${API_BASE}/api/orders`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 orderId,
                 name: fullName,
-                email: form.email.trim().toLowerCase() || 'noreply@holisbotanicals.com',
+                email: form.email.trim().toLowerCase() || 'sales@holisbotanicals.com',
                 phone: form.phone.trim(),
                 altPhone: form.altPhone.trim(),
                 shippingAddress,
@@ -237,8 +250,19 @@ export function useFinalCTAForm() {
       return;
     }
 
-    // COD — fire-and-forget both backend and Sheet, navigate immediately
+    // COD — send notification and fire-and-forget both backend and Sheet, navigate immediately
     const requests: Promise<unknown>[] = [
+      sendNotification({
+        orderId,
+        name: fullName,
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+        shippingAddress,
+        itemsOrdered,
+        subtotal: selectedPkg.price,
+        deliveryFee,
+        total,
+      }),
       fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

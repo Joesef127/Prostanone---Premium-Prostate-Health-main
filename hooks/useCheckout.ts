@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext';
 import { PACKAGES, API_BASE } from '../lib/constants';
 import { calcDeliveryFee } from '../utils/delivery';
 import { useModal } from '../context/ModalContext';
+import { useSendOrderNotification } from './useSendOrderNotification';
 
 declare global {
   interface Window {
@@ -60,6 +61,7 @@ export function useCheckout() {
   const { cart, paymentMethod, setPaymentMethod, gatewayChoice, setGatewayChoice } = useApp();
   const navigate = useNavigate();
   const { showAlert } = useModal();
+  const { sendNotification } = useSendOrderNotification();
 
   const [formData, setFormData] = useState<CheckoutFormData>(INITIAL_FORM);
   const [step, setStep] = useState(1);
@@ -255,31 +257,19 @@ export function useCheckout() {
       },
       onSuccess: async (data: any) => {
         try {
-          const orderSummary = cart
-            .map(item => {
-              const pkg = PACKAGES.find(p => p.id === item.packageId);
-              return `${item.quantity}x ${pkg?.name} (₦${pkg?.price.toLocaleString()})`;
-            })
-            .join(', ');
+          const orderSummary = buildOrderSummary();
 
-          await fetch('https://formsubmit.co/ajax/sales@holisbotanicals.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({
-              _subject: `New Prostanone Order Confirmed (ID: ${orderId})`,
-              order_id: orderId,
-              customer_name: formData.name.trim(),
-              customer_email: formData.email.trim().toLowerCase(),
-              customer_phone: formData.phone.trim(),
-              shipping_address: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
-              notes: formData.notes.trim(),
-              order_summary: orderSummary,
-              subtotal_amount: `₦${subtotal.toLocaleString()}`,
-              delivery_fee: `₦${finalDeliveryFee.toLocaleString()}`,
-              total_amount: `₦${total.toLocaleString()}`,
-              _cc: formData.email.trim().toLowerCase(),
-              _template: 'table',
-            }),
+          await sendNotification({
+            orderId,
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            phone: formData.phone.trim(),
+            shippingAddress: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`,
+            itemsOrdered: orderSummary,
+            subtotal,
+            deliveryFee: finalDeliveryFee,
+            total,
+            notes: formData.notes.trim(),
           });
 
           sendCheckoutProgress(4, 'payment_completed', data);
@@ -329,8 +319,21 @@ export function useCheckout() {
 
     const SHEETS_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL;
     const shippingAddress = `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}`;
+    const orderSummary = buildOrderSummary();
 
     const requests: Promise<unknown>[] = [
+      sendNotification({
+        orderId,
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        shippingAddress,
+        itemsOrdered: orderSummary,
+        subtotal,
+        deliveryFee: finalDeliveryFee,
+        total,
+        notes: formData.notes.trim(),
+      }),
       fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -376,9 +379,9 @@ export function useCheckout() {
       );
     }
 
-    Promise.allSettled(requests).catch(err => console.error('COD order error:', err));
-
-    navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } });
+    Promise.allSettled(requests)
+      .catch(err => console.error('COD order error:', err))
+      .finally(() => navigate('/thank-you', { state: { paymentMethod: 'cod', phone: formData.phone.trim() } }));
   };
 
   return {

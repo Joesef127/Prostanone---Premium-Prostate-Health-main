@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSeoMeta } from '../hooks/useSeoMeta';
+import { useSendOrderNotification } from '../hooks/useSendOrderNotification';
 import { API_BASE } from '../lib/constants';
 import OrderHeader from '../components/thank-you/OrderHeader';
 import OrderInfoSection from '../components/thank-you/OrderInfoSection';
@@ -19,6 +20,7 @@ const ThankYou: React.FC = () => {
   const { clearCart } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
+  const { sendNotification } = useSendOrderNotification();
   const { paymentMethod: stateMethod, phone } = (location.state ?? {}) as { paymentMethod?: string; phone?: string };
 
   // Payaza redirects here with ?paymentMethod=online&reference=PR-xxx — verify before showing success
@@ -41,6 +43,18 @@ const ThankYou: React.FC = () => {
         })
         .then(data => {
           if (data.status === 'success') {
+            // Send notification on successful payment verification
+            sendNotification({
+              orderId: data.orderId,
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+              shippingAddress: data.shippingAddress,
+              itemsOrdered: data.itemsOrdered,
+              subtotal: data.subtotal,
+              deliveryFee: data.deliveryFee,
+              total: data.total,
+            }).catch(err => console.error('Notification error after Payaza verification:', err));
             clearCart();
             setVerifying(false);
           } else {
@@ -57,7 +71,7 @@ const ThankYou: React.FC = () => {
       // KoraPay (stateMethod) or COD — already confirmed on client side
       clearCart();
     }
-  }, [paymentMethod, reference, stateMethod, clearCart, navigate]);
+  }, [paymentMethod, reference, stateMethod, clearCart, navigate, sendNotification]);
 
   if (verifying) return <ThankYouSkeleton />;
 
