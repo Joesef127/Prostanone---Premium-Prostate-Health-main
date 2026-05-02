@@ -6,7 +6,7 @@ export const admins = pgTable('admins', {
   passwordHash: varchar('password_hash', { length: 255 }).notNull(),
   phone: varchar('phone', { length: 20 }),
   twoFactorEnabled: boolean('two_factor_enabled').default(false).notNull(),
-  twoFactorMethod: varchar('two_factor_method', { length: 10 }), // 'email' | 'sms' | null
+  twoFactorMethod: varchar('two_factor_method', { length: 10 }), // 'email' | 'sms'
   verificationToken: varchar('verification_token', { length: 10 }), // 6-digit code
   verificationTokenExpiresAt: timestamp('verification_token_expires_at'),
   lastLoginAt: timestamp('last_login_at'),
@@ -99,16 +99,4 @@ export const testimonials = pgTable('testimonials', {
   text: text('text').notNull(),
   rating: integer('rating').notNull().default(5),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const trustedDevices = pgTable('trusted_devices', {
-  id: serial('id').primaryKey(),
-  adminId: integer('admin_id')
-    .notNull()
-    .references(() => admins.id, { onDelete: 'cascade' }),
-  deviceFingerprint: varchar('device_fingerprint', { length: 255 }).notNull(),
-  deviceName: varchar('device_name', { length: 255 }), // e.g. "Chrome on Windows"
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  lastUsedAt: timestamp('last_used_at').defaultNow().notNull(),
-  isActive: boolean('is_active').default(true).notNull(),
 });
