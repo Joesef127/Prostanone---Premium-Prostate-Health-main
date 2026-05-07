@@ -1,25 +1,52 @@
-import React from 'react';
-import { useDynamicTitle } from '../hooks/useDynamicTitle';
-import { useAdminDashboard } from '../hooks/useAdminDashboard';
-import AdminHeader from '../components/admin/AdminHeader';
-import AdminStatCards from '../components/admin/AdminStatCards';
-import AdminTabs from '../components/admin/AdminTabs';
-import AdminControlsBar from '../components/admin/AdminControlsBar';
-import AdminConfirmBanner from '../components/admin/AdminConfirmBanner';
-import AdminDataView from '../components/admin/AdminDataView';
-import AdminSkeleton from '../components/skeleton-loaders/admin/AdminSkeleton';
+import React, { useState } from "react";
+import { useDynamicTitle } from "../hooks/useDynamicTitle";
+import { useAdminDashboard } from "../hooks/useAdminDashboard";
+import AdminHeader from "../components/admin/AdminHeader";
+import AdminStatCards from "../components/admin/AdminStatCards";
+import AdminTabs from "../components/admin/AdminTabs";
+import AdminControlsBar from "../components/admin/AdminControlsBar";
+import AdminConfirmBanner from "../components/admin/AdminConfirmBanner";
+import AdminDataView from "../components/admin/AdminDataView";
+import AdminSkeleton from "../components/skeleton-loaders/admin/AdminSkeleton";
+import Admin2FASetup from "../components/admin/Admin2FASetup";
+import { useAuth } from "@/context/AuthContext";
 
 const AdminProfile: React.FC = () => {
-  useDynamicTitle('Admin Dashboard');
+  useDynamicTitle("Admin Dashboard");
   const dash = useAdminDashboard();
+  const { twoFactorEnabled, twoFactorMethod } = useAuth();
+
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   if (!dash.stats && dash.loading) return <AdminSkeleton />;
+
+  const handleShowSettings = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleCloseSettings = () => {
+    setShowSettingsModal(false);
+  };
 
   return (
     <div className="pt-20 bg-background min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <AdminHeader
+          adminEmail={dash.adminEmail}
+          onLogout={dash.handleLogout}
+          showSettings={handleShowSettings}
+        />
 
-        <AdminHeader adminEmail={dash.adminEmail} onLogout={dash.handleLogout} />
+        {/* 2FA Setup Section */}
+        <div className="mb-12">
+          <Admin2FASetup
+            twoFactorEnabled={twoFactorEnabled}
+            twoFactorMethod={twoFactorMethod}
+            onStartSetup={handleShowSettings}
+            onCancelSetup={handleCloseSettings}
+            showSettings={showSettingsModal}
+          />
+        </div>
 
         {dash.stats && <AdminStatCards stats={dash.stats} />}
 
@@ -36,10 +63,13 @@ const AdminProfile: React.FC = () => {
           onTimeRangeChange={dash.setTimeRange}
           viewMode={dash.viewMode}
           onViewModeChange={dash.setViewMode}
-          onRefresh={() => { dash.fetchTab(dash.activeTab); dash.fetchStats(); }}
+          onRefresh={() => {
+            dash.fetchTab(dash.activeTab);
+            dash.fetchStats();
+          }}
           selectedSize={dash.selected.size}
-          onDeleteSelected={() => dash.setConfirmClear('selected')}
-          onClearAll={() => dash.setConfirmClear('all')}
+          onDeleteSelected={() => dash.setConfirmClear("selected")}
+          onClearAll={() => dash.setConfirmClear("all")}
         />
 
         {dash.confirmClear && (
@@ -50,7 +80,7 @@ const AdminProfile: React.FC = () => {
             deleting={dash.deleting}
             onCancel={() => dash.setConfirmClear(null)}
             onConfirm={() =>
-              dash.confirmClear === 'all'
+              dash.confirmClear === "all"
                 ? dash.doDelete()
                 : dash.doDelete(Array.from(dash.selected) as number[])
             }
@@ -74,7 +104,6 @@ const AdminProfile: React.FC = () => {
             {dash.selected.size > 0 && ` · ${dash.selected.size} selected`}
           </p>
         )}
-
       </div>
     </div>
   );

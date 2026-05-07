@@ -97,7 +97,7 @@ export async function sendVerificationEmail(
     });
 
     if (!result.data?.id) {
-      console.error("Failed to send verification email:", result.error);
+      console.error("Failed to send verification email:", JSON.stringify(result.error));
       return false;
     }
 

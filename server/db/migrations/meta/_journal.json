@@ -15,6 +15,13 @@
       "when": 1777748044578,
       "tag": "0001_bizarre_thanos",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777761171755,
+      "tag": "0002_orange_amazoness",
+      "breakpoints": true
     }
   ]
 }

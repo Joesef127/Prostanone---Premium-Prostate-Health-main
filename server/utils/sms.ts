@@ -30,9 +30,9 @@ export async function sendVerificationSMS(
     return false;
   }
 
-  const fromNumber = process.env.TWILIO_FROM_NUMBER;
+  const fromNumber = process.env.TWILIO_PHONE_NUMBER;
   if (!fromNumber) {
-    throw new Error("TWILIO_FROM_NUMBER is required to send SMS");
+    throw new Error("TWILIO_PHONE_NUMBER is required to send SMS");
   }
 
   const expiryMinutes = Math.round((expiresAt.getTime() - Date.now()) / 60000);
@@ -48,7 +48,7 @@ export async function sendVerificationSMS(
     console.log("SMS sent:", message.sid);
     return true;
   } catch (error) {
-    console.error("Error sending SMS:", error);
-    return false;
-  }
+  console.error("Error sending SMS:", error instanceof Error ? error.message : error);
+  return false;
+}
 }

@@ -9,6 +9,8 @@ export const admins = pgTable('admins', {
   twoFactorMethod: varchar('two_factor_method', { length: 10 }), // 'email' | 'sms'
   verificationToken: varchar('verification_token', { length: 10 }), // 6-digit code
   verificationTokenExpiresAt: timestamp('verification_token_expires_at'),
+  pendingTwoFactorMethod: varchar('pending_two_factor_method', { length: 10 }), // 'email' | 'sms'
+  pendingPhone: varchar('pending_phone', { length: 20 }),
   lastLoginAt: timestamp('last_login_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
