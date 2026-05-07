@@ -5,7 +5,7 @@ import { Tab, TimeRange, ViewMode, Stats, getTimeCutoff } from '../components/ad
 import { API_BASE } from '../lib/constants';
 
 export function useAdminDashboard() {
-  const { adminEmail, logout, token } = useAuth();
+  const { adminEmail, logout } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<Tab>('orders');
@@ -28,18 +28,16 @@ export function useAdminDashboard() {
   const fetchStats = useCallback(() => {
     fetch(`${API_BASE}/api/stats`, {
       credentials: 'include',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then((r) => r.json())
       .then((s: Stats) => setStats(s))
       .catch(() => {});
-  }, [token]);
+  }, []);
 
   const fetchTab = useCallback((tab: Tab) => {
     setLoading(true);
     fetch(`${API_BASE}/api/${tab}`, {
       credentials: 'include',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then((r) => r.json())
       .then((rows: Record<string, unknown>[]) => {
@@ -47,7 +45,7 @@ export function useAdminDashboard() {
         setFetched((prev) => new Set(prev).add(tab));
       })
       .finally(() => setLoading(false));
-  }, [token]);
+  }, []);
 
   // Stats on mount
   useEffect(() => { fetchStats(); }, [fetchStats]);
@@ -112,7 +110,7 @@ export function useAdminDashboard() {
     await fetch(`${API_BASE}/api/${activeTab}`, {
       method: 'DELETE',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(ids ? { ids } : {}),
     }).catch(() => {});
     setSelected(new Set());
