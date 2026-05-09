@@ -102,8 +102,8 @@ export function isTrustedDevice(c: Context, adminId: number): boolean {
 export function setTrustDeviceCookie(c: Context, value: string): void {
   setCookie(c, "trust_device_token", value, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    secure: true,
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     maxAge: 7 * 24 * 60 * 60,
     path: "/",
   });
@@ -112,8 +112,8 @@ export function setTrustDeviceCookie(c: Context, value: string): void {
 export function clearTrustDeviceCookie(c: Context): void {
   deleteCookie(c, "trust_device_token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    secure: true,
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     path: "/",
   });
 }
@@ -121,8 +121,8 @@ export function clearTrustDeviceCookie(c: Context): void {
 export function setAdminTokenCookie(c: Context, token: string): void {
   setCookie(c, "admin_token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    secure: true,
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
   });
@@ -131,8 +131,8 @@ export function setAdminTokenCookie(c: Context, token: string): void {
 export function clearAdminTokenCookie(c: Context): void {
   deleteCookie(c, "admin_token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    secure: true,
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     path: "/",
   });
 }
