@@ -75,7 +75,7 @@ const Reviews: React.FC = () => {
   });
 
   const { testimonials, loading, refetch } = useTestimonials();
-  const { isAdmin, token } = useAuth();
+  const { isAdmin } = useAuth();
   const { showConfirm } = useModal();
   const [editing, setEditing] = useState<Testimonial | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -97,7 +97,6 @@ const Reviews: React.FC = () => {
     await fetch(`${API_BASE}/api/testimonials/${id}`, {
       method: 'DELETE',
       credentials: 'include',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
     refetch();
   };

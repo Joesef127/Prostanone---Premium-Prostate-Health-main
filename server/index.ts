@@ -25,14 +25,23 @@ const allowedOrigins = Array.from(
     ...(process.env.VITE_FRONTEND_URL ? [process.env.VITE_FRONTEND_URL] : []),
   ]),
 );
-const fallbackOrigin = allowedOrigins[1] ?? allowedOrigins[0];
 
-app.use(
-  "*",
-  cors({
-    origin: (origin) =>
-      allowedOrigins.includes(origin) ? origin : fallbackOrigin,
-    credentials: true,
+if (allowedOrigins.length === 0) {  
+  throw new Error(  
+    "CORS is misconfigured: set CORS_ALLOWED_ORIGINS or VITE_FRONTEND_URL",  
+  );  
+}  
+const fallbackOrigin = allowedOrigins[0];  
+
+app.use(  
+  "*",  
+  cors({  
+    origin: (origin) =>  
+      allowedOrigins.includes(origin) ? origin : fallbackOrigin,  
+    credentials: true, 
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    exposeHeaders: ["Set-Cookie"],
   }),
 );
 
