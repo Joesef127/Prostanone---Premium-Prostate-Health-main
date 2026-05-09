@@ -23,6 +23,14 @@ export async function sendVerificationEmail(
   expiresAt: Date,
   deviceInfo?: string,
 ): Promise<boolean> {
+  const client = getResendClient();
+  if (!client) {
+    console.error(
+      "Email service not configured: missing RESEND_API_KEY or RESEND_FROM_EMAIL",
+    );
+    return false;
+  }
+
   const expiryMinutes = Math.max(
     1,
     Math.ceil((expiresAt.getTime() - Date.now()) / 60000),
@@ -30,8 +38,8 @@ export async function sendVerificationEmail(
   const safeDeviceInfo = deviceInfo ? escapeHtml(deviceInfo) : null;
 
   try {
-    const result = await getResendClient()?.resend.emails.send({
-      from: getResendClient()?.hostEmail || " ",
+    const result = await client.resend.emails.send({
+      from: client.hostEmail,
       to: email,
       subject: "Your Holis Botanicals Verification Code",
       html: `

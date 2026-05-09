@@ -23,7 +23,6 @@ import {
 } from "../utils/2fa";
 import { sendVerificationEmail } from "../utils/email";
 import { sendVerificationSMS } from "../utils/sms";
-import { ad } from "vitest/dist/chunks/reporters.d.BFLkQcL6.js";
 
 if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is required");
 const jwtSecret = process.env.JWT_SECRET;
