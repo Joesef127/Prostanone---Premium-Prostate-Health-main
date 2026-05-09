@@ -28,10 +28,10 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
     // Allow only digits and + sign
     input = input.replace(/[^\d+]/g, '');
 
-    // Limit to max length (E.164: +[1-9] + up to 14 digits = 16 chars)
-    if (input.length > 15) {
-      input = input.slice(0, 15);
-    }
+     // Limit to max length (E.164: + sign + up to 15 digits = 16 chars)  
+    if (input.length > 16) {  
+      input = input.slice(0, 16);  
+    } 
 
     onChange(input);
   };

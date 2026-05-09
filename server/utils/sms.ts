@@ -35,7 +35,7 @@ export async function sendVerificationSMS(
     throw new Error("TWILIO_PHONE_NUMBER is required to send SMS");
   }
 
-  const expiryMinutes = Math.round((expiresAt.getTime() - Date.now()) / 60000);
+  const expiryMinutes = Math.max(1, Math.ceil((expiresAt.getTime() - Date.now()) / 60000));
 
   try {
     const client = getTwilioClient();

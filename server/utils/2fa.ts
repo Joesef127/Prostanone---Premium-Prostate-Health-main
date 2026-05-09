@@ -15,7 +15,7 @@ export function generateVerificationCode(): string {
  */
 export function isTokenExpired(expiresAt: Date | null | undefined): boolean {
   if (!expiresAt) return true;
-  return Date.now() > expiresAt.getTime();
+  return Date.now() >= expiresAt.getTime();
 }
 
 /**

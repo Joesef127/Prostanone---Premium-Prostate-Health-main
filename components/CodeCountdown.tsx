@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Clock, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { Clock, AlertTriangle } from "lucide-react";
 
 interface CodeCountdownProps {
   expiresAt: Date | null;
@@ -14,6 +14,7 @@ const CodeCountdown: React.FC<CodeCountdownProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isExpired, setIsExpired] = useState(false);
+  const hasNotifiedExpire = useRef(false);
 
   useEffect(() => {
     if (!expiresAt) return;
@@ -25,10 +26,14 @@ const CodeCountdown: React.FC<CodeCountdownProps> = ({
       if (diff <= 0) {
         setTimeLeft(0);
         setIsExpired(true);
-        onExpire?.();
+        if (!hasNotifiedExpire.current) {
+          hasNotifiedExpire.current = true; // Ensure we only notify once
+          onExpire?.();
+        }
       } else {
         setTimeLeft(diff);
         setIsExpired(false);
+        hasNotifiedExpire.current = false; // Reset for future expirations
       }
     };
 
@@ -44,10 +49,14 @@ const CodeCountdown: React.FC<CodeCountdownProps> = ({
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  if (!expiresAt || isExpired) {
+  if (!expiresAt) {
+    return null;
+  }
+
+  if (isExpired) {
     return (
       <div className="flex gap-2 items-center text-xs sm:text-sm text-red-600 dark:text-red-400">
         <AlertTriangle className="w-4 h-4 shrink-0" />
@@ -61,9 +70,7 @@ const CodeCountdown: React.FC<CodeCountdownProps> = ({
   return (
     <div
       className={`flex gap-2 items-center text-xs sm:text-sm font-medium transition-colors ${
-        isWarning
-          ? 'text-red-600 dark:text-red-400'
-          : 'text-text-muted'
+        isWarning ? "text-red-600 dark:text-red-400" : "text-text-muted"
       }`}
     >
       <Clock className="w-4 h-4 shrink-0" />

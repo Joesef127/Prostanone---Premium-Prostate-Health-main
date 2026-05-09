@@ -1,15 +1,12 @@
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY is required");
-}
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL;
+  if (!apiKey || !fromEmail) return null;
 
-if (!process.env.RESEND_FROM_EMAIL) {
-  throw new Error("RESEND_FROM_EMAIL is required");
+  return { resend: new Resend(apiKey), hostEmail: fromEmail };
 }
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const hostEmail = process.env.RESEND_FROM_EMAIL;
 
 function escapeHtml(str: string): string {
   return str
@@ -26,12 +23,15 @@ export async function sendVerificationEmail(
   expiresAt: Date,
   deviceInfo?: string,
 ): Promise<boolean> {
-  const expiryMinutes = Math.round((expiresAt.getTime() - Date.now()) / 60000);
+  const expiryMinutes = Math.max(
+    1,
+    Math.ceil((expiresAt.getTime() - Date.now()) / 60000),
+  );
   const safeDeviceInfo = deviceInfo ? escapeHtml(deviceInfo) : null;
 
   try {
-    const result = await resend.emails.send({
-      from: hostEmail,
+    const result = await getResendClient()?.resend.emails.send({
+      from: getResendClient()?.hostEmail || " ",
       to: email,
       subject: "Your Holis Botanicals Verification Code",
       html: `
@@ -96,8 +96,11 @@ export async function sendVerificationEmail(
       `,
     });
 
-    if (!result.data?.id) {
-      console.error("Failed to send verification email:", JSON.stringify(result.error));
+    if (!result?.data?.id) {
+      console.error(
+        "Failed to send verification email:",
+        JSON.stringify(result?.error),
+      );
       return false;
     }
 

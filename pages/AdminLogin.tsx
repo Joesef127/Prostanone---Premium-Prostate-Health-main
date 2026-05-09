@@ -125,7 +125,6 @@ const AdminLogin: React.FC = () => {
           )}
 
           {/* STEP 2: Method Selection */}
-          {/* STEP 2: Method Selection */}
           {login.step === "method-select" && login.pendingVerification && (
             <div className="space-y-5">
               <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-xs sm:text-sm text-blue-700 dark:text-blue-400">
@@ -134,7 +133,7 @@ const AdminLogin: React.FC = () => {
               </div>
 
               {(login.maskedEmail || login.email) && (
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2.5 text-center text-xs sm:text-sm text-text-muted">
+                <div className="bg-gray-100 dark:bg-gray-800/20 rounded-lg p-2.5 text-center text-xs sm:text-sm text-text-muted">
                   {login.maskedEmail || login.email}
                 </div>
               )}

@@ -51,6 +51,7 @@ export function use2FAVerification(): Use2FAVerificationResult {
       if (diff <= 0) {
         setError("Verification code expired. Please request a new one.");
         setCodeExpiresAt(null);
+        setCodeTimeLeft(0);
         setConfirmationCode("");
         clearInterval(interval);
       } else {

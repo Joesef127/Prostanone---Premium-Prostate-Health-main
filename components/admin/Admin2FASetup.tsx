@@ -27,6 +27,11 @@ const Admin2FASetup: React.FC<Admin2FASetupProps> = ({
   const { adminEmail } = useAuth();
   const setup2FA = useAdmin2FASetup(twoFactorEnabled, twoFactorMethod);
 
+  const handleClose = () => {  
+    setup2FA.handleCancel();  
+    onCancelSetup();  
+  }; 
+
   return (
     <div className="">
       {/* Backdrop */}
@@ -38,7 +43,7 @@ const Admin2FASetup: React.FC<Admin2FASetupProps> = ({
         transition={{ duration: 0.18 }}
         className={`fixed inset-0 z-9998 bg-black/50 backdrop-blur-sm ${showSettings ? "block" : "hidden"}`}
         aria-hidden="true"
-        onClick={() => onCancelSetup()}
+        onClick={handleClose} 
       />
 
       {/* Dialog */}
@@ -55,7 +60,7 @@ const Admin2FASetup: React.FC<Admin2FASetupProps> = ({
           className={`relative pointer-events-auto w-full max-w-lg sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden p-4 sm:p-6 md:p-8 ${showSettings ? "block" : "hidden"}`}
         >
           <button
-            onClick={() => onCancelSetup()}
+            onClick={handleClose} 
             className="absolute right-[3%] top-[3%] text-text-muted border border-transparent hover:text-text hover:border-primary rounded-2xl p-1.5 transition-colors"
           >
             <X className="w-5 h-5" />

@@ -13,6 +13,8 @@ import {
   setTrustDeviceCookie,
   clearTrustDeviceCookie,
   isTrustedDevice,
+  setAdminTokenCookie,
+  clearAdminTokenCookie,
 } from "../middleware/auth";
 import {
   generateVerificationCode,
@@ -21,6 +23,7 @@ import {
 } from "../utils/2fa";
 import { sendVerificationEmail } from "../utils/email";
 import { sendVerificationSMS } from "../utils/sms";
+import { ad } from "vitest/dist/chunks/reporters.d.BFLkQcL6.js";
 
 if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is required");
 const jwtSecret = process.env.JWT_SECRET;
@@ -65,34 +68,28 @@ auth.post("/login", async (c) => {
         { expiresIn: "7d" },
       );
 
-      setCookie(c, "admin_token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Strict",
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-      });
+      setAdminTokenCookie(c, token);
 
       return c.json({ success: true, email: admin.email, twoFactorEnabled: false });
     }
 
     // Trusted device — skip 2FA, issue JWT directly
-    if (isTrustedDevice(c)) {
+    if (isTrustedDevice(c, admin.id)) {
       const token = jwt.sign(
         { adminId: admin.id, email: admin.email },
         jwtSecret,
         { expiresIn: "7d" },
       );
 
-      setCookie(c, "admin_token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Strict",
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-      });
+      setAdminTokenCookie(c, token);
 
-      return c.json({ success: true, email: admin.email, twoFactorEnabled: true, trustedDevice: true });
+      return c.json({  
+        success: true,  
+        email: admin.email,  
+        twoFactorEnabled: true,  
+        twoFactorMethod: admin.twoFactorMethod,  
+        trustedDevice: true,  
+      });  
     }
 
     // Generate and store verification code
@@ -180,6 +177,7 @@ auth.post("/verify-token", async (c) => {
     const storedToken = admin.verificationToken;
     if (
       !storedToken ||
+      storedToken.length !== verificationToken.length ||
       !crypto.timingSafeEqual(
         Buffer.from(storedToken),
         Buffer.from(verificationToken),
@@ -204,22 +202,18 @@ auth.post("/verify-token", async (c) => {
       { expiresIn: "7d" },
     );
 
-    setCookie(c, "admin_token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
+    setAdminTokenCookie(c, token);
 
     if (trustThisDevice) {
-      const trustCookie = createTrustDeviceCookie();
+      const trustCookie = createTrustDeviceCookie(admin.id);
       setTrustDeviceCookie(c, trustCookie);
     }
 
     return c.json({
       success: true,
       email: admin.email,
+      twoFactorEnabled: admin.twoFactorEnabled,  
+      twoFactorMethod: admin.twoFactorMethod,
       trusted: trustThisDevice ?? false,
     });
   } catch (err) {
@@ -374,6 +368,7 @@ auth.post("/confirm-2fa", requireAdmin, async (c) => {
     const storedToken = row.verificationToken;
     if (
       !storedToken ||
+      storedToken.length !== code.length ||
       !crypto.timingSafeEqual(Buffer.from(storedToken), Buffer.from(code))
     ) {
       return c.json({ error: "Invalid verification code" }, 401);
@@ -422,7 +417,7 @@ auth.get("/me", requireAdmin, async (c) => {
 
 // POST /api/auth/logout
 auth.post("/logout", (c) => {
-  deleteCookie(c, "admin_token", { path: "/", secure: true, sameSite: "Strict" });
+  clearAdminTokenCookie(c);
   // trust_device_token intentionally NOT cleared — persists for 7 days across sessions
   return c.json({ success: true });
 });

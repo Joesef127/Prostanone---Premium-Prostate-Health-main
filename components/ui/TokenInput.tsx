@@ -66,6 +66,9 @@ const TokenInput: React.FC<TokenInputProps> = ({
         {Array.from({ length: 6 }).map((_, index) => (
           <input
             key={index}
+            aria-label={`Verification code digit ${index + 1}`}  
+            aria-invalid={!!error}  
+            autoComplete={index === 0 ? 'one-time-code' : 'off'} 
             ref={(el) => {
               if (el) {
                 inputRefs.current[index] = el;
@@ -88,12 +91,12 @@ const TokenInput: React.FC<TokenInputProps> = ({
         ))}
       </div>
 
-      {error && (
-        <div className="flex gap-2 text-xs sm:text-sm text-red-600 dark:text-red-400">
-          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-          <span>{error}</span>
-        </div>
-      )}
+      {error && (  
+        <div role="alert" aria-live="polite" className="flex gap-2 text-xs sm:text-sm text-red-600 dark:text-red-400">  
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />  
+          <span>{error}</span>  
+        </div>  
+      )}  
     </div>
   );
 };

@@ -33,15 +33,16 @@ function verifyJWT(token: string): AdminPayload | null {
   }
 }
 
-function verifyTrustDeviceCookie(cookieValue: string): boolean {
+function verifyTrustDeviceCookie(cookieValue: string, adminId: number): boolean {
   try {
-    const [signature, expiryTime, nonce] = cookieValue.split(".");
-    if (!signature || !expiryTime || !nonce) return false;
+    const [signature, storedAdminId, expiryTime, nonce] = cookieValue.split(".");
+    if (!signature || !storedAdminId || !expiryTime || !nonce) return false;
+    if (storedAdminId !== String(adminId)) return false;
 
     const expiry = parseInt(expiryTime, 10);
     if (isNaN(expiry) || Date.now() > expiry) return false;
 
-    const payload = `${expiryTime}.${nonce}`;
+    const payload = `${storedAdminId}.${expiryTime}.${nonce}`;
     const expectedSignature = crypto
       .createHmac("sha256", deviceCookieSecret)
       .update(payload)
@@ -58,10 +59,10 @@ function verifyTrustDeviceCookie(cookieValue: string): boolean {
 
 // --- Exported functions ---
 
-export function createTrustDeviceCookie(): string {
+export function createTrustDeviceCookie(adminId: number): string {
   const expiryTime = Date.now() + SEVEN_DAYS_MS;
   const nonce = crypto.randomBytes(16).toString("hex");
-  const payload = `${expiryTime}.${nonce}`;
+  const payload = `${adminId}.${expiryTime}.${nonce}`;
 
   const signature = crypto
     .createHmac("sha256", deviceCookieSecret)
@@ -92,10 +93,10 @@ export async function requireAdmin(c: Context<AdminEnv>, next: Next) {
   await next();
 }
 
-export function isTrustedDevice(c: Context): boolean {
+export function isTrustedDevice(c: Context, adminId: number): boolean {
   const trustCookie = getCookie(c, "trust_device_token");
   if (!trustCookie) return false;
-  return verifyTrustDeviceCookie(trustCookie);
+  return verifyTrustDeviceCookie(trustCookie, adminId);
 }
 
 export function setTrustDeviceCookie(c: Context, value: string): void {
@@ -110,6 +111,25 @@ export function setTrustDeviceCookie(c: Context, value: string): void {
 
 export function clearTrustDeviceCookie(c: Context): void {
   deleteCookie(c, "trust_device_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    path: "/",
+  });
+}
+
+export function setAdminTokenCookie(c: Context, token: string): void {
+  setCookie(c, "admin_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+}
+
+export function clearAdminTokenCookie(c: Context): void {
+  deleteCookie(c, "admin_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",

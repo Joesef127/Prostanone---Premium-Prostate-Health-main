@@ -19,7 +19,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ adminEmail, onLogout, showSet
         <p className="text-text-muted text-sm">{adminEmail}</p>
       </div>
     </div>
-    <div className="grid grid-cols-2 items-center gap-2 5">
+    <div className="grid grid-cols-2 items-center gap-2.5">
     <button
       onClick={onLogout}
       className="inline-flex justify-center items-center gap-2 px-4 py-2 rounded-lg border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors text-sm w-full sm:w-fit"
