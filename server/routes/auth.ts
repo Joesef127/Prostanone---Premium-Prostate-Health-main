@@ -31,6 +31,11 @@ const E164_RE = /^\+[1-9]\d{7,14}$/;
 
 const auth = new Hono<AdminEnv>();
 
+// HMACs the verification code using the JWT secret to prevent token forgery if the database is compromised
+function hmacCode(code: string): string {
+  return crypto.createHmac("sha256", jwtSecret).update(code).digest("hex");
+}
+
 // POST /api/auth/login
 // Step 1: Validate email + password, send verification code
 // Returns: { pendingVerification: true, method: 'email' | 'sms' }
@@ -60,7 +65,7 @@ auth.post("/login", async (c) => {
     }
 
     // 2FA not set up — issue JWT directly
-    if (!admin.twoFactorEnabled || !admin.twoFactorMethod) {
+    if (!admin.twoFactorEnabled) {
       const token = jwt.sign(
         { adminId: admin.id, email: admin.email },
         jwtSecret,
@@ -69,7 +74,24 @@ auth.post("/login", async (c) => {
 
       setAdminTokenCookie(c, token);
 
-      return c.json({ success: true, email: admin.email, twoFactorEnabled: false });
+      return c.json({
+        success: true,
+        email: admin.email,
+        twoFactorEnabled: false,
+      });
+    }
+
+    if (!admin.twoFactorMethod) {
+      console.error(
+        "[/api/auth/login] 2FA enabled but no delivery method configured",
+        {
+          adminId: admin.id,
+        },
+      );
+      return c.json(
+        { error: "Two-factor authentication is misconfigured" },
+        500,
+      );
     }
 
     // Trusted device — skip 2FA, issue JWT directly
@@ -82,24 +104,28 @@ auth.post("/login", async (c) => {
 
       setAdminTokenCookie(c, token);
 
-      return c.json({  
-        success: true,  
-        email: admin.email,  
-        twoFactorEnabled: true,  
-        twoFactorMethod: admin.twoFactorMethod,  
-        trustedDevice: true,  
-      });  
+      return c.json({
+        success: true,
+        email: admin.email,
+        twoFactorEnabled: true,
+        twoFactorMethod: admin.twoFactorMethod,
+        trustedDevice: true,
+      });
     }
 
     // Generate and store verification code
     const verificationCode = generateVerificationCode();
     const expiresAt = getTokenExpiryTime();
+    const loginChallenge = crypto.randomBytes(32).toString("hex");
+    const challengeExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await db
       .update(admins)
       .set({
-        verificationToken: verificationCode,
+        verificationToken: hmacCode(verificationCode),
         verificationTokenExpiresAt: expiresAt,
+        loginChallenge,
+        loginChallengeExpiresAt: challengeExpiresAt,
       })
       .where(eq(admins.id, admin.id));
 
@@ -121,7 +147,9 @@ auth.post("/login", async (c) => {
 
     if (!sendSuccess) {
       return c.json(
-        { error: `Failed to send verification code via ${admin.twoFactorMethod}. Please try again.` },
+        {
+          error: `Failed to send verification code via ${admin.twoFactorMethod}. Please try again.`,
+        },
         500,
       );
     }
@@ -129,8 +157,11 @@ auth.post("/login", async (c) => {
     return c.json({
       pendingVerification: true,
       method: admin.twoFactorMethod,
-      // Masked to avoid confirming which email is registered
-      email: admin.email.replace(/^(.)(.*)(@.*)$/, (_, a, b, c) => `${a}${"*".repeat(b.length)}${c}`),
+      email: admin.email.replace(
+        /^(.)(.*)(@.*)$/,
+        (_, a, b, c) => `${a}${"*".repeat(b.length)}${c}`,
+      ),
+      loginChallenge, // frontend holds this, sends it back with OTP
     });
   } catch (err) {
     console.error("[/api/auth/login]", err);
@@ -142,14 +173,21 @@ auth.post("/login", async (c) => {
 // Step 2: Verify OTP code, issue JWT + optional trust device cookie
 auth.post("/verify-token", async (c) => {
   try {
-    const { email, verificationToken, trustThisDevice } = await c.req.json<{
-      email: string;
-      verificationToken: string;
-      trustThisDevice?: boolean;
-    }>();
+    const { email, verificationToken, trustThisDevice, loginChallenge } =
+      await c.req.json<{
+        email: string;
+        verificationToken: string;
+        trustThisDevice?: boolean;
+        loginChallenge: string;
+      }>();
 
-    if (!email || !verificationToken) {
-      return c.json({ error: "Email and verification token are required" }, 400);
+    if (!email || !verificationToken || !loginChallenge) {
+      return c.json(
+        {
+          error: "Email, verification token, and login challenge are required",
+        },
+        400,
+      );
     }
 
     const [admin] = await db
@@ -168,29 +206,48 @@ auth.post("/verify-token", async (c) => {
       );
     }
 
+    // Validate challenge — proves password was checked in this session
+    if (
+      !admin.loginChallenge ||
+      !admin.loginChallengeExpiresAt ||
+      Date.now() > admin.loginChallengeExpiresAt.getTime() ||
+      !crypto.timingSafeEqual(
+        Buffer.from(admin.loginChallenge),
+        Buffer.from(loginChallenge),
+      )
+    ) {
+      return c.json(
+        { error: "Invalid or expired login session. Please log in again." },
+        401,
+      );
+    }
+
     if (isTokenExpired(admin.verificationTokenExpiresAt)) {
       return c.json({ error: "Verification token has expired" }, 401);
     }
 
-    // Timing-safe comparison to prevent timing attacks
     const storedToken = admin.verificationToken;
+    const incomingHash = hmacCode(verificationToken);
+
     if (
       !storedToken ||
-      storedToken.length !== verificationToken.length ||
+      storedToken.length !== incomingHash.length ||
       !crypto.timingSafeEqual(
         Buffer.from(storedToken),
-        Buffer.from(verificationToken),
+        Buffer.from(incomingHash),
       )
     ) {
       return c.json({ error: "Invalid verification token" }, 401);
     }
 
-    // Clear verification token
+    // Consume challenge and clear token
     await db
       .update(admins)
       .set({
         verificationToken: null,
         verificationTokenExpiresAt: null,
+        loginChallenge: null, // ← consumed, can't be reused
+        loginChallengeExpiresAt: null,
         lastLoginAt: new Date(),
       })
       .where(eq(admins.id, admin.id));
@@ -211,7 +268,7 @@ auth.post("/verify-token", async (c) => {
     return c.json({
       success: true,
       email: admin.email,
-      twoFactorEnabled: admin.twoFactorEnabled,  
+      twoFactorEnabled: admin.twoFactorEnabled,
       twoFactorMethod: admin.twoFactorMethod,
       trusted: trustThisDevice ?? false,
     });
@@ -226,10 +283,13 @@ auth.post("/verify-token", async (c) => {
 // Body: { email }
 auth.post("/resend-code", async (c) => {
   try {
-    const { email } = await c.req.json<{ email: string }>();
+    const { email, loginChallenge } = await c.req.json<{
+      email: string;
+      loginChallenge: string;
+    }>();
 
-    if (!email) {
-      return c.json({ error: "Email is required" }, 400);
+    if (!email || !loginChallenge) {
+      return c.json({ error: "Email and login challenge are required" }, 400);
     }
 
     const [admin] = await db
@@ -237,9 +297,22 @@ auth.post("/resend-code", async (c) => {
       .from(admins)
       .where(eq(admins.email, email.toLowerCase().trim()));
 
-    // Return same response whether admin exists or not — prevents email enumeration
+    // Fail silently if admin not found — prevents enumeration
     if (!admin || !admin.twoFactorEnabled || !admin.twoFactorMethod) {
       return c.json({ success: true });
+    }
+
+    // Validate challenge
+    if (
+      !admin.loginChallenge ||
+      !admin.loginChallengeExpiresAt ||
+      Date.now() > admin.loginChallengeExpiresAt.getTime() ||
+      !crypto.timingSafeEqual(
+        Buffer.from(admin.loginChallenge),
+        Buffer.from(loginChallenge),
+      )
+    ) {
+      return c.json({ error: "Invalid or expired login session. Please log in again." }, 401);
     }
 
     const verificationCode = generateVerificationCode();
@@ -248,8 +321,9 @@ auth.post("/resend-code", async (c) => {
     await db
       .update(admins)
       .set({
-        verificationToken: verificationCode,
+        verificationToken: hmacCode(verificationCode),
         verificationTokenExpiresAt: expiresAt,
+        // Challenge stays valid — resend doesn't consume it
       })
       .where(eq(admins.id, admin.id));
 
@@ -277,7 +351,10 @@ auth.post("/setup-2fa", requireAdmin, async (c) => {
     }>();
 
     if (!method || !["email", "sms"].includes(method)) {
-      return c.json({ error: "Invalid 2FA method. Must be 'email' or 'sms'" }, 400);
+      return c.json(
+        { error: "Invalid 2FA method. Must be 'email' or 'sms'" },
+        400,
+      );
     }
 
     if (method === "sms" && !phone) {
@@ -294,22 +371,24 @@ auth.post("/setup-2fa", requireAdmin, async (c) => {
       // Validate against the same E.164 regex used in sms.ts
       if (!E164_RE.test(sanitizedPhone)) {
         return c.json(
-          { error: "Invalid phone number. Must be in E.164 format (e.g. +2348012345678)" },
+          {
+            error:
+              "Invalid phone number. Must be in E.164 format (e.g. +2348012345678)",
+          },
           400,
         );
       }
     }
 
-    // Generate test code and store it — 2FA is NOT enabled until confirmed
+    // Generate code and store it — 2FA is NOT enabled until confirmed
     const testCode = generateVerificationCode();
     const expiresAt = getTokenExpiryTime();
 
     await db
       .update(admins)
       .set({
-        verificationToken: testCode,
+        verificationToken: hmacCode(testCode),
         verificationTokenExpiresAt: expiresAt,
-        // Store pending settings separately so they only apply after confirmation
         pendingTwoFactorMethod: method,
         pendingPhone: method === "sms" ? sanitizedPhone : null,
       })
@@ -323,12 +402,18 @@ auth.post("/setup-2fa", requireAdmin, async (c) => {
         expiresAt,
       );
     } else if (method === "sms") {
-      sendSuccess = await sendVerificationSMS(sanitizedPhone!, testCode, expiresAt);
+      sendSuccess = await sendVerificationSMS(
+        sanitizedPhone!,
+        testCode,
+        expiresAt,
+      );
     }
 
     if (!sendSuccess) {
       return c.json(
-        { error: `Failed to send test verification code via ${method}. Please check your details and try again.` },
+        {
+          error: `Failed to send verification code via ${method}. Please check your details and try again.`,
+        },
         500,
       );
     }
@@ -336,7 +421,7 @@ auth.post("/setup-2fa", requireAdmin, async (c) => {
     return c.json({
       success: true,
       pendingConfirmation: true,
-      message: `A test code has been sent via ${method}. Call /confirm-2fa with the code to activate.`,
+      message: `A code has been sent via ${method}. Call /confirm-2fa with the code to activate.`,
       method,
     });
   } catch (err) {
@@ -361,7 +446,10 @@ auth.post("/confirm-2fa", requireAdmin, async (c) => {
     if (!row) return c.json({ error: "Admin not found" }, 404);
 
     if (isTokenExpired(row.verificationTokenExpiresAt)) {
-      return c.json({ error: "Test code has expired. Please restart 2FA setup." }, 400);
+      return c.json(
+        { error: "Code has expired. Please restart 2FA setup." },
+        400,
+      );
     }
 
     const storedToken = row.verificationToken;

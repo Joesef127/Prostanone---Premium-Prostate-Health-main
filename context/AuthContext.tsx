@@ -15,6 +15,7 @@ interface LoginResult {
   method?: "email" | "sms"; // which method to use
   email?: string; // masked email (if 2FA required)
   error?: string;
+  loginChallenge?: string;
 }
 
 interface VerifyTokenResult {
@@ -28,6 +29,7 @@ interface AuthContextValue extends AuthState {
     email: string,
     code: string,
     trustThisDevice: boolean,
+    loginChallenge: string,
   ) => Promise<VerifyTokenResult>;
   logout: () => Promise<void>;
 }
@@ -66,8 +68,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setState({
             isAdmin: false,
             adminEmail: null,
-  twoFactorEnabled: false,
-  twoFactorMethod: null,
+            twoFactorEnabled: false,
+            twoFactorMethod: null,
             isLoading: false,
           });
         }
@@ -76,8 +78,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setState({
           isAdmin: false,
           adminEmail: null,
-  twoFactorEnabled: false,
-  twoFactorMethod: null,
+          twoFactorEnabled: false,
+          twoFactorMethod: null,
           isLoading: false,
         });
       }
@@ -106,8 +108,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setState({
             isAdmin: true,
             adminEmail: data.email,
-  twoFactorEnabled: data.twoFactorEnabled ?? false,
-  twoFactorMethod: data.twoFactorMethod ?? null,
+            twoFactorEnabled: data.twoFactorEnabled ?? false,
+            twoFactorMethod: data.twoFactorMethod ?? null,
             isLoading: false,
           });
           return { success: true, step: "complete", email: data.email };
@@ -120,6 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             step: "method-select",
             method: data.method,
             email: data.email, // masked email from backend
+            loginChallenge: data.loginChallenge,
           };
         }
 
@@ -138,6 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     email: string,
     code: string,
     trustThisDevice: boolean,
+    loginChallenge: string,
   ): Promise<VerifyTokenResult> => {
     try {
       const res = await fetch(`${API_BASE}/api/auth/verify-token`, {
@@ -148,6 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           email,
           verificationToken: code,
           trustThisDevice,
+          loginChallenge,
         }),
       });
 
@@ -158,8 +163,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setState({
           isAdmin: true,
           adminEmail: data.email,
-  twoFactorEnabled: data.twoFactorEnabled ?? false,
-  twoFactorMethod: data.twoFactorMethod ?? null,
+          twoFactorEnabled: data.twoFactorEnabled ?? false,
+          twoFactorMethod: data.twoFactorMethod ?? null,
           isLoading: false,
         });
         return { success: true };
@@ -185,8 +190,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setState({
         isAdmin: false,
         adminEmail: null,
-  twoFactorEnabled: false,
-  twoFactorMethod: null,
+        twoFactorEnabled: false,
+        twoFactorMethod: null,
         isLoading: false,
       });
     }

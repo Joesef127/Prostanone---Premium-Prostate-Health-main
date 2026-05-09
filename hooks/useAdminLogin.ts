@@ -42,6 +42,7 @@ export function useAdminLogin(): UseAdminLoginResult {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [maskedEmail, setMaskedEmail] = useState<string | null>(null);
   const [trustThisDevice, setTrustThisDevice] = useState(false);
+  const [loginChallenge, setLoginChallenge] = useState<string | null>(null);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +55,7 @@ export function useAdminLogin(): UseAdminLoginResult {
         if (result.step === 'complete') {
           setStep('complete');
         } else if (result.step === 'method-select') {
+          setLoginChallenge(result.loginChallenge || null);
           setStep('method-select');
           setPendingVerification(true);
           twoFA.setMethod(result.method || 'email');
@@ -95,6 +97,7 @@ export function useAdminLogin(): UseAdminLoginResult {
         email,
         code || twoFA.confirmationCode,
         trustThisDevice,
+        loginChallenge || '',
       );
 
       if (result.success) {
@@ -120,7 +123,7 @@ export function useAdminLogin(): UseAdminLoginResult {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, loginChallenge }),
       });
 
       const data = await res.json();
