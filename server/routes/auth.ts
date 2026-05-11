@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { setCookie, deleteCookie } from "hono/cookie";
+// import { setCookie, deleteCookie } from "hono/cookie";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -11,7 +11,7 @@ import {
   type AdminEnv,
   createTrustDeviceCookie,
   setTrustDeviceCookie,
-  clearTrustDeviceCookie,
+  // clearTrustDeviceCookie,
   isTrustedDevice,
   setAdminTokenCookie,
   clearAdminTokenCookie,
@@ -453,10 +453,15 @@ auth.post("/confirm-2fa", requireAdmin, async (c) => {
     }
 
     const storedToken = row.verificationToken;
+    const incomingHash = hmacCode(code);
+
     if (
-      !storedToken ||
-      storedToken.length !== code.length ||
-      !crypto.timingSafeEqual(Buffer.from(storedToken), Buffer.from(code))
+        !storedToken ||
+        storedToken.length !== incomingHash.length ||
+        !crypto.timingSafeEqual(
+            Buffer.from(storedToken),
+            Buffer.from(incomingHash),
+        )
     ) {
       return c.json({ error: "Invalid verification code" }, 401);
     }
